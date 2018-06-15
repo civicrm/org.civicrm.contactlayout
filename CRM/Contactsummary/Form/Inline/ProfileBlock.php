@@ -7,14 +7,32 @@ use CRM_Contactsummary_ExtensionUtil as E;
  *
  * @see https://wiki.civicrm.org/confluence/display/CRMDOC/QuickForm+Reference
  */
-class CRM_Contactsummary_Form_Inline_ProfileBlock extends CRM_Contact_Form_Inline {
+class CRM_Contactsummary_Form_Inline_ProfileBlock extends CRM_Profile_Form_Edit {
 
   /**
-   * Form for editing key profiles
+   * Form for editing profile blocks
    */
-  public function buildQuickForm() {
+  public function preProcess() {
+    if (!empty($_GET['cid'])) {
+      $this->set('id', $_GET['cid']);
+    }
+    parent::preProcess();
+  }
 
+  public function buildQuickForm() {
     parent::buildQuickForm();
+    $buttons = array(
+      array(
+        'type' => 'upload',
+        'name' => ts('Save'),
+        'isDefault' => TRUE,
+      ),
+      array(
+        'type' => 'cancel',
+        'name' => ts('Cancel'),
+      ),
+    );
+    $this->addButtons($buttons);
   }
 
   /**
@@ -24,38 +42,20 @@ class CRM_Contactsummary_Form_Inline_ProfileBlock extends CRM_Contact_Form_Inlin
    */
   public function postProcess() {
     $values = $this->exportValues();
+    $values['contact_id'] = $cid = $this->_id;
+    $values['profile_id'] = $this->_gid;
+    $result = civicrm_api3('Profile', 'submit', $values);
 
-    $this->log();
-    $this->response();
-  }
-
-  /**
-   * Get existing profiles for form
-   */
-  public function setDefaultValues() {
-    $defaults = [];
-    return $defaults;
-  }
-
-  /**
-   * Get the fields/elements defined in this form.
-   *
-   * @return array (string)
-   */
-  public function getRenderableElementNames() {
-    // The _elements list includes some items which should not be
-    // auto-rendered in the loop -- such as "qfKey" and "buttons".  These
-    // items don't have labels.  We'll identify renderable by filtering on
-    // the 'label'.
-    $elementNames = array();
-    foreach ($this->_elements as $element) {
-      /** @var HTML_QuickForm_Element $element */
-      $label = $element->getLabel();
-      if (!empty($label)) {
-        $elementNames[] = $element->getName();
-      }
-    }
-    return $elementNames;
+    // These are normally performed by CRM_Contact_Form_Inline postprocessing but this form doesn't inherit from that class.
+    CRM_Core_BAO_Log::register($cid,
+      'civicrm_contact',
+      $cid
+    );
+    $this->ajaxResponse = array_merge(
+      CRM_Contact_Form_Inline::renderFooter($cid),
+      $this->ajaxResponse,
+      CRM_Contact_Form_Inline_Lock::getResponse($cid)
+    );
   }
 
 }

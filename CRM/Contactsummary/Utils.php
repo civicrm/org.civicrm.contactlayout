@@ -16,7 +16,7 @@ class CRM_Contactsummary_Utils {
           ],
           [
             'title' => ts('Constituent Info'),
-            'tpl_file' => 'CRM/Contact/Page/Inline/CustomFieldSet.tpl',
+            'tpl_file' => 'CRM/Contactsummary/Page/Inline/CustomFieldSet.tpl',
             'block_id' => 1,
           ],
         ],
@@ -30,10 +30,9 @@ class CRM_Contactsummary_Utils {
             'tpl_file' => 'CRM/Contact/Page/Inline/IM.tpl',
           ],
           [
-            'title' => ts('OpenID'),
-            'tpl_file' => 'CRM/Contact/Page/Inline/OpenID.tpl',
-            'collapsible' => TRUE,
-            'collapsed' => TRUE,
+            'title' => ts('Summary Profile 1'),
+            'tpl_file' => 'CRM/Contactsummary/Page/Inline/Profile.tpl',
+            'block_id' => 16,
           ],
         ],
       ],

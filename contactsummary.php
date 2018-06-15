@@ -122,7 +122,7 @@ function contactsummary_civicrm_entityTypes(&$entityTypes) {
 }
 
 /**
- * Implementation of hook_civicrm_pageRun
+ * Implements hook_civicrm_pageRun().
  *
  * Generate a list of entities to create/deactivate/delete when this module
  * is installed, disabled, uninstalled.
@@ -131,17 +131,26 @@ function contactsummary_civicrm_pageRun(&$page) {
   if (get_class($page) === 'CRM_Contact_Page_View_Summary') {
     $contactID = $page->getVar('_contactId');
     if ($contactID) {
-      $page->assign('layoutBlocks', CRM_Contactsummary_Utils::getLayout($contactID));
+      $layoutBlocks = CRM_Contactsummary_Utils::getLayout($contactID);
+      $profileBlocks = [];
+      foreach ($layoutBlocks['columns'] as $column) {
+        foreach ($column as $block) {
+          if (CRM_Utils_Array::value('tpl_file', $block) === 'CRM/Contactsummary/Page/Inline/Profile.tpl') {
+            $profileBlocks[$block['block_id']] = CRM_Contactsummary_Page_Inline_ProfileBlock::getProfileBlock($block['block_id'], $contactID);
+          }
+        }
+      }
+      $page->assign('layoutBlocks', $layoutBlocks);
+      $page->assign('profileBlocks', $profileBlocks);
     }
   }
 }
 
 /**
- * Implements hook_civicrm_entityTypes().
+ * Implements hook_civicrm_summary().
  *
- * Declare entity types provided by this module.
- *
- * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_entityTypes
+ * This simply forces CiviCRM to replace the contents of the contact summary
+ * with SummaryHook.tpl, which we then override.
  */
 function contactsummary_civicrm_summary($contactID, &$content, &$contentPlacement) {
   $contentPlacement = CRM_Utils_Hook::SUMMARY_REPLACE;
