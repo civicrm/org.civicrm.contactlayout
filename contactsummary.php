@@ -131,12 +131,13 @@ function contactsummary_civicrm_pageRun(&$page) {
   if (get_class($page) === 'CRM_Contact_Page_View_Summary') {
     $contactID = $page->getVar('_contactId');
     if ($contactID) {
+      CRM_Contactsummary_Utils::getAllBlocks();
       $layoutBlocks = CRM_Contactsummary_Utils::getLayout($contactID);
       $profileBlocks = [];
       foreach ($layoutBlocks['columns'] as $column) {
         foreach ($column as $block) {
-          if (CRM_Utils_Array::value('tpl_file', $block) === 'CRM/Contactsummary/Page/Inline/Profile.tpl') {
-            $profileBlocks[$block['block_id']] = CRM_Contactsummary_Page_Inline_ProfileBlock::getProfileBlock($block['block_id'], $contactID);
+          if (!empty($block['profile_id'])) {
+            $profileBlocks[$block['profile_id']] = CRM_Contactsummary_Page_Inline_ProfileBlock::getProfileBlock($block['profile_id'], $contactID);
           }
         }
       }
@@ -155,4 +156,13 @@ function contactsummary_civicrm_pageRun(&$page) {
 function contactsummary_civicrm_summary($contactID, &$content, &$contentPlacement) {
   $contentPlacement = CRM_Utils_Hook::SUMMARY_REPLACE;
   $content = 1;
+}
+
+/**
+ * Implements hook_civicrm_fieldOptions().
+ */
+function contactsummary_civicrm_fieldOptions($entity, $fieldName, &$options, $params) {
+  if ($entity == 'UFJoin' && $fieldName == 'module') {
+    $options += ['Contact Summary' => ts('Contact Summary Block')];
+  }
 }

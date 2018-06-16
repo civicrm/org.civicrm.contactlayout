@@ -9,7 +9,7 @@ class CRM_Contactsummary_Page_Inline_ProfileBlock extends CRM_Core_Page {
 
     $this->assign('contactId', $contactId);
     $this->assign('profileBlock', self::getProfileBlock($profileId, $contactId));
-    $this->assign('block', ['block_id' => $profileId]);
+    $this->assign('block', ['profile_id' => $profileId]);
 
     CRM_Contact_Page_View::checkUserPermission($this, $contactId);
     parent::run();
