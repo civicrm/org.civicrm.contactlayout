@@ -456,5 +456,11 @@ function _contactsummary_civix_civicrm_alterSettingsFolders(&$metaDataFolders = 
 
 function _contactsummary_civix_civicrm_entityTypes(&$entityTypes) {
   $entityTypes = array_merge($entityTypes, array (
+    'CRM_Contactsummary_DAO_ContactSummary' => 
+    array (
+      'name' => 'ContactSummary',
+      'class' => 'CRM_Contactsummary_DAO_ContactSummary',
+      'table' => 'civicrm_contact_summary',
+    ),
   ));
 }
