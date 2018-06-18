@@ -130,28 +130,22 @@ function contactsummary_civicrm_pageRun(&$page) {
   if (get_class($page) === 'CRM_Contact_Page_View_Summary') {
     $contactID = $page->getVar('_contactId');
     if ($contactID) {
-      $layoutBlocks = CRM_Contactsummary_BAO_ContactSummary::getLayout($contactID);
-      $profileBlocks = [];
-      foreach ($layoutBlocks['columns'] as $column) {
-        foreach ($column as $block) {
-          if (!empty($block['profile_id'])) {
-            $profileBlocks[$block['profile_id']] = CRM_Contactsummary_Page_Inline_ProfileBlock::getProfileBlock($block['profile_id'], $contactID);
+      $layout = CRM_Contactsummary_BAO_ContactSummary::getLayout($contactID);
+      if ($layout) {
+        $profileBlocks = [];
+        foreach ($layout as $column) {
+          foreach ($column as $block) {
+            if (!empty($block['profile_id'])) {
+              $profileBlocks[$block['profile_id']] = CRM_Contactsummary_Page_Inline_ProfileBlock::getProfileBlock($block['profile_id'], $contactID);
+            }
           }
         }
+        $page->assign('layoutBlocks', $layout);
+        $page->assign('profileBlocks', $profileBlocks);
+        // Setting these variables will make Summary.tpl replace the contents with SummaryHook.tpl which we override.
+        $page->assign('hookContent', 1);
+        $page->assign('hookContentPlacement', CRM_Utils_Hook::SUMMARY_REPLACE);
       }
-      $page->assign('layoutBlocks', $layoutBlocks);
-      $page->assign('profileBlocks', $profileBlocks);
     }
   }
-}
-
-/**
- * Implements hook_civicrm_summary().
- *
- * This simply forces CiviCRM to replace the contents of the contact summary
- * with SummaryHook.tpl, which we then override.
- */
-function contactsummary_civicrm_summary($contactID, &$content, &$contentPlacement) {
-  $contentPlacement = CRM_Utils_Hook::SUMMARY_REPLACE;
-  $content = 1;
 }

@@ -1,5 +1,5 @@
 <div class="contact_panel">
-  {foreach from=$layoutBlocks.columns item="column" key="columnNo"}
+  {foreach from=$layoutBlocks item="column" key="columnNo"}
     <div class="contactCard{if $columnNo}Right{else}Left{/if}">
       {foreach from=$column item='block'}
         <div class="{if $block.collapsible}crm-collapsible{if $block.collapsed} collapsed{/if}{/if}">

@@ -4,47 +4,49 @@ use CRM_Contactsummary_ExtensionUtil as E;
 class CRM_Contactsummary_BAO_ContactSummary extends CRM_Contactsummary_DAO_ContactSummary {
 
   /**
-   * @param $cid
+   * @param int $cid
+   *   Id of contact being displayed.
+   * @param int $uid
+   *   Contact id of current user.
+   *
    * @return array
    */
-  public static function getLayout($cid) {
+  public static function getLayout($cid, $uid = NULL) {
     // Mock output for development purposes. WIP.
     $mockLayout = [
-      'columns' => [
+      [
         [
-          [
-            'title' => ts('Email'),
-            'tpl_file' => 'CRM/Contact/Page/Inline/Email.tpl',
-          ],
-          [
-            'title' => ts('Website'),
-            'tpl_file' => 'CRM/Contact/Page/Inline/Website.tpl',
-          ],
-          [
-            'title' => ts('Constituent Info'),
-            'tpl_file' => 'CRM/Contactsummary/Page/Inline/CustomFieldSet.tpl',
-            'custom_group_id' => 1,
-          ],
-          [
-            'title' => ts('MultiValue Test'),
-            'tpl_file' => 'CRM/Contactsummary/Page/Inline/CustomFieldSet.tpl',
-            'custom_group_id' => 7,
-          ],
+          'title' => ts('Email'),
+          'tpl_file' => 'CRM/Contact/Page/Inline/Email.tpl',
         ],
         [
-          [
-            'title' => ts('Phone'),
-            'tpl_file' => 'CRM/Contact/Page/Inline/Phone.tpl',
-          ],
-          [
-            'title' => ts('Address'),
-            'tpl_file' => 'CRM/Contactsummary/Page/Inline/AddressBlocks.tpl',
-          ],
-          [
-            'title' => ts('Summary Profile 1'),
-            'tpl_file' => 'CRM/Contactsummary/Page/Inline/Profile.tpl',
-            'profile_id' => 16,
-          ],
+          'title' => ts('Website'),
+          'tpl_file' => 'CRM/Contact/Page/Inline/Website.tpl',
+        ],
+        [
+          'title' => ts('Constituent Info'),
+          'tpl_file' => 'CRM/Contactsummary/Page/Inline/CustomFieldSet.tpl',
+          'custom_group_id' => 1,
+        ],
+        [
+          'title' => ts('MultiValue Test'),
+          'tpl_file' => 'CRM/Contactsummary/Page/Inline/CustomFieldSet.tpl',
+          'custom_group_id' => 7,
+        ],
+      ],
+      [
+        [
+          'title' => ts('Phone'),
+          'tpl_file' => 'CRM/Contact/Page/Inline/Phone.tpl',
+        ],
+        [
+          'title' => ts('Address'),
+          'tpl_file' => 'CRM/Contactsummary/Page/Inline/AddressBlocks.tpl',
+        ],
+        [
+          'title' => ts('Summary Profile 1'),
+          'tpl_file' => 'CRM/Contactsummary/Page/Inline/Profile.tpl',
+          'profile_id' => 16,
         ],
       ],
     ];
