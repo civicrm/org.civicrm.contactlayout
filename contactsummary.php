@@ -124,15 +124,13 @@ function contactsummary_civicrm_entityTypes(&$entityTypes) {
 /**
  * Implements hook_civicrm_pageRun().
  *
- * Generate a list of entities to create/deactivate/delete when this module
- * is installed, disabled, uninstalled.
+ * Add layout block data to the contact summary screen.
  */
 function contactsummary_civicrm_pageRun(&$page) {
   if (get_class($page) === 'CRM_Contact_Page_View_Summary') {
     $contactID = $page->getVar('_contactId');
     if ($contactID) {
-      CRM_Contactsummary_Utils::getAllBlocks();
-      $layoutBlocks = CRM_Contactsummary_Utils::getLayout($contactID);
+      $layoutBlocks = CRM_Contactsummary_BAO_ContactSummary::getLayout($contactID);
       $profileBlocks = [];
       foreach ($layoutBlocks['columns'] as $column) {
         foreach ($column as $block) {
@@ -156,13 +154,4 @@ function contactsummary_civicrm_pageRun(&$page) {
 function contactsummary_civicrm_summary($contactID, &$content, &$contentPlacement) {
   $contentPlacement = CRM_Utils_Hook::SUMMARY_REPLACE;
   $content = 1;
-}
-
-/**
- * Implements hook_civicrm_fieldOptions().
- */
-function contactsummary_civicrm_fieldOptions($entity, $fieldName, &$options, $params) {
-  if ($entity == 'UFJoin' && $fieldName == 'module') {
-    $options += ['Contact Summary' => ts('Contact Summary Block')];
-  }
 }
