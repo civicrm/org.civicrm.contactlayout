@@ -23,6 +23,7 @@
   <field>
     <name>label</name>
     <title>Label</title>
+    <required>true</required>
     <type>varchar</type>
     <length>255</length>
     <comment>Name of this layout.</comment>

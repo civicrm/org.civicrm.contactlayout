@@ -82,7 +82,7 @@ CREATE TABLE `civicrm_contact_summary` (
 
 
      `id` int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'Unique ContactSummary ID',
-     `label` varchar(255)    COMMENT 'Name of this layout.',
+     `label` varchar(255) NOT NULL   COMMENT 'Name of this layout.',
      `contact_type` varchar(255)    COMMENT 'The type of contacts this layout applies to.',
      `contact_sub_type` varchar(255)    COMMENT 'The contacts subtypes this layout applies to.',
      `groups` varchar(255)    COMMENT 'Show layout to users belonging to these groups.',
