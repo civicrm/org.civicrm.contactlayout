@@ -10,7 +10,8 @@ use CRM_Contactsummary_ExtensionUtil as E;
  * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
  */
 function _civicrm_api3_contact_summary_create_spec(&$spec) {
-  // $spec['some_parameter']['api.required'] = 1;
+  $spec['label']['api.required'] = 1;
+  $spec['data']['api.required'] = 1;
 }
 
 /**
