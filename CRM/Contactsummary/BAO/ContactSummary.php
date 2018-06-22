@@ -28,11 +28,6 @@ class CRM_Contactsummary_BAO_ContactSummary extends CRM_Contactsummary_DAO_Conta
           'tpl_file' => 'CRM/Contactsummary/Page/Inline/CustomFieldSet.tpl',
           'custom_group_id' => 1,
         ],
-        [
-          'title' => ts('MultiValue Test'),
-          'tpl_file' => 'CRM/Contactsummary/Page/Inline/CustomFieldSet.tpl',
-          'custom_group_id' => 7,
-        ],
       ],
       [
         [
@@ -44,9 +39,9 @@ class CRM_Contactsummary_BAO_ContactSummary extends CRM_Contactsummary_DAO_Conta
           'tpl_file' => 'CRM/Contactsummary/Page/Inline/AddressBlocks.tpl',
         ],
         [
-          'title' => ts('Summary Profile 1'),
+          'title' => ts('Name and Address'),
           'tpl_file' => 'CRM/Contactsummary/Page/Inline/Profile.tpl',
-          'profile_id' => 16,
+          'profile_id' => 1,
         ],
       ],
     ];
