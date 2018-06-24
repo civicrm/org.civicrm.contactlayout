@@ -6,14 +6,10 @@ use CRM_Contactsummary_ExtensionUtil as E;
  */
 class CRM_Contactsummary_Upgrader extends CRM_Contactsummary_Upgrader_Base {
 
-  // By convention, functions that look like "function upgrade_NNNN()" are
-  // upgrade tasks. They are executed in order (like Drupal's hook_update_N).
-
   /**
-   * Example: Run an external SQL script when the module is installed.
-   *
+   * Install script
+   */
   public function install() {
-    $this->executeSqlFile('sql/myinstall.sql');
   }
 
   /**
@@ -23,15 +19,26 @@ class CRM_Contactsummary_Upgrader extends CRM_Contactsummary_Upgrader_Base {
    * of your installation depends on accessing an entity that is itself
    * created during the installation (e.g., a setting or a managed entity), do
    * so here to avoid order of operation problems.
-   *
+   */
   public function postInstall() {
-    $customFieldId = civicrm_api3('CustomField', 'getvalue', array(
-      'return' => array("id"),
-      'name' => "customFieldCreatedViaManagedHook",
-    ));
-    civicrm_api3('Setting', 'create', array(
-      'myWeirdFieldSetting' => array('id' => $customFieldId, 'weirdness' => 1),
-    ));
+    // Add menu item for contact summary editor.
+    try {
+      $parent = Civi\Api4\Navigation::get()
+        ->addWhere('name', '=', 'Customize Data and Screens')
+        ->setLimit(1)
+        ->execute()
+        ->first();
+      Civi\Api4\Navigation::create()
+        ->addValue('label', E::ts('Contact Summary Layouts'))
+        ->addValue('name', 'contact_summary_editor')
+        ->addValue('permission', 'administer CiviCRM')
+        ->addValue('url', 'civicrm/a/#/contact-summary-editor')
+        ->addValue('parent_id', $parent['id'])
+        ->execute();
+    }
+    catch (Exception $e) {
+      // Couldn't create menu item.
+    }
   }
 
   /**
