@@ -45,11 +45,9 @@
       <labelColumn>label</labelColumn>
       <condition>parent_id IS NULL</condition>
     </pseudoconstant>
-    <serialize>SEPARATOR_BOOKEND</serialize>
     <add>1.0</add>
     <html>
       <type>Select</type>
-      <multiple>1</multiple>
     </html>
   </field>
 
@@ -104,11 +102,12 @@
   </field>
 
   <field>
-    <name>data</name>
+    <name>blocks</name>
     <type>longtext</type>
     <comment>Contains json encoded layout blocks.</comment>
     <add>1.0</add>
     <serialize>JSON</serialize>
+    <required>true</required>
   </field>
 
 </table>

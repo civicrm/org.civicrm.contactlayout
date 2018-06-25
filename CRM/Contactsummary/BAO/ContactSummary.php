@@ -4,6 +4,8 @@ use CRM_Contactsummary_ExtensionUtil as E;
 class CRM_Contactsummary_BAO_ContactSummary extends CRM_Contactsummary_DAO_ContactSummary {
 
   /**
+   * Fetch the right layout
+   *
    * @param int $cid
    *   Id of contact being displayed.
    * @param int $uid
@@ -12,46 +14,84 @@ class CRM_Contactsummary_BAO_ContactSummary extends CRM_Contactsummary_DAO_Conta
    * @return array
    */
   public static function getLayout($cid, $uid = NULL) {
-    // Mock output for development purposes. WIP.
-    $mockLayout = [
-      [
-        [
-          'title' => ts('Email'),
-          'tpl_file' => 'CRM/Contact/Page/Inline/Email.tpl',
-        ],
-        [
-          'title' => ts('Website'),
-          'tpl_file' => 'CRM/Contact/Page/Inline/Website.tpl',
-        ],
-        [
-          'title' => ts('Constituent Info'),
-          'tpl_file' => 'CRM/Contactsummary/Page/Inline/CustomFieldSet.tpl',
-          'custom_group_id' => 1,
-        ],
-      ],
-      [
-        [
-          'title' => ts('Phone'),
-          'tpl_file' => 'CRM/Contact/Page/Inline/Phone.tpl',
-        ],
-        [
-          'title' => ts('Address'),
-          'tpl_file' => 'CRM/Contactsummary/Page/Inline/AddressBlocks.tpl',
-        ],
-        [
-          'title' => ts('Name and Address'),
-          'tpl_file' => 'CRM/Contactsummary/Page/Inline/Profile.tpl',
-          'profile_id' => 1,
-        ],
-      ],
-    ];
-    return $mockLayout;
+    $uid = $uid ?: \CRM_Core_Session::getLoggedInContactID();
+    $contact = \Civi\Api4\Contact::get()
+      ->addWhere('id', '=', $cid)
+      ->setSelect(['contact_type', 'contact_sub_type'])
+      ->execute()
+      ->first();
+    $layout = \Civi\Api4\ContactSummary::get()
+      ->setLimit(1)
+      ->addSelect('blocks')
+      ->addClause('OR', ['contact_type', 'IS NULL'], ['contact_type', 'LIKE', '%' . $contact['contact_type'] . '%'])
+      ->addOrderBy('weight');
+    if (!empty($contact['contact_sub_type'])) {
+      $layout->addClause('OR', ['contact_sub_type', 'IS NULL'], ['contact_sub_type', 'IN', $contact['contact_sub_type']]);
+    }
+    $layout = CRM_Utils_Array::value('blocks', $layout->execute()->first());
+    self::loadLayout($layout);
+    return $layout;
+  }
+
+  /**
+   * Merge block data with a saved layout.
+   *
+   * @param $layout
+   */
+  public static function loadLayout(&$layout) {
+    if ($layout) {
+      foreach ($layout as &$column) {
+        foreach ($column as &$block) {
+          $blockInfo = self::getBlock($block['name']);
+          if ($blockInfo) {
+            $block += $blockInfo;
+          }
+          // If this block is missing, invalidate it
+          else {
+            $block = FALSE;
+          }
+        }
+        // Remove invalid blocks
+        $column = array_filter($column);
+      }
+    }
   }
 
   /**
    * @return array
    */
   public static function getAllBlocks() {
+    if (!isset(\Civi::$statics[__CLASS__]['blocks'])) {
+      \Civi::$statics[__CLASS__]['blocks'] = self::loadAllBlocks();
+      foreach (\Civi::$statics[__CLASS__]['blocks'] as $groupName => &$group) {
+        $group['name'] = $groupName;
+        foreach ($group['blocks'] as $blockName => &$block) {
+          $block['name'] = "$groupName.$blockName";
+        }
+      }
+    }
+    return \Civi::$statics[__CLASS__]['blocks'];
+  }
+
+  /**
+   * Fetches a block based on its full name.
+   *
+   * @param string $fullName
+   *
+   * @return null|array
+   */
+  public static function getBlock($fullName) {
+    list($groupName, $blockName) = explode('.', $fullName, 2);
+    $group = CRM_Utils_Array::value($groupName, self::getAllBlocks());
+    return isset($group['blocks'][$blockName]) ? $group['blocks'][$blockName] : NULL;
+  }
+
+  /**
+   * Fetch raw block info and invoke hook_civicrm_contactSummaryBlocks.
+   *
+   * @return array
+   */
+  protected static function loadAllBlocks() {
     $blocks = [
       'core' => [
         'title' => ts('Predefined Blocks'),

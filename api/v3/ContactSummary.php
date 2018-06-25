@@ -11,7 +11,7 @@ use CRM_Contactsummary_ExtensionUtil as E;
  */
 function _civicrm_api3_contact_summary_create_spec(&$spec) {
   $spec['label']['api.required'] = 1;
-  $spec['data']['api.required'] = 1;
+  $spec['blocks']['api.required'] = 1;
 }
 
 /**

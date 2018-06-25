@@ -21,6 +21,10 @@
     <ver>4.7</ver>
   </compatibility>
   <comments></comments>
+  <requires>
+    <ext>org.civicrm.api4</ext>
+    <ext>org.civicrm.shoreditch</ext>
+  </requires>
   <civix>
     <namespace>CRM/Contactsummary</namespace>
   </civix>

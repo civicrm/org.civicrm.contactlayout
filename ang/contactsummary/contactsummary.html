@@ -1,0 +1,64 @@
+<div id="bootstrap-theme">
+  <div crm-ui-debug="layouts"></div>
+  <h1 crm-page-title>{{ts('Contact Summary Editor')}}</h1>
+
+  <div id="contactSummaryEditor" class="row">
+
+    <div id="contactSummaryLayouts" class="col-md-3">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <div class="btn-group btn-group-md pull-right">
+            <button class="btn btn-primary"><i class="crm-i fa-plus"></i> {{ ts('Layout') }}</button>
+          </div>
+          <h3 class="panel-title">
+            {{ ts('Layouts') }}
+          </h3>
+        </div>
+        <div class="panel-body">
+          <div class="panel-inner">
+            <div class="cse-layout-item" ng-repeat="layout in layouts" ng-class="{'cse-item-selected': layout == selectedLayout}" ng-click="selectLayout(layout)">
+              <h4 class="cse-layout-item-title">{{ layout.label }}</h4>
+              <div class="cse-layout-item-contact_types">{{ ts('Show: %1', {1: showContactTypes(layout)}) }}</div>
+              <div class="cse-layout-item-groups">{{ ts('To: %1', {1: showGroups(layout)}) }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="contactSummaryEdit" class="col-md-9">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title" >
+            <span ng-if="!selectedLayout">{{ ts('No layout selected') }}</span>
+            <div class="btn-group btn-group-md pull-right">
+              <button class="btn" ng-class="{'btn-primary': !changesSaved}" ng-disabled="changesSaved">
+                <i class="crm-i fa-check"></i>
+                <span ng-if="changesSaved">{{ ts('All Saved') }}</span>
+                <span ng-if="!changesSaved">{{ ts('Save All') }}</span>
+              </button>
+            </div>
+            <form class="form-inline" ng-if="selectedLayout">
+              <label for="selected_layout_label">{{ ts('Editing:') }}</label>
+              <input id="selected_layout_label" class="form-control" placeholder="{{ ts('Layout name') }}" ng-model="selectedLayout.label" />
+            </form>
+          </h3>
+        </div>
+        <div class="panel-body">
+          <div ng-if="selectedLayout">
+            <nav class="navbar navbar-default">
+              <div class="container-fluid">
+                <form class="navbar-form navbar-left">
+                  <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search">
+                  </div>
+                </form>
+              </div>
+            </nav>
+            <div class="panel-inner"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
