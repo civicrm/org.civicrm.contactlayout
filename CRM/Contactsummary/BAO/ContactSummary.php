@@ -95,14 +95,17 @@ class CRM_Contactsummary_BAO_ContactSummary extends CRM_Contactsummary_DAO_Conta
     $blocks = [
       'core' => [
         'title' => ts('Predefined Blocks'),
+        'icon' => 'fa-lock',
         'blocks' => [],
       ],
       'custom' => [
         'title' => ts('Custom Field Sets'),
+        'icon' => 'fa-gear',
         'blocks' => [],
       ],
       'profile' => [
         'title' => ts('Profiles'),
+        'icon' => 'fa-edit',
         'blocks' => [],
       ],
     ];
