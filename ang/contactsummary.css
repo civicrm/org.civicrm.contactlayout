@@ -24,9 +24,14 @@
 }
 #bootstrap-theme #contactSummaryEditor .panel-heading .btn {
   padding: 7px 13px;
+  border-color: white;
 }
 #bootstrap-theme #contactSummaryEditor .panel-heading .btn i {
   margin-right: 4px;
+}
+#bootstrap-theme #contactSummaryEditor .alert {
+  padding: 10px;
+  margin: 0;
 }
 
 #bootstrap-theme #contactSummaryEditor .cse-layout-item {
@@ -89,12 +94,21 @@
   padding: 0;
 }
 #cse-block-container #cse-palette-col > h4 {
-  padding: 8px 11px;
+  padding: 10px;
   border-radius: 2px 2px 0 0;
   margin: 0;
   background-color: #42afcb;
   color: white;
   font-weight: 600;
+  position: relative;
+}
+#cse-block-container #cse-palette-col > h4 .btn-group {
+  position: relative;
+  top: -5px;
+}
+#cse-block-container #cse-palette-col > h4 .btn {
+  padding: 3px 8px;
+  border-color: white;
 }
 #cse-block-container #cse-palette {
   color: #333;

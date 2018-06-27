@@ -15,6 +15,10 @@
           </h3>
         </div>
         <div class="panel-body">
+          <div class="alert alert-warning" ng-if="deletedLayout">
+            {{ ts('Deleted %1', {1: deletedLayout.label}) }}
+            <a href ng-click="restoreLayout()">{{ ts('Undo') }}</a>
+          </div>
           <div class="panel-inner" ui-sortable="{axis: 'y'}" ng-model="layouts">
             <div class="cse-layout-item" ng-repeat="layout in layouts" ng-class="{'cse-item-selected': layout == selectedLayout}" ng-click="selectLayout(layout)">
               <div class="btn-group btn-group-sm cse-layout-delete">
@@ -82,7 +86,7 @@
                 <div id="cse-palette-col">
                   <h4>
                     {{ ts('Blocks') }}
-                    <div class="btn-group btn-group-xs pull-right">
+                    <div class="btn-group btn-group-sm pull-right">
                       <button type="button" class="btn btn-primary" ng-click="newProfile()">
                         <i class="crm-i fa-plus"></i> Block
                       </button>

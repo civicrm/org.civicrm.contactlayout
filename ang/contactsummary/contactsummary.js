@@ -125,15 +125,23 @@
         blocks: [[],[]],
         palette: _.cloneDeep(allBlocks)
       };
+      $scope.deletedLayout = null;
       $scope.layouts.unshift(newLayout);
       $scope.selectedLayout = newLayout;
     };
 
     $scope.deleteLayout = function(index) {
+      $scope.deletedLayout = $scope.layouts[index];
       if ($scope.selectedLayout === $scope.layouts[index]) {
         $scope.selectedLayout = null;
       }
       $scope.layouts.splice(index, 1);
+    };
+
+    $scope.restoreLayout = function() {
+      $scope.layouts.unshift($scope.deletedLayout);
+      $scope.selectedLayout = $scope.deletedLayout;
+      $scope.deletedLayout = null;
     };
 
     $scope.newProfile = function() {
@@ -142,6 +150,7 @@
 
     $scope.save = function() {
       $scope.saving = true;
+      $scope.deletedLayout = null;
       var data = [],
         layoutWeight = 0;
       _.each($scope.layouts, function(layout) {
