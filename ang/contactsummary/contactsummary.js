@@ -29,16 +29,22 @@
   //   crmApi, crmStatus, crmUiHelp -- These are services provided by civicrm-core.
   //   data -- defined above in config().
   angular.module('contactsummary').controller('Contactsummarycontactsummary', function($scope, $timeout, crmApi4, crmStatus, crmUiHelp, data) {
-    // The ts() and hs() functions help load strings for this module.
     var ts = $scope.ts = CRM.ts('contactsummary');
     var hs = $scope.hs = crmUiHelp({file: 'CRM/contactsummary/contactsummary'});
-    $scope.paletteGroups = [];
+    $scope.paletteGroups = {};
     $scope.selectedLayout = null;
     $scope.changesSaved = 1;
     $scope.contactTypes = data.contactTypes;
-
+    $scope.layouts = data.layouts;
+    var newLayoutCount = 0;
     var allBlocks = loadBlocks(data.blocks);
-    loadLayouts(data.layouts);
+
+    // Initialize
+    if ($scope.layouts.length) {
+      loadLayouts();
+    } else {
+      $scope.newLayout();
+    }
 
     $scope.selectLayout = function(layout) {
       $scope.selectedLayout = layout;
@@ -87,6 +93,23 @@
       blocks.splice(index, 1);
     };
 
+    $scope.editBlock = function(block) {
+      var edited;
+      if (block.group === 'profile') {
+
+      } else {
+        CRM.loadForm(CRM.url(block.edit))
+          .on('crmFormSuccess', function() {
+            edited = true;
+          })
+          .on('dialogclose', function() {
+            if (edited) {
+              reloadBlocks();
+            }
+          });
+      }
+    };
+
     $scope.enforceUnique = function(e, ui) {
       if (!ui.item.sortable.received &&
         $(ui.item.sortable.droptarget).is('#cse-palette'))
@@ -95,10 +118,31 @@
       }
     };
 
+    $scope.newLayout = function() {
+      var newLayout = {
+        label: ts('Untitled %1', {1: ++newLayoutCount}),
+        blocks: [[],[]],
+        palette: _.cloneDeep(allBlocks)
+      };
+      $scope.layouts.unshift(newLayout);
+      $scope.selectedLayout = newLayout;
+    };
+
+    $scope.deleteLayout = function(index) {
+      if ($scope.selectedLayout === $scope.layouts[index]) {
+        $scope.selectedLayout = null;
+      }
+      $scope.layouts.splice(index, 1);
+    };
+
+    $scope.newProfile = function() {
+
+    };
+
     function loadBlocks(blockData) {
       allBlocks = [];
       _.each(blockData, function(group) {
-        $scope.paletteGroups.push({name: group.name, title: group.title, icon: group.icon});
+        $scope.paletteGroups[group.name] = {title: group.title, icon: group.icon};
         _.each(group.blocks, function(block) {
           block.group = group.name;
           block.icon = group.icon;
@@ -108,8 +152,7 @@
       return allBlocks;
     }
 
-    function loadLayouts(layouts) {
-      $scope.layouts = _.cloneDeep(layouts);
+    function loadLayouts() {
       _.each($scope.layouts, function(layout) {
         layout.palette = _.cloneDeep(allBlocks);
         _.each(layout.blocks, function(column) {
@@ -119,6 +162,16 @@
           });
         });
       });
+    }
+
+    function reloadBlocks() {
+      CRM.api4('ContactSummary', 'getBlocks')
+        .done(function(data) {
+          $scope.$apply(function () {
+            allBlocks = loadBlocks(data);
+            loadLayouts($scope.layouts);
+          });
+        });
     }
 
     $scope.$watch('layouts', function(a, b) {$scope.changesSaved = $scope.changesSaved === 1;}, true);

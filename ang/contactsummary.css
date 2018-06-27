@@ -37,6 +37,16 @@
   margin-bottom: 10px;
   cursor: move;
   background-color: #eee;
+  position: relative;
+}
+
+#bootstrap-theme #contactSummaryEditor .cse-layout-delete {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+#bootstrap-theme #contactSummaryEditor .cse-layout-delete .btn {
+  border: 0 none;
 }
 
 #bootstrap-theme #contactSummaryEditor .cse-item-selected {
@@ -76,7 +86,7 @@
   background-color: #f8f8f8;
 }
 #cse-block-container #cse-palette-col {
-  padding: 2px;
+  padding: 0;
 }
 #cse-block-container #cse-palette-col > h4 {
   padding: 8px 11px;
@@ -92,9 +102,6 @@
   border-radius: 0 0 2px 2px;
   border: 1px solid #42afcb;
   padding: 2px 4px;
-}
-#cse-block-container #cse-palette .cse-block-sample {
-  display: none;
 }
 #cse-block-container .cse-block {
   cursor: move;
@@ -134,11 +141,18 @@
   padding: 1px;
   margin: 0;
 }
+#cse-block-container #cse-palette .cse-block {
+  border: 1px solid #58b7d1;
+  margin-bottom: 6px;
+  margin-top: 6px;
+}
 #cse-block-container #cse-palette .cse-block-sample {
   display: none;
 }
 #cse-block-container #cse-palette .cse-block h5 {
   position: initial;
   padding: 0 10px;
+  font-size: 12px;
+  font-weight: 500;
   background: transparent;
 }

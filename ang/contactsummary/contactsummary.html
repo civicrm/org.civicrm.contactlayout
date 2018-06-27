@@ -8,7 +8,7 @@
       <div class="panel panel-primary">
         <div class="panel-heading">
           <div class="btn-group btn-group-md pull-right">
-            <button class="btn btn-primary"><i class="crm-i fa-plus"></i> {{ ts('Layout') }}</button>
+            <button class="btn btn-primary" ng-click="newLayout()"><i class="crm-i fa-plus"></i> {{ ts('Layout') }}</button>
           </div>
           <h3 class="panel-title">
             {{ ts('Layouts') }}
@@ -17,6 +17,11 @@
         <div class="panel-body">
           <div class="panel-inner" ui-sortable="{axis: 'y'}" ng-model="layouts">
             <div class="cse-layout-item" ng-repeat="layout in layouts" ng-class="{'cse-item-selected': layout == selectedLayout}" ng-click="selectLayout(layout)">
+              <div class="btn-group btn-group-sm cse-layout-delete">
+                <button class="btn btn-danger-outline" ng-click="deleteLayout($index)">
+                  <i class="crm-i fa-trash"></i>
+                </button>
+              </div>
               <h4 class="cse-layout-item-title">{{ layout.label }}</h4>
               <div class="cse-layout-item-contact_types">{{ ts('Show: %1', {1: showContactTypes(layout)}) }}</div>
               <div class="cse-layout-item-groups">{{ ts('To: %1', {1: showGroups(layout)}) }}</div>
@@ -74,7 +79,14 @@
                   <div class="cse-block" ng-repeat="block in col" ng-include="'~/contactsummary/contactsummaryblock.html'"></div>
                 </div>
                 <div id="cse-palette-col">
-                  <h4>{{ ts('Available Blocks') }}</h4>
+                  <h4>
+                    {{ ts('Blocks') }}
+                    <div class="btn-group btn-group-xs pull-right">
+                      <button type="button" class="btn btn-primary" ng-click="newProfile()">
+                        <i class="crm-i fa-plus"></i> Block
+                      </button>
+                    </div>
+                  </h4>
                   <div id="cse-palette" class="cse-col" ui-sortable="{connectWith: '.cse-col', containment: '#cse-block-container', update: enforceUnique}" ng-model="selectedLayout.palette">
                     <div class="cse-block" ng-repeat="block in selectedLayout.palette" ng-include="'~/contactsummary/contactsummaryblock.html'"></div>
                   </div>

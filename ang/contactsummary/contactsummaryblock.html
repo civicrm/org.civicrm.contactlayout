@@ -8,5 +8,6 @@
   </button>
 </div>
 <div class="cse-block-sample">
+  <p class="cse-no-sample" ng-if="!block.sample || !block.sample.length">{{ ts('(No fields)') }}</p>
   <p ng-repeat="sample in block.sample">{{ sample }}</p>
 </div>

@@ -167,6 +167,27 @@ class CRM_Contactsummary_BAO_ContactSummary extends CRM_Contactsummary_DAO_Conta
       'edit' => FALSE,
     ];
 
+    $profiles = civicrm_api3('UFJoin', 'get', [
+      'return' => ['uf_group_id.title', 'uf_group_id.name', 'uf_group_id'],
+      'options' => ['limit' => 0],
+      'module' => 'Contact Summary',
+      'api.UFField.get' => [
+        'return' => 'label',
+        'is_active' => 1,
+        'uf_group_id' => '$value.uf_group_id',
+        'options' => ['limit' => 10, 'sort' => 'weight'],
+      ],
+    ]);
+    foreach ($profiles['values'] as $profile) {
+      $blocks['profile']['blocks'][$profile['uf_group_id.name']] = [
+        'title' => $profile['uf_group_id.title'],
+        'tpl_file' => 'CRM/Contactsummary/Page/Inline/Profile.tpl',
+        'profile_id' => $profile['uf_group_id'],
+        'sample' => CRM_Utils_Array::collect('label', $profile['api.UFField.get']['values']),
+        'edit' => TRUE,
+      ];
+    }
+
     $customGroups = civicrm_api3('CustomGroup', 'get', [
       'extends' => ['IN' => ['Contact', 'Individual', 'Household', 'Organization']],
       'style' => 'Inline',
@@ -185,28 +206,7 @@ class CRM_Contactsummary_BAO_ContactSummary extends CRM_Contactsummary_DAO_Conta
         'custom_group_id' => $groupId,
         'sample' => CRM_Utils_Array::collect('label', $group['api.CustomField.get']['values']),
         'multiple' => !empty($group['is_multiple']),
-        'edit' => 'FIXME',
-      ];
-    }
-
-    $profiles = civicrm_api3('UFJoin', 'get', [
-      'return' => ['uf_group_id.title', 'uf_group_id.name', 'uf_group_id'],
-      'options' => ['limit' => 0],
-      'module' => 'Contact Summary',
-      'api.UFField.get' => [
-        'return' => 'label',
-        'is_active' => 1,
-        'uf_group_id' => '$value.uf_group_id',
-        'options' => ['limit' => 10, 'sort' => 'weight'],
-      ],
-    ]);
-    foreach ($profiles['values'] as $profile) {
-      $blocks['profile']['blocks'][$profile['uf_group_id.name']] = [
-        'title' => $profile['uf_group_id.title'],
-        'tpl_file' => 'CRM/Contactsummary/Page/Inline/Profile.tpl',
-        'profile_id' => $profile['uf_group_id'],
-        'sample' => CRM_Utils_Array::collect('label', $profile['api.UFField.get']['values']),
-        'edit' => 'FIXME',
+        'edit' => 'civicrm/admin/custom/group/field?reset=1&action=browse&gid=' . $groupId,
       ];
     }
 
