@@ -34,6 +34,7 @@
     $scope.paletteGroups = {};
     $scope.selectedLayout = null;
     $scope.changesSaved = 1;
+    $scope.saving = false;
     $scope.contactTypes = data.contactTypes;
     $scope.layouts = data.layouts;
     var newLayoutCount = 0;
@@ -139,6 +140,36 @@
 
     };
 
+    $scope.save = function() {
+      $scope.saving = true;
+      var data = [],
+        layoutWeight = 0;
+      _.each($scope.layouts, function(layout) {
+        var item = {
+          label: layout.label,
+          weight: ++layoutWeight,
+          id: layout.id,
+          contact_type: layout.contact_type,
+          contact_sub_type: layout.contact_sub_type,
+          groups: layout.groups,
+          blocks: [[],[]]
+        };
+        _.each(layout.blocks, function(blocks, col) {
+          _.each(blocks, function(block) {
+            item.blocks[col].push(_.pick(block, 'name'));
+          });
+        });
+        data.push(item);
+      });
+      CRM.api4('ContactSummary', 'replace', {records: data})
+        .done(function() {
+          $scope.$apply(function() {
+            $scope.saving = false;
+            $scope.changesSaved = true;
+          });
+        });
+    };
+
     function loadBlocks(blockData) {
       allBlocks = [];
       _.each(blockData, function(group) {
@@ -167,7 +198,7 @@
     function reloadBlocks() {
       CRM.api4('ContactSummary', 'getBlocks')
         .done(function(data) {
-          $scope.$apply(function () {
+          $scope.$apply(function() {
             allBlocks = loadBlocks(data);
             loadLayouts($scope.layouts);
           });
