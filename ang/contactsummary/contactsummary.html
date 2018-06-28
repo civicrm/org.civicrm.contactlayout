@@ -38,7 +38,6 @@
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title" >
-            <span ng-if="!selectedLayout">{{ ts('No layout selected') }}</span>
             <div class="btn-group btn-group-md pull-right">
               <button class="btn" ng-class="{'btn-primary': !changesSaved && !saving, 'btn-warning': saving, 'btn-success': changesSaved}" ng-disabled="changesSaved || saving" ng-click="save()">
                 <i class="crm-i" ng-class="{'fa-check': !saving, 'fa-spin fa-spinner': saving}"></i>
@@ -47,6 +46,7 @@
                 <span ng-if="saving">{{ ts('Saving...') }}</span>
               </button>
             </div>
+            <span ng-if="!selectedLayout">{{ ts('No layout selected') }}</span>
             <form class="form-inline" ng-if="selectedLayout">
               <label for="selected_layout_label">{{ ts('Edit Layout:') }}</label>
               <input id="selected_layout_label" class="form-control" maxlength="255" placeholder="{{ ts('Layout name') }}" ng-model="selectedLayout.label" />

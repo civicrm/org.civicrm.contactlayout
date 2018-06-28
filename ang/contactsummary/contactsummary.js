@@ -8,6 +8,9 @@
         // If you need to look up data when opening the page, list it out
         // under 'resolve'.
         resolve: {
+          profile_status: function(crmProfiles) {
+            return crmProfiles.load();
+          },
           data: function(crmApi4) {
             return crmApi4({
               layouts: ['ContactSummary', 'get', {orderBy: {weight: 'ASC'}}],
@@ -37,8 +40,9 @@
     $scope.saving = false;
     $scope.contactTypes = data.contactTypes;
     $scope.layouts = data.layouts;
-    var newLayoutCount = 0;
-    var allBlocks = loadBlocks(data.blocks);
+    var newLayoutCount = 0,
+      profileEntities = [{entity_name: "contact_1", entity_type: "IndividualModel"}],
+      allBlocks = loadBlocks(data.blocks);
 
     // Initialize
     if ($scope.layouts.length) {
@@ -96,8 +100,8 @@
 
     $scope.editBlock = function(block) {
       var edited;
-      if (block.group === 'profile') {
-
+      if (block.profile_id) {
+        editProfile(block.profile_id);
       } else {
         CRM.loadForm(CRM.url(block.edit))
           .on('crmFormSuccess', function() {
@@ -145,8 +149,41 @@
     };
 
     $scope.newProfile = function() {
-
+      var profileEditor = new CRM.Designer.DesignerDialog({
+        findCreateUfGroupModel: function(options) {
+          // Initialize new UF group
+          var ufGroupModel = new CRM.UF.UFGroupModel();
+          ufGroupModel.getRel('ufEntityCollection').reset(profileEntities);
+          options.onLoad(ufGroupModel);
+        }
+      }).render();
+      CRM.designerApp.vent.off('ufSaved', null, 'contactsummary');
+      CRM.designerApp.vent.on('ufSaved', function() {
+        var newId = profileEditor.model.get('id');
+        reloadBlocks(newId);
+      }, 'contactsummary');
     };
+
+    function editProfile(ufId) {
+      var profileEditor = new CRM.Designer.DesignerDialog({
+        // Copied from crm.profile-selector.js doEdit() method.
+        findCreateUfGroupModel: function(options) {
+          CRM.api('UFGroup', 'getsingle', {id: ufId, "api.UFField.get": 1}, {
+            success: function(formData) {
+              // Note: With chaining, API returns some extraneous keys that aren't part of UFGroupModel
+              var ufGroupModel = new CRM.UF.UFGroupModel(_.pick(formData, _.keys(CRM.UF.UFGroupModel.prototype.schema)));
+              ufGroupModel.setUFGroupModel(ufGroupModel.calculateContactEntityType(), profileEntities);
+              ufGroupModel.getRel('ufFieldCollection').reset(_.values(formData["api.UFField.get"].values));
+              options.onLoad(ufGroupModel);
+            }
+          });
+        }
+      }).render();
+      CRM.designerApp.vent.off('ufSaved', null, 'contactsummary');
+      CRM.designerApp.vent.on('ufSaved', function() {
+        reloadBlocks();
+      }, 'contactsummary');
+    }
 
     $scope.save = function() {
       $scope.saving = true;
@@ -204,15 +241,28 @@
       });
     }
 
-    function reloadBlocks() {
-      CRM.api4('ContactSummary', 'getBlocks')
+    function reloadBlocks(newProfileId) {
+      var calls = [['ContactSummary', 'getBlocks']];
+      // If a new profile was just created, link it to this extension.
+      if (newProfileId) {
+        calls.unshift(['UFJoin', 'create', {values: {module: "Contact Summary", uf_group_id: newProfileId}}]);
+      }
+      CRM.api4(calls)
         .done(function(data) {
           $scope.$apply(function() {
-            allBlocks = loadBlocks(data);
+            allBlocks = loadBlocks(_.last(data));
             loadLayouts($scope.layouts);
           });
         });
     }
+
+    // Load schema for backbone-based profile editor
+    CRM.civiSchema = {
+      IndividualModel: null,
+      OrganizationModel: null,
+      HouseholdModel: null
+    };
+    CRM.Schema.reloadModels();
 
     $scope.$watch('layouts', function(a, b) {$scope.changesSaved = $scope.changesSaved === 1;}, true);
 
