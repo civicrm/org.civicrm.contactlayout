@@ -23,13 +23,15 @@ Please contribute to the [CiviCRM.org Make-it-Happen campaign](https://civicrm.o
 * Once installed, navigate to **Administer -> Customize Data and Screens -> Contact Summary Layouts** to open the editor.
 * Create one or more layouts, dragging the desired blocks from the palette.
 * Click the "New Block" button to create a block combining any contact fields you desire (including custom fields).
-* New blocks can be added to one or more layouts. Editing a block in use by multiple layouts will affect them all.
-* When viewing a contact, the system will display the first layout in the list that applies to a given contact type being displayed **if** the logged-in user belongs to the specified group(s).
-* If no layout matches those criteria, the default system layout will be used.
+* Your blocks can be added to one or more layouts. Editing a block in use by multiple layouts will affect them all.
+* The "Show" option can specify a contact type, e.g. if a layout is specifically designed for Organization contacts rather than individuals.
+* The "To" option can restrict a layout to be visible to only certain logged-in users.
+* When a user views a contact, the first layout in the list which meets the "Show" and "To" criteria will be shown.
+* If no layout matches the criteria, the default system layout will be used.
 
 ## Integrates with
 * [Shoreditch theme](https://github.com/civicrm/org.civicrm.shoreditch) - works with or without full theme override mode.
-* [Relationship block extension](https://github.com/eileenmcnaughton/org.wikimedia.relationshipblock) - provides an additional block for your layouts.
+* [Relationship block extension](https://github.com/eileenmcnaughton/org.wikimedia.relationshipblock) - provides a block for displaying important relationships.
 
 ## For developers
 
@@ -45,12 +47,8 @@ Hook example:
  * @link https://github.com/civicrm/org.civicrm.contactsummary
  */
 function example_civicrm_contactSummaryBlocks(&$blocks) {
-  // Provide our own group for this block to visually distinguish it on the contact summary editor.
-  $blocks['example'] = CRM_Utils_Array::value('example', $blocks, [
-    'title' => ts('Example Blocks'),
-    'icon' => 'fa-rocket',
-  ]);
-  $blocks['example']['blocks']['example_block'] = [
+  // Register our block with the layout editor.
+  $blocks['core']['blocks']['example_block'] = [
     'title' => ts('Example Block'),
     'tpl_file' => 'CRM/Example/ExampleBlock.tpl',
     'sample' => [ts('Example field'), ts('Another example field')],
