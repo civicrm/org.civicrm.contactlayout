@@ -22,9 +22,10 @@ Please contribute to the [CiviCRM.org Make-it-Happen campaign](https://civicrm.o
 
 * Once installed, navigate to **Administer -> Customize Data and Screens -> Contact Summary Layouts** to open the editor.
 * Create one or more layouts, dragging the desired blocks from the palette.
-* Click the "New Block" button to create a block combining any contact fields (including custom fields) you desire.
+* Click the "New Block" button to create a block combining any contact fields you desire (including custom fields).
 * New blocks can be added to one or more layouts. Editing a block in use by multiple layouts will affect them all.
-* When viewing a contact, the system will display the first layout in the list that applies to a given contact type being displayed **and** the logged-in user belongs to the specified group(s).
+* When viewing a contact, the system will display the first layout in the list that applies to a given contact type being displayed **if** the logged-in user belongs to the specified group(s).
+* If no layout matches those criteria, the default system layout will be used.
 
 ## Integrates with
 * [Shoreditch theme](https://github.com/civicrm/org.civicrm.shoreditch) - works with or without full theme override mode.

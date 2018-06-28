@@ -22,6 +22,9 @@
 #bootstrap-theme #contactSummaryEditor .panel-heading .btn-group {
   top: -8px;
 }
+#bootstrap-theme #contactSummaryEdit .panel-heading .btn-group {
+  top: -6px;
+}
 #bootstrap-theme #contactSummaryEditor .panel-heading .btn {
   padding: 7px 13px;
   border-color: white;
