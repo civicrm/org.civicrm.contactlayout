@@ -11,7 +11,7 @@ class CRM_Contactsummary_BAO_ContactSummary extends CRM_Contactsummary_DAO_Conta
    * @param int $uid
    *   Contact id of current user.
    *
-   * @return array
+   * @return array|null
    */
   public static function getLayout($cid, $uid = NULL) {
     $uid = $uid ?: \CRM_Core_Session::getLoggedInContactID();
@@ -20,13 +20,30 @@ class CRM_Contactsummary_BAO_ContactSummary extends CRM_Contactsummary_DAO_Conta
       ->setSelect(['contact_type', 'contact_sub_type'])
       ->execute()
       ->first();
+    $groups = \CRM_Contact_BAO_GroupContact::getContactGroup($uid, 'Added', NULL, FALSE, TRUE, FALSE, TRUE, NULL, TRUE);
+    $groupIds = array_column($groups, 'group_id');
     $layout = \Civi\Api4\ContactSummary::get()
       ->setLimit(1)
       ->addSelect('blocks')
-      ->addClause('OR', ['contact_type', 'IS NULL'], ['contact_type', 'LIKE', '%' . $contact['contact_type'] . '%'])
+      ->addClause('OR', ['contact_type', 'IS NULL'], ['contact_type', '=', $contact['contact_type']])
       ->addOrderBy('weight');
     if (!empty($contact['contact_sub_type'])) {
-      $layout->addClause('OR', ['contact_sub_type', 'IS NULL'], ['contact_sub_type', 'IN', $contact['contact_sub_type']]);
+      $subClauses = [['contact_sub_type', 'IS NULL']];
+      foreach ($contact['contact_sub_type'] as $subType) {
+        $subClauses[] = ['contact_sub_type', 'LIKE', '%' . CRM_Core_DAO::VALUE_SEPARATOR . $subType . CRM_Core_DAO::VALUE_SEPARATOR . '%'];
+      }
+      $layout->addClause('OR', $subClauses);
+    }
+    if (!empty($groups)) {
+      $groups = \Civi\Api4\Group::get()
+        ->addSelect('name')
+        ->addWhere('id', 'IN', $groupIds)
+        ->execute();
+      $subClauses = [['groups', 'IS NULL']];
+      foreach ($groups as $group) {
+        $subClauses[] = ['groups', 'LIKE', '%' . CRM_Core_DAO::VALUE_SEPARATOR . $group['name'] . CRM_Core_DAO::VALUE_SEPARATOR . '%'];
+      }
+      $layout->addClause('OR', $subClauses);
     }
     $layout = CRM_Utils_Array::value('blocks', $layout->execute()->first());
     self::loadLayout($layout);
