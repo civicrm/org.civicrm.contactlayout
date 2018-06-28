@@ -249,6 +249,7 @@
       // If a new profile was just created, link it to this extension.
       if (newProfileId) {
         calls.unshift(['UFJoin', 'create', {values: {module: "Contact Summary", uf_group_id: newProfileId}}]);
+        calls.unshift(['UFJoin', 'create', {values: {module: "Profile", uf_group_id: newProfileId}}]);
       }
       CRM.api4(calls)
         .done(function(data) {
