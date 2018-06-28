@@ -29,6 +29,11 @@
 #bootstrap-theme #contactSummaryEditor .panel-heading .btn i {
   margin-right: 4px;
 }
+#bootstrap-theme #contactSummaryEditor .panel-heading .panel-title form {
+  position: relative;
+  top: -3px;
+}
+
 #bootstrap-theme #contactSummaryEditor .alert {
   padding: 10px;
   margin: 0;
@@ -43,6 +48,11 @@
   cursor: move;
   background-color: #eee;
   position: relative;
+}
+
+#bootstrap-theme #contactSummaryEditor h4.cse-layout-item-title {
+  font-weight: 600;
+  margin: 7px 0;
 }
 
 #bootstrap-theme #contactSummaryEditor .cse-layout-delete {
@@ -94,7 +104,7 @@
   padding: 0;
 }
 #cse-block-container #cse-palette-col > h4 {
-  padding: 10px;
+  padding: 11px 10px;
   border-radius: 2px 2px 0 0;
   margin: 0;
   background-color: #0071bd;
@@ -120,7 +130,7 @@
 #cse-block-container .cse-block {
   cursor: move;
   border-radius: 4px;
-  border: 2px solid #58b7d1;
+  border: 2px solid #0071bd;
   position: relative;
   background-color: white;
   margin-bottom: 14px;
@@ -135,7 +145,7 @@
   border: 0 none;
 }
 #cse-block-container .cse-block h5 {
-  color: #58b7d1;
+  color: #0071bd;
   position: absolute;
   background-color: white;
   background: linear-gradient(to bottom, #f8f8f8 0%,#f8f8f8 50%,#fff 51%,#fff 100%);
@@ -156,7 +166,7 @@
   margin: 0;
 }
 #cse-block-container #cse-palette .cse-block {
-  border: 1px solid #58b7d1;
+  border: 1px solid #0071bd;
   margin-bottom: 6px;
   margin-top: 6px;
 }

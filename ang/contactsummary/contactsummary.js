@@ -94,8 +94,8 @@
     };
 
     $scope.removeBlock = function(index, blocks) {
-      $scope.selectedLayout.palette.push(blocks[index]);
       blocks.splice(index, 1);
+      loadLayout($scope.selectedLayout);
     };
 
     $scope.editBlock = function(block) {
@@ -195,9 +195,9 @@
           label: layout.label,
           weight: ++layoutWeight,
           id: layout.id,
-          contact_type: layout.contact_type,
-          contact_sub_type: layout.contact_sub_type,
-          groups: layout.groups,
+          contact_type: layout.contact_type || null,
+          contact_sub_type: layout.contact_sub_type && layout.contact_sub_type.length ? layout.contact_sub_type : null,
+          groups: layout.groups && layout.groups.length ? layout.groups : null,
           blocks: [[],[]]
         };
         _.each(layout.blocks, function(blocks, col) {
@@ -230,18 +230,21 @@
     }
 
     function loadLayouts() {
-      _.each($scope.layouts, function(layout) {
-        layout.palette = _.cloneDeep(allBlocks);
-        _.each(layout.blocks, function(column) {
-          _.each(column, function(block) {
-            $.extend(block, _.where(layout.palette, {name: block.name})[0]);
-            _.remove(layout.palette, {name: block.name});
-          });
+      _.each($scope.layouts, loadLayout);
+    }
+
+    function loadLayout(layout) {
+      layout.palette = _.cloneDeep(allBlocks);
+      _.each(layout.blocks, function(column) {
+        _.each(column, function(block) {
+          $.extend(block, _.where(layout.palette, {name: block.name})[0]);
+          _.remove(layout.palette, {name: block.name});
         });
       });
     }
 
     function reloadBlocks(newProfileId) {
+      $scope.deletedLayout = null;
       var calls = [['ContactSummary', 'getBlocks']];
       // If a new profile was just created, link it to this extension.
       if (newProfileId) {
