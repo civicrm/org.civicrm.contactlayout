@@ -44,13 +44,6 @@
       profileEntities = [{entity_name: "contact_1", entity_type: "IndividualModel"}],
       allBlocks = loadBlocks(data.blocks);
 
-    // Initialize
-    if ($scope.layouts.length) {
-      loadLayouts();
-    } else {
-      $scope.newLayout();
-    }
-
     $scope.selectLayout = function(layout) {
       $scope.selectedLayout = layout;
     };
@@ -268,7 +261,17 @@
     };
     CRM.Schema.reloadModels();
 
-    $scope.$watch('layouts', function(a, b) {$scope.changesSaved = $scope.changesSaved === 1;}, true);
+    $scope.$watch('layouts', function (a, b) {
+      $scope.changesSaved = $scope.changesSaved === 1;
+    }, true);
+
+    // Initialize
+    if ($scope.layouts.length) {
+      loadLayouts();
+    }
+    else {
+      $scope.newLayout();
+    }
 
   });
 
