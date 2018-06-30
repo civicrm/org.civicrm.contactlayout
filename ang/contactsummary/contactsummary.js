@@ -200,7 +200,12 @@
         });
         data.push(item);
       });
-      CRM.api4('ContactSummary', 'replace', {records: data})
+      // Replace records (or delete all if there are none)
+      var apiCall = ['ContactSummary', 'delete', {where: [['id', 'IS NOT NULL']]}];
+      if (data.length) {
+        apiCall = ['ContactSummary', 'replace', {records: data}];
+      }
+      CRM.api4([apiCall])
         .done(function() {
           $scope.$apply(function() {
             $scope.saving = false;
