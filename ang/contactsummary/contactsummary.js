@@ -178,12 +178,13 @@
       }, 'contactsummary');
     }
 
+    // Called when pressing the save button
     $scope.save = function() {
-      $scope.saving = true;
-      $scope.deletedLayout = null;
       var data = [],
-        layoutWeight = 0;
+        layoutWeight = 0,
+        emptyLayouts = [];
       _.each($scope.layouts, function(layout) {
+        var empty = true;
         var item = {
           label: layout.label,
           weight: ++layoutWeight,
@@ -196,23 +197,38 @@
         _.each(layout.blocks, function(blocks, col) {
           _.each(blocks, function(block) {
             item.blocks[col].push(_.pick(block, 'name'));
+            empty = false;
           });
         });
+        if (empty) {
+          emptyLayouts.push(layout.label);
+        }
         data.push(item);
       });
+      if (emptyLayouts.length) {
+        alert(ts('The layout %1 is empty. Please add at least one block before saving.', {1: emptyLayouts.join(', ')}));
+      } else {
+        writeRecords(data);
+      }
+    };
+
+    // Write layout data to the server
+    function writeRecords(data) {
+      $scope.saving = true;
+      $scope.deletedLayout = null;
       // Replace records (or delete all if there are none)
       var apiCall = ['ContactSummary', 'delete', {where: [['id', 'IS NOT NULL']]}];
       if (data.length) {
         apiCall = ['ContactSummary', 'replace', {records: data}];
       }
       CRM.api4([apiCall])
-        .done(function() {
-          $scope.$apply(function() {
+        .done(function () {
+          $scope.$apply(function () {
             $scope.saving = false;
             $scope.changesSaved = true;
           });
         });
-    };
+    }
 
     function loadBlocks(blockData) {
       allBlocks = [];
