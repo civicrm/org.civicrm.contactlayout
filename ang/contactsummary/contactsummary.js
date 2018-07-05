@@ -108,6 +108,31 @@
       }
     };
 
+    $scope.deleteBlock = function(block) {
+      var message = [_.escape(ts('Delete the block "%1"?', {1: block.title}))];
+      _.each($scope.layouts, function (layout) {
+        if (_.where(layout.blocks[0].concat(layout.blocks[1]), {name: block.name}).length) {
+          message.push(_.escape(ts('It is currently part of the "%1" layout.', {1: layout.label})));
+        }
+      });
+      CRM.confirm({
+        message: '<p>' + message.join('</p><p>') + '</p>',
+        options: {no: ts('No'), yes: ts('Yes')}
+      })
+        .on('crmConfirm:yes', function() {
+          // Remove block from all layouts
+          _.each($scope.layouts, function (layout) {
+            _.each(layout.blocks, function(blocks) {
+              var idx = _.findIndex(blocks, {name: block.name});
+              if (idx > -1) {
+                blocks.splice(idx, 1);
+              }
+            });
+          });
+          reloadBlocks(block.profile_id, 'delete');
+        });
+    };
+
     $scope.enforceUnique = function(e, ui) {
       if (!ui.item.sortable.received &&
         $(ui.item.sortable.droptarget).is('#cse-palette'))
@@ -257,13 +282,18 @@
       });
     }
 
-    function reloadBlocks(newProfileId) {
+    function reloadBlocks(profileId, op) {
       $scope.deletedLayout = null;
       var calls = [['ContactSummary', 'getBlocks']];
-      // If a new profile was just created, link it to this extension.
-      if (newProfileId) {
-        calls.unshift(['UFJoin', 'create', {values: {module: "Contact Summary", uf_group_id: newProfileId}}]);
-        calls.unshift(['UFJoin', 'create', {values: {module: "Profile", uf_group_id: newProfileId}}]);
+      if (profileId) {
+        if (op === 'delete') {
+          // Used when deleting a profile
+          calls.unshift(['UFGroup', 'delete', {where: [['id', '=', profileId]]}]);
+        } else {
+          // If a new profile was just created, link it to this extension.
+          calls.unshift(['UFJoin', 'create', {values: {module: "Contact Summary", uf_group_id: profileId}}]);
+          calls.unshift(['UFJoin', 'create', {values: {module: "Profile", uf_group_id: profileId}}]);
+        }
       }
       CRM.api4(calls)
         .done(function(data) {

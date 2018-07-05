@@ -6,6 +6,9 @@
   <button class="btn btn-danger-outline cse-block-remove" ng-if="col" ng-click="removeBlock($index, col)">
     <i class="crm-i fa-close"></i>
   </button>
+  <button class="btn btn-danger-outline cse-block-remove" ng-if="!col && block.profile_id" ng-click="deleteBlock(block)">
+    <i class="crm-i fa-trash"></i>
+  </button>
 </div>
 <div class="cse-block-sample">
   <p class="cse-no-sample" ng-if="!block.sample || !block.sample.length">{{ ts('(No fields)') }}</p>
