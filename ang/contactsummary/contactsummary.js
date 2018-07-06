@@ -207,7 +207,8 @@
     $scope.save = function() {
       var data = [],
         layoutWeight = 0,
-        emptyLayouts = [];
+        emptyLayouts = [],
+        noLabel = false;
       _.each($scope.layouts, function(layout) {
         var empty = true;
         var item = {
@@ -228,11 +229,16 @@
         if (empty) {
           emptyLayouts.push(layout.label);
         }
+        if (!layout.label) {
+          noLabel = true;
+          alert('Please give the layout a name.');
+          return;
+        }
         data.push(item);
       });
       if (emptyLayouts.length) {
         alert(ts('The layout %1 is empty. Please add at least one block before saving.', {1: emptyLayouts.join(', ')}));
-      } else {
+      } else if (!noLabel) {
         writeRecords(data);
       }
     };
