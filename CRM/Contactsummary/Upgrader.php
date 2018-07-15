@@ -13,12 +13,7 @@ class CRM_Contactsummary_Upgrader extends CRM_Contactsummary_Upgrader_Base {
   }
 
   /**
-   * Example: Work with entities usually not available during the install step.
-   *
-   * This method can be used for any post-install tasks. For example, if a step
-   * of your installation depends on accessing an entity that is itself
-   * created during the installation (e.g., a setting or a managed entity), do
-   * so here to avoid order of operation problems.
+   * Called just after installation.
    */
   public function postInstall() {
     // Add menu item for contact summary editor.
@@ -42,10 +37,17 @@ class CRM_Contactsummary_Upgrader extends CRM_Contactsummary_Upgrader_Base {
   }
 
   /**
-   * Example: Run an external SQL script when the module is uninstalled.
-   *
+   * Uninstall routine.
+   */
   public function uninstall() {
-   $this->executeSqlFile('sql/myuninstall.sql');
+    try {
+      Civi\Api4\Navigation::delete()
+        ->addWhere('name', '=', 'contact_summary_editor')
+        ->execute();
+    }
+    catch (Exception $e) {
+      // Couldn't delete menu item.
+    }
   }
 
   /**
