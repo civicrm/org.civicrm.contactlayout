@@ -20,10 +20,12 @@ class CRM_Contactsummary_Upgrader extends CRM_Contactsummary_Upgrader_Base {
     try {
       $parent = Civi\Api4\Navigation::get()
         ->addWhere('name', '=', 'Customize Data and Screens')
+        ->setCheckPermissions(FALSE)
         ->setLimit(1)
         ->execute()
         ->first();
       Civi\Api4\Navigation::create()
+        ->setCheckPermissions(FALSE)
         ->addValue('label', E::ts('Contact Summary Layouts'))
         ->addValue('name', 'contact_summary_editor')
         ->addValue('permission', 'administer CiviCRM')
@@ -42,6 +44,7 @@ class CRM_Contactsummary_Upgrader extends CRM_Contactsummary_Upgrader_Base {
   public function uninstall() {
     try {
       Civi\Api4\Navigation::delete()
+        ->setCheckPermissions(FALSE)
         ->addWhere('name', '=', 'contact_summary_editor')
         ->execute();
     }
