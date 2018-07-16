@@ -111,17 +111,17 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
   protected static function loadAllBlocks() {
     $blocks = [
       'core' => [
-        'title' => ts('Predefined Blocks'),
+        'title' => E::ts('Predefined Blocks'),
         'icon' => 'fa-lock',
         'blocks' => [],
       ],
       'custom' => [
-        'title' => ts('Custom Field Sets'),
+        'title' => E::ts('Custom Field Sets'),
         'icon' => 'fa-gear',
         'blocks' => [],
       ],
       'profile' => [
-        'title' => ts('Profiles'),
+        'title' => E::ts('Profiles'),
         'icon' => 'fa-edit',
         'blocks' => [],
       ],
@@ -129,58 +129,58 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
 
     // Core blocks are not editable
     $blocks['core']['blocks']['ContactInfo'] = [
-      'title' => ts('Contact Info'),
+      'title' => E::ts('Contact Info'),
       'tpl_file' => 'CRM/Contact/Page/Inline/ContactInfo.tpl',
-      'sample' => [ts('Employer'), ts('Job Title'), ts('Nickame'), ts('Source')],
+      'sample' => [E::ts('Employer'), E::ts('Job Title'), E::ts('Nickame'), E::ts('Source')],
       'edit' => FALSE,
     ];
     $blocks['core']['blocks']['Demographics'] = [
-      'title' => ts('Demographics'),
+      'title' => E::ts('Demographics'),
       'tpl_file' => 'CRM/Contact/Page/Inline/Demographics.tpl',
-      'sample' => [ts('Gender'), ts('Date of Birth'), ts('Age')],
+      'sample' => [E::ts('Gender'), E::ts('Date of Birth'), E::ts('Age')],
       'edit' => FALSE,
     ];
     $blocks['core']['blocks']['CommunicationPreferences'] = [
-      'title' => ts('Communication Preferences'),
+      'title' => E::ts('Communication Preferences'),
       'tpl_file' => 'CRM/Contact/Page/Inline/CommunicationPreferences.tpl',
-      'sample' => [ts('Privacy'), ts('Preferred Method(s)'), ts('Email Format'), ts('Communication Style'), ts('Email Greeting'), ts('Postal Greeting'), ts('Addressee')],
+      'sample' => [E::ts('Privacy'), E::ts('Preferred Method(s)'), E::ts('Email Format'), E::ts('Communication Style'), E::ts('Email Greeting'), E::ts('Postal Greeting'), E::ts('Addressee')],
       'edit' => FALSE,
     ];
     $blocks['core']['blocks']['Address'] = [
-      'title' => ts('Address'),
+      'title' => E::ts('Address'),
       'tpl_file' => 'CRM/Contactlayout/Page/Inline/AddressBlocks.tpl',
-      'sample' => [ts('Home Address'), ts('City'), ts('State/Province'), ts('Postal Code')],
+      'sample' => [E::ts('Home Address'), E::ts('City'), E::ts('State/Province'), E::ts('Postal Code')],
       'multiple' => TRUE,
       'edit' => FALSE,
     ];
     $blocks['core']['blocks']['Phone'] = [
-      'title' => ts('Phone'),
+      'title' => E::ts('Phone'),
       'tpl_file' => 'CRM/Contact/Page/Inline/Phone.tpl',
-      'sample' => [ts('Home Phone'), ts('Work Phone')],
+      'sample' => [E::ts('Home Phone'), E::ts('Work Phone')],
       'edit' => FALSE,
     ];
     $blocks['core']['blocks']['Email'] = [
-      'title' => ts('Email'),
+      'title' => E::ts('Email'),
       'tpl_file' => 'CRM/Contact/Page/Inline/Email.tpl',
-      'sample' => [ts('Home Email'), ts('Work Email')],
+      'sample' => [E::ts('Home Email'), E::ts('Work Email')],
       'edit' => FALSE,
     ];
     $blocks['core']['blocks']['IM'] = [
-      'title' => ts('Instant Messenger'),
+      'title' => E::ts('Instant Messenger'),
       'tpl_file' => 'CRM/Contact/Page/Inline/IM.tpl',
-      'sample' => [ts('Yahoo'), ts('Skype')],
+      'sample' => [E::ts('Yahoo'), E::ts('Skype')],
       'edit' => FALSE,
     ];
     $blocks['core']['blocks']['OpenID'] = [
-      'title' => ts('Open ID'),
+      'title' => E::ts('Open ID'),
       'tpl_file' => 'CRM/Contact/Page/Inline/OpenID.tpl',
-      'sample' => [ts('User')],
+      'sample' => [E::ts('User')],
       'edit' => FALSE,
     ];
     $blocks['core']['blocks']['Website'] = [
-      'title' => ts('Website'),
+      'title' => E::ts('Website'),
       'tpl_file' => 'CRM/Contact/Page/Inline/Website.tpl',
-      'sample' => [ts('Facebook'), ts('Linkedin')],
+      'sample' => [E::ts('Facebook'), E::ts('Linkedin')],
       'edit' => FALSE,
     ];
 

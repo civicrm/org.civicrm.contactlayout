@@ -24,12 +24,12 @@ class CRM_Contactlayout_Form_Inline_ProfileBlock extends CRM_Profile_Form_Edit {
     $buttons = array(
       array(
         'type' => 'upload',
-        'name' => ts('Save'),
+        'name' => E::ts('Save'),
         'isDefault' => TRUE,
       ),
       array(
         'type' => 'cancel',
-        'name' => ts('Cancel'),
+        'name' => E::ts('Cancel'),
       ),
     );
     $this->addButtons($buttons);
