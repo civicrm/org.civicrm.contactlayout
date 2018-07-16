@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<extension key="org.civicrm.contactsummary" type="module">
-  <file>contactsummary</file>
-  <name>Contact Summary Editor</name>
+<extension key="org.civicrm.contactlayout" type="module">
+  <file>contactlayout</file>
+  <name>Contact Summary Layout Editor</name>
   <description>Rearrange the contact summary screen. Create multiple layouts to display different types of contacts to different users.</description>
   <license>AGPL-3.0</license>
   <maintainer>
@@ -9,9 +9,9 @@
     <email>coleman@civicrm.org</email>
   </maintainer>
   <urls>
-    <url desc="Main Extension Page">http://FIXME</url>
-    <url desc="Documentation">https://github.com/civicrm/org.civicrm.contactsummary</url>
-    <url desc="Support">https://github.com/civicrm/org.civicrm.contactsummary/issues</url>
+    <url desc="Main Extension Page">https://civicrm.org/extensions/contact-layout-editor</url>
+    <url desc="Documentation">https://github.com/civicrm/org.civicrm.contactlayout</url>
+    <url desc="Support">https://github.com/civicrm/org.civicrm.contactlayout/issues</url>
     <url desc="Licensing">http://www.gnu.org/licenses/agpl-3.0.html</url>
   </urls>
   <releaseDate>2018-06-14</releaseDate>
@@ -27,7 +27,7 @@
     <ext>org.civicrm.angularprofiles</ext>
   </requires>
   <civix>
-    <namespace>CRM/Contactsummary</namespace>
+    <namespace>CRM/Contactlayout</namespace>
   </civix>
   <classloader>
     <psr4 prefix="Civi\" path="Civi" />

@@ -33,6 +33,6 @@
 
 SET FOREIGN_KEY_CHECKS=0;
 
-DROP TABLE IF EXISTS `civicrm_contact_summary`;
+DROP TABLE IF EXISTS `civicrm_contact_layout`;
 
 SET FOREIGN_KEY_CHECKS=1;

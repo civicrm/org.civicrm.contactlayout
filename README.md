@@ -44,7 +44,7 @@ Hook example:
 /**
  * Implements hook_civicrm_contactSummaryBlocks().
  *
- * @link https://github.com/civicrm/org.civicrm.contactsummary
+ * @link https://github.com/civicrm/org.civicrm.contactlayout
  */
 function example_civicrm_contactSummaryBlocks(&$blocks) {
   // Register our block with the layout editor.

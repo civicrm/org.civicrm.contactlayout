@@ -1,4 +1,4 @@
-Package: org.civicrm.contactsummary
+Package: org.civicrm.contactlayout
 Copyright (C) 2018, Coleman Watts <coleman@civicrm.org>
 Licensed under the GNU Affero Public License 3.0 (below).
 

@@ -62,7 +62,7 @@
 
 SET FOREIGN_KEY_CHECKS=0;
 
-DROP TABLE IF EXISTS `civicrm_contact_summary`;
+DROP TABLE IF EXISTS `civicrm_contact_layout`;
 
 SET FOREIGN_KEY_CHECKS=1;
 -- /*******************************************************
@@ -73,15 +73,15 @@ SET FOREIGN_KEY_CHECKS=1;
 
 -- /*******************************************************
 -- *
--- * civicrm_contact_summary
+-- * civicrm_contact_layout
 -- *
 -- * Layouts for the contact summary page
 -- *
 -- *******************************************************/
-CREATE TABLE `civicrm_contact_summary` (
+CREATE TABLE `civicrm_contact_layout` (
 
 
-     `id` int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'Unique ContactSummary ID',
+     `id` int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'Unique ContactLayout ID',
      `label` varchar(255) NOT NULL   COMMENT 'Name of this layout.',
      `contact_type` varchar(255)    COMMENT 'The type of contacts this layout applies to.',
      `contact_sub_type` varchar(255)    COMMENT 'The contacts subtypes this layout applies to.',
