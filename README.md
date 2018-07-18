@@ -1,4 +1,4 @@
-# Contact Summary Editor
+# Contact Summary Layout Editor
 
 **Customize the contact summary screen.**
 
@@ -24,7 +24,7 @@ Please contribute to the [CiviCRM.org Make-it-Happen campaign](https://civicrm.o
 * Create one or more layouts, dragging the desired blocks from the palette.
 * Click the "New Block" button to create a block combining any contact fields you desire (including custom fields).
 * Your blocks can be added to one or more layouts. Editing a block in use by multiple layouts will affect them all.
-* The "Show" option can specify a contact type, e.g. if a layout is specifically designed for Organization contacts rather than individuals.
+* The "Show" option can specify a contact type, e.g. if a layout is specifically designed for _organization_ contacts rather than _individuals_.
 * The "To" option can restrict a layout to be visible to only certain logged-in users.
 * When a user views a contact, the first layout in the list which meets the "Show" and "To" criteria will be shown.
 * If no layout matches the criteria, the default system layout will be used.
