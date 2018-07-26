@@ -12,6 +12,7 @@ Have you ever wanted to rearrange the contact summary screen? Move the most impo
 
 * CiviCRM 5.x
 * [Api v4 extension](https://github.com/civicrm/org.civicrm.api4)
+* [Angular Profiles extension](https://github.com/ginkgostreet/org.civicrm.angularprofiles)
 * [Shoreditch theme](https://github.com/civicrm/org.civicrm.shoreditch) (does not require the full theme override mode shown above)
 
 ## Contribute
