@@ -133,6 +133,18 @@
         });
     };
 
+    $scope.toggleCollapsible = function(block) {
+      if (!block.collapsible) {
+        block.collapsible = true;
+        block.collapsed = true;
+      } else if (block.collapsed) {
+        block.collapsed = false;
+      } else {
+        block.collapsible = false;
+        block.collapsed = false;
+      }
+    };
+
     $scope.enforceUnique = function(e, ui) {
       if (!ui.item.sortable.received &&
         $(ui.item.sortable.droptarget).is('#cse-palette'))
@@ -227,7 +239,7 @@
         };
         _.each(layout.blocks, function(blocks, col) {
           _.each(blocks, function(block) {
-            item.blocks[col].push(_.pick(block, 'name'));
+            item.blocks[col].push(_.pick(block, 'name', 'collapsible', 'collapsed'));
             empty = false;
           });
         });

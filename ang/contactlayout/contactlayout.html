@@ -17,7 +17,7 @@
           </h3>
         </div>
         <div class="panel-body">
-          <div class="alert alert-warning" ng-if="deletedLayout">
+          <div class="alert alert-warning cse-deleted-msg" ng-if="deletedLayout">
             {{ ts('Deleted %1', {1: deletedLayout.label}) }}
             <a href ng-click="restoreLayout()">{{ ts('Undo') }}</a>
           </div>
@@ -85,7 +85,7 @@
             <div class="panel-inner">
               <div id="cse-block-container">
                 <div class="cse-col" ng-repeat="col in selectedLayout.blocks" ui-sortable="{connectWith: '.cse-col', containment: '#cse-block-container'}" ng-model="col">
-                  <div class="cse-block" ng-repeat="block in col" ng-include="'~/contactlayout/contactlayoutblock.html'"></div>
+                  <div class="cse-block" ng-repeat="block in col" ng-class="{collapsible: block.collapsible, collapsed: block.collapsed}" ng-include="'~/contactlayout/contactlayoutblock.html'"></div>
                 </div>
                 <div id="cse-palette-col">
                   <h4>

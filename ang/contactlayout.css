@@ -41,6 +41,9 @@
   padding: 10px;
   margin: 0;
 }
+#bootstrap-theme #contactLayoutEditor .cse-deleted-msg a {
+  float: right;
+}
 
 #bootstrap-theme #contactLayoutEditor .cse-layout-item {
   border-radius: 4px;
@@ -139,7 +142,7 @@
   margin-bottom: 14px;
   margin-top: 2px;
 }
-#cse-block-container .cse-block .btn-group-xs {
+#cse-block-container .cse-block .cse-block-buttons {
   position: absolute;
   right: 3px;
   top: 3px;
@@ -153,12 +156,15 @@
   background-color: white;
   background: linear-gradient(to bottom, #f8f8f8 0%,#f8f8f8 50%,#fff 51%,#fff 100%);
   padding: 1px 3px;
-  top: -15px;
+  top: -16px;
   left: 8px;
   margin: 5px 0;
+  font-weight: normal;
+}
+#cse-block-container .cse-block.collapsible h5 {
+  font-weight: 700;
 }
 #cse-block-container .cse-block-sample {
-  margin-top: 12px;
   margin-left: 8px;
   margin-bottom: 4px;
 }
@@ -173,7 +179,26 @@
   margin-bottom: 6px;
   margin-top: 6px;
 }
-#cse-block-container #cse-palette .cse-block-sample {
+#cse-block-container .cse-block .cse-block-collapsible-toggle {
+  margin-left: 5px;
+  margin-top: 4px;
+  margin-bottom: 2px;
+}
+#cse-block-container .cse-block .cse-block-collapsible-toggle button:active,
+#cse-block-container .cse-block .cse-block-collapsible-toggle button:focus {
+  background-color: rgba(88, 183, 209, 0.7);
+}
+#cse-block-container .cse-block .cse-block-collapsible-toggle button:hover {
+  background-color: #58b7d1;
+}
+#cse-block-container .cse-block .cse-block-collapsible-toggle button span span:last-child {
+  text-transform: none;
+  color: white;
+}
+#cse-block-container #cse-palette .cse-block .cse-block-sample,
+#cse-block-container #cse-palette .cse-block .cse-block-collapsible-toggle,
+#cse-block-container .cse-block.collapsed .cse-block-sample,
+#cse-block-container #cse-palette .cse-block .form-inline {
   display: none;
 }
 #cse-block-container #cse-palette .cse-block h5 {
