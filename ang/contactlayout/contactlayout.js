@@ -316,7 +316,7 @@
         .done(function(data) {
           $scope.$apply(function() {
             allBlocks = loadBlocks(_.last(data));
-            loadLayouts($scope.layouts);
+            loadLayouts();
           });
         });
     }
@@ -336,6 +336,7 @@
     // Initialize
     if ($scope.layouts.length) {
       loadLayouts();
+      $scope.selectedLayout = $scope.layouts[0];
     }
     else {
       $scope.newLayout();
