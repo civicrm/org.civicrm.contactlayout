@@ -134,14 +134,17 @@
     };
 
     $scope.toggleCollapsible = function(block) {
-      if (!block.collapsible) {
+      if (!block.collapsible && !block.showTitle) {
         block.collapsible = true;
         block.collapsed = true;
+      } else if (!block.collapsible && block.showTitle) {
+        block.showTitle = false;
       } else if (block.collapsed) {
         block.collapsed = false;
       } else {
         block.collapsible = false;
         block.collapsed = false;
+        block.showTitle = true;
       }
     };
 
@@ -239,7 +242,7 @@
         };
         _.each(layout.blocks, function(blocks, col) {
           _.each(blocks, function(block) {
-            item.blocks[col].push(_.pick(block, 'name', 'collapsible', 'collapsed'));
+            item.blocks[col].push(_.pick(block, 'name', 'collapsible', 'collapsed', 'showTitle'));
             empty = false;
           });
         });

@@ -152,17 +152,19 @@
 }
 #cse-block-container .cse-block h5 {
   color: #0071bd;
-  position: absolute;
-  background-color: white;
-  background: linear-gradient(to bottom, #f8f8f8 0%,#f8f8f8 50%,#fff 51%,#fff 100%);
-  padding: 1px 3px;
   top: -16px;
   left: 8px;
   margin: 5px 0;
-  font-weight: normal;
 }
-#cse-block-container .cse-block.collapsible h5 {
-  font-weight: 700;
+#cse-block-container .cse-layout-col .cse-block h5 {
+  padding: 1px 3px;
+  position: absolute;
+  background-color: white;
+  background: linear-gradient(to bottom, #f8f8f8 0%,#f8f8f8 50%,#fff 51%,#fff 100%);
+}
+#cse-block-container .cse-layout-col .cse-block:not(.collapsible):not(.show-title) h5 {
+  font-weight: normal;
+  font-style: italic;
 }
 #cse-block-container .cse-block-sample {
   margin-left: 8px;
@@ -202,9 +204,7 @@
   display: none;
 }
 #cse-block-container #cse-palette .cse-block h5 {
-  position: initial;
   padding: 0 10px;
   font-size: 12px;
   font-weight: 500;
-  background: transparent;
 }

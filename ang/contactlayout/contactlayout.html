@@ -84,8 +84,8 @@
             </nav>
             <div class="panel-inner">
               <div id="cse-block-container">
-                <div class="cse-col" ng-repeat="col in selectedLayout.blocks" ui-sortable="{connectWith: '.cse-col', containment: '#cse-block-container'}" ng-model="col">
-                  <div class="cse-block" ng-repeat="block in col" ng-class="{collapsible: block.collapsible, collapsed: block.collapsed}" ng-include="'~/contactlayout/contactlayoutblock.html'"></div>
+                <div class="cse-col cse-layout-col" ng-repeat="col in selectedLayout.blocks" ui-sortable="{connectWith: '.cse-col', containment: '#cse-block-container'}" ng-model="col">
+                  <div class="cse-block" ng-repeat="block in col" ng-class="{collapsible: block.collapsible, collapsed: block.collapsed, 'show-title': block.showTitle}" ng-include="'~/contactlayout/contactlayoutblock.html'"></div>
                 </div>
                 <div id="cse-palette-col">
                   <h4>
