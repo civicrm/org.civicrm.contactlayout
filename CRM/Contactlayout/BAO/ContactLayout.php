@@ -111,17 +111,17 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
   protected static function loadAllBlocks() {
     $blocks = [
       'core' => [
-        'title' => E::ts('Predefined Blocks'),
+        'title' => E::ts('Predefined'),
         'icon' => 'fa-lock',
         'blocks' => [],
       ],
       'custom' => [
-        'title' => E::ts('Custom Field Sets'),
+        'title' => E::ts('Custom Field'),
         'icon' => 'fa-gear',
         'blocks' => [],
       ],
       'profile' => [
-        'title' => E::ts('Profiles'),
+        'title' => E::ts('Profile'),
         'icon' => 'fa-edit',
         'blocks' => [],
       ],

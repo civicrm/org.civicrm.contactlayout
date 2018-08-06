@@ -34,7 +34,6 @@
   angular.module('contactlayout').controller('Contactlayoutcontactlayout', function($scope, $timeout, crmApi4, crmStatus, crmUiHelp, data) {
     var ts = $scope.ts = CRM.ts('contactlayout');
     var hs = $scope.hs = crmUiHelp({file: 'CRM/contactlayout/contactlayout'});
-    $scope.paletteGroups = {};
     $scope.selectedLayout = null;
     $scope.changesSaved = 1;
     $scope.saving = false;
@@ -289,9 +288,9 @@
     function loadBlocks(blockData) {
       allBlocks = [];
       _.each(blockData, function(group) {
-        $scope.paletteGroups[group.name] = {title: group.title, icon: group.icon};
         _.each(group.blocks, function(block) {
           block.group = group.name;
+          block.groupTitle = group.title;
           block.icon = group.icon;
           allBlocks.push(block);
         });
