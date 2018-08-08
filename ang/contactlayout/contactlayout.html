@@ -1,6 +1,14 @@
 <div id="bootstrap-theme">
-  <div crm-ui-debug="layouts"></div>
   <h1 crm-page-title>{{ts('Contact Summary Editor')}}</h1>
+
+  <!--This warning will show if bootstrap is unavailable. Normally it will be hidden by the bootstrap .collapse class.-->
+  <div class="messages warning no-popup collapse">
+    <p>
+      <i class="crm-i fa-exclamation-triangle"></i>
+      <strong>{{ ts('Bootstrap theme not found.') }}</strong>
+    </p>
+    <p>{{ ts('This screen may not work correctly without a bootstrap-based theme such as Shoreditch installed.') }}</p>
+  </div>
 
   <div id="contactLayoutEditor" class="row">
 

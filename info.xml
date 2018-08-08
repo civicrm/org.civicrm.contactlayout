@@ -23,7 +23,6 @@
   <comments></comments>
   <requires>
     <ext>org.civicrm.api4</ext>
-    <ext>org.civicrm.shoreditch</ext>
     <ext>org.civicrm.angularprofiles</ext>
   </requires>
   <civix>
