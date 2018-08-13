@@ -88,9 +88,16 @@
   width: 20em;
 }
 
+#contactLayoutEditor,
 #cse-block-container {
   display: flex;
-  align-items: stretch;
+}
+#contactLayoutLayouts {
+  flex: 1;
+  margin-right: 10px;
+}
+#contactLayoutEdit {
+  flex: 3;
 }
 #cse-block-container > div {
   flex: 1;
