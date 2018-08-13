@@ -15,10 +15,10 @@
 </div>
 <div class="btn-group btn-group-xs cse-block-collapsible-toggle">
   <button class="btn btn-info-outline" ng-click="toggleCollapsible(block)" title="{{ ts('Display mode') }}">
-    <span ng-if="!block.collapsible && block.showTitle"><i class="crm-i fa-window-maximize"></i> <span>{{ ts('Fixed - show title') }}</span></span>
-    <span ng-if="!block.collapsible && !block.showTitle"><i class="crm-i fa-square-o"></i> <span>{{ ts('Fixed - hide title') }}</span></span>
-    <span ng-if="block.collapsible && !block.collapsed"><i class="crm-i fa-caret-square-o-down"></i> <span>{{ ts('Collapsible - open') }}</span></span>
-    <span ng-if="block.collapsible && block.collapsed"><i class="crm-i fa-caret-square-o-right"></i> <span>{{ ts('Collapsible - closed') }}</span></span>
+    <span ng-if="!block.collapsible && block.showTitle"><i class="crm-i fa-window-maximize"></i> <span>{{ ts('Open - show title') }}</span></span>
+    <span ng-if="!block.collapsible && !block.showTitle"><i class="crm-i fa-square-o"></i> <span>{{ ts('Open - hide title') }}</span></span>
+    <span ng-if="block.collapsible && !block.collapsed"><i class="crm-i fa-caret-square-o-down"></i> <span>{{ ts('Collapsible - expanded') }}</span></span>
+    <span ng-if="block.collapsible && block.collapsed"><i class="crm-i fa-caret-square-o-right"></i> <span>{{ ts('Collapsible - collapsed') }}</span></span>
   </button>
 </div>
 <div class="cse-block-sample">
