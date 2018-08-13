@@ -99,6 +99,14 @@
           .on('crmFormSuccess', function() {
             edited = true;
           })
+          .on('crmLoad', function(e) {
+            if ($(e.target).is('.ui-dialog-content')) {
+              $(this).prepend('<div class="help"><p><i class="crm-i fa-exclamation-triangle"></i> ' +
+                ts('You are editing global settings, which will affect more than just this layout.') +
+                '</p></div>'
+              );
+            }
+          })
           .on('dialogclose', function() {
             if (edited) {
               reloadBlocks();
