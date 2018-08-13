@@ -2,7 +2,7 @@
   <div class="crm-inline-button">
     {include file="CRM/common/formButtons.tpl"}
   </div>
-  {if $help_pre && $action neq 4}
+  {if $help_pre}
     <div class="messages help">{$help_pre}</div>
   {/if}
   {foreach from=$fields item=field key=fieldName}
@@ -104,4 +104,7 @@
       {/if}
     {/if}{* end of main if field name if *}
   {/foreach}
+  {if $help_post}
+    <div class="messages help">{$help_post}</div>
+  {/if}
 </div>

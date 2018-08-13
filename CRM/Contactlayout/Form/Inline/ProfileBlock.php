@@ -33,6 +33,8 @@ class CRM_Contactlayout_Form_Inline_ProfileBlock extends CRM_Profile_Form_Edit {
       ),
     );
     $this->addButtons($buttons);
+    $this->assign('help_pre', CRM_Utils_Array::value('help_pre', $this->_ufGroup));
+    $this->assign('help_post', CRM_Utils_Array::value('help_post', $this->_ufGroup));
   }
 
   /**
