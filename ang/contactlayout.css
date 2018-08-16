@@ -166,12 +166,11 @@
 #cse-block-container .cse-layout-col .cse-block h5 {
   padding: 1px 3px;
   position: absolute;
-  background-color: white;
-  background: linear-gradient(to bottom, #f8f8f8 0%,#f8f8f8 50%,#fff 51%,#fff 100%);
+  background: white linear-gradient(to bottom, #f8f8f8 0%,#f8f8f8 50%,#fff 65%,#fff 100%);
 }
 #cse-block-container .cse-layout-col .cse-block:not(.collapsible):not(.show-title) h5 {
   font-weight: normal;
-  font-style: italic;
+  color: grey;
 }
 #cse-block-container .cse-block-sample {
   margin-left: 8px;
