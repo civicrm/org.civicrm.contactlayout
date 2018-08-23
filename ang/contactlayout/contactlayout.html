@@ -1,15 +1,6 @@
 <div id="bootstrap-theme">
   <h1 crm-page-title>{{ts('Contact Summary Editor')}}</h1>
 
-  <!--This warning will show if bootstrap is unavailable. Normally it will be hidden by the bootstrap .collapse class.-->
-  <div class="messages warning no-popup collapse">
-    <p>
-      <i class="crm-i fa-exclamation-triangle"></i>
-      <strong>{{ ts('Bootstrap theme not found.') }}</strong>
-    </p>
-    <p>{{ ts('This screen may not work correctly without a bootstrap-based theme such as Shoreditch installed.') }}</p>
-  </div>
-
   <div id="contactLayoutEditor">
 
     <div id="contactLayoutLayouts">
@@ -20,9 +11,9 @@
               <i class="crm-i fa-plus"></i> {{ ts('Layout') }}
             </button>
           </div>
-          <h3 class="panel-title">
+          <h2 class="panel-title">
             {{ ts('Layouts') }}
-          </h3>
+          </h2>
         </div>
         <div class="panel-body">
           <div class="alert alert-warning cse-deleted-msg" ng-if="deletedLayout">
@@ -47,7 +38,7 @@
     <div id="contactLayoutEdit">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title" >
+          <h2 class="panel-title" >
             <form class="form-inline">
               <div class="btn-group btn-group-md pull-right">
                 <button class="btn" ng-class="{'btn-primary': !changesSaved && !saving, 'btn-warning': saving, 'btn-success': changesSaved}" ng-disabled="changesSaved || saving" ng-click="save()">
@@ -63,7 +54,7 @@
               </label>
               <input ng-if="selectedLayout" id="selected_layout_label" class="form-control" maxlength="255" title="{{ ts('Layout name (shown on this screen only)') }}" ng-model="selectedLayout.label" />
             </form>
-          </h3>
+          </h2>
         </div>
         <div class="panel-body">
           <div ng-if="selectedLayout">

@@ -189,8 +189,11 @@
 }
 #cse-block-container .cse-block .cse-block-collapsible-toggle {
   margin-left: 5px;
-  margin-top: 4px;
+  margin-top: 6px;
   margin-bottom: 2px;
+}
+#cse-block-container .cse-block .cse-block-collapsible-toggle button {
+  background: white;
 }
 #cse-block-container .cse-block .cse-block-collapsible-toggle button:active,
 #cse-block-container .cse-block .cse-block-collapsible-toggle button:focus {
@@ -213,4 +216,27 @@
   padding: 0 10px;
   font-size: 12px;
   font-weight: 500;
+}
+
+/**
+ * Shims so the UI isn't completely broken when a Bootstrap theme is not installed
+ */
+.panel {
+  border: 1px solid grey;
+  box-sizing: border-box;
+}
+.panel-heading {
+  padding: 10px 20px;
+  color: #464354;
+  background-color: #f3f6f7;
+}
+.panel-primary>.panel-heading {
+  color: #fff;
+  background-color: #0071bd;
+}
+.panel-inner {
+  box-sizing: border-box;
+}
+.btn:not([disabled]) {
+  cursor: pointer;
 }

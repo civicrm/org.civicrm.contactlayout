@@ -13,7 +13,7 @@ Have you ever wanted to rearrange the contact summary screen? Move the most impo
 * CiviCRM 5.x
 * [Api v4 extension](https://github.com/civicrm/org.civicrm.api4)
 * [Angular Profiles extension](https://github.com/ginkgostreet/org.civicrm.angularprofiles)
-* [Shoreditch theme](https://github.com/civicrm/org.civicrm.shoreditch) (does not require the full theme override mode shown above)
+* (Optional) Looks best with a bootstrap-based admin theme or the [Shoreditch exension](https://github.com/civicrm/org.civicrm.shoreditch).
 
 ## Contribute
 
@@ -24,9 +24,9 @@ Please contribute to the [CiviCRM.org Make-it-Happen campaign](https://civicrm.o
 * Once installed, navigate to **Administer -> Customize Data and Screens -> Contact Summary Layouts** to open the editor.
 * Create one or more layouts, dragging the desired blocks from the palette.
 * Click the "New Block" button to create a block combining any contact fields you desire (including custom fields).
-* Your blocks can be added to one or more layouts. Editing a block in use by multiple layouts will affect them all.
-* The "Show" option can specify a contact type, e.g. if a layout is specifically designed for _organization_ contacts rather than _individuals_.
-* The "To" option can restrict a layout to be visible to only certain logged-in users.
+* Your blocks can be added to one or more layouts. **Note:** Editing the contents of a block will affect all layouts the block appears in.
+* The "Show" option can specify a contact type, e.g. if a layout is specifically designed for _Organization_ contacts rather than _Individuals_.
+* The "To" option can restrict a layout to be visible to only certain logged-in users (e.g. show one layout to your volunteers and another to your staff).
 * When a user views a contact, the first layout in the list which meets the "Show" and "To" criteria will be shown.
 * If no layout matches the criteria, the default system layout will be used.
 
@@ -64,6 +64,7 @@ To successfully implement this hook your extension needs to provide a block for 
 * A form class, e.g. `CRM_Example_Form_Inline_Example`
 * Smarty templates for both
 * A pagerun hook to inject the necessary data onto the summary screen at runtime.
+* Optionally a region hook to inject the template onto the summary screen if you want your block to work even without this extension.
 
 For a working example of how to do this, see the [relationship block extension](https://github.com/eileenmcnaughton/org.wikimedia.relationshipblock),
 which works well on its own; the only addition needed to add its block to the editor palette was [implementing `hook_civicrm_contactSummaryBlocks`](https://github.com/eileenmcnaughton/org.wikimedia.relationshipblock/pull/14).
