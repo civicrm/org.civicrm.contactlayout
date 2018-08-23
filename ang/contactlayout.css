@@ -159,14 +159,20 @@
 }
 #cse-block-container .cse-block h5 {
   color: #0071bd;
-  top: -16px;
+  top: -18px;
   left: 8px;
   margin: 5px 0;
 }
 #cse-block-container .cse-layout-col .cse-block h5 {
-  padding: 1px 3px;
+  padding: 0 3px;
   position: absolute;
   background: white linear-gradient(to bottom, #f8f8f8 0%,#f8f8f8 50%,#fff 65%,#fff 100%);
+}
+#cse-block-container .cse-block h5 div {
+  display: inline-block;
+}
+#cse-block-container .cse-block h5 div[contenteditable]:focus {
+  cursor: text;
 }
 #cse-block-container .cse-layout-col .cse-block:not(.collapsible):not(.show-title) h5 {
   font-weight: normal;
@@ -239,4 +245,7 @@
 }
 .btn:not([disabled]) {
   cursor: pointer;
+}
+#contactLayoutEditor h5 {
+  font-size: 13px;
 }

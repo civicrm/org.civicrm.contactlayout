@@ -1,6 +1,7 @@
 <h5 title="{{ ts('%1 block', {1: block.groupTitle || 'Unknown'}) }}">
   <i class="crm-i {{ block.icon || 'fa-question-circle-o' }}"></i>
-  {{ block.title || ts('Unknown block') }}
+  <div ng-if="!col || (!block.collapsible && !block.showTitle)">{{ block.title || ts('Untitled') }}</div>
+  <div ng-if="col && (block.collapsible || block.showTitle)" contenteditable layout-block-title ng-model="block.title" class="crm-editable-enabled">{{ block.title || ts('Untitled') }}</div>
 </h5>
 <div class="btn-group btn-group-xs cse-block-buttons">
   <button class="btn btn-success-outline" ng-if="block.edit" ng-click="editBlock(block)" title="{{ ts('Edit block') }}">
