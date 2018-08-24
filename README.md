@@ -33,6 +33,7 @@ Please contribute to the [CiviCRM.org Make-it-Happen campaign](https://civicrm.o
 ## Integrates with
 * [Shoreditch theme](https://github.com/civicrm/org.civicrm.shoreditch) - works with or without full theme override mode.
 * [Relationship block extension](https://github.com/eileenmcnaughton/org.wikimedia.relationshipblock) - provides a block for displaying important relationships.
+* [Extended Reports extension](https://civicrm.org/extensions/extended-reports) - allows reports to be displayed as blocks on the summary screen.
 
 ## For developers
 
