@@ -168,7 +168,7 @@
   position: absolute;
   background: white linear-gradient(to bottom, #f8f8f8 0%,#f8f8f8 50%,#fff 65%,#fff 100%);
 }
-#cse-block-container .cse-block h5 div {
+#contactLayoutEditor .crm-editable-enabled {
   display: inline-block;
 }
 #cse-block-container .cse-block h5 div[contenteditable]:focus {

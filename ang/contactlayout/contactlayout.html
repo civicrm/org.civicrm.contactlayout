@@ -20,14 +20,14 @@
             {{ ts('Deleted %1', {1: deletedLayout.label}) }}
             <a href ng-click="restoreLayout()">{{ ts('Undo') }}</a>
           </div>
-          <div class="panel-inner" ui-sortable="{axis: 'y'}" ng-model="layouts">
+          <div class="panel-inner" ui-sortable="{axis: 'y', cancel: 'input,textarea,button,select,option,a,.crm-editable-enabled,[contenteditable]'}" ng-model="layouts">
             <div class="cse-layout-item" ng-repeat="layout in layouts" ng-class="{'cse-item-selected': layout == selectedLayout}" ng-click="selectLayout(layout)">
               <div class="btn-group btn-group-sm cse-layout-delete">
                 <button class="btn btn-danger-outline" ng-click="deleteLayout($index)" title="{{ ts('Delete layout') }}">
                   <i class="crm-i fa-trash"></i>
                 </button>
               </div>
-              <h4 class="cse-layout-item-title">{{ layout.label || ts('(no name)') }}</h4>
+              <h4 class="cse-layout-item-title" contact-layout-editable ng-model="layout.label">{{ layout.label || ts('Untitled') }}</h4>
               <div class="cse-layout-item-contact_types">{{ ts('Show: %1', {1: showContactTypes(layout)}) }}</div>
               <div class="cse-layout-item-groups">{{ ts('To: %1', {1: showGroups(layout)}) }}</div>
             </div>
@@ -48,11 +48,8 @@
                   <span ng-if="saving">{{ ts('Saving...') }}</span>
                 </button>
               </div>
-              <label for="selected_layout_label">
-                <span ng-if="!selectedLayout">{{ ts('No layout selected') }}</span>
-                <span ng-if="selectedLayout">{{ ts('Edit Layout:') }}</span>
-              </label>
-              <input ng-if="selectedLayout" id="selected_layout_label" class="form-control" maxlength="255" title="{{ ts('Layout name (shown on this screen only)') }}" ng-model="selectedLayout.label" />
+              <div ng-if="!selectedLayout">{{ ts('No layout selected') }}</div>
+              <div ng-if="selectedLayout" contact-layout-editable ng-model="selectedLayout.label">{{ selectedLayout.label || ts('Untitled') }}</div>
             </form>
           </h2>
         </div>

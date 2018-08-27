@@ -359,8 +359,8 @@
 
   });
 
-  // Editable block titles using ngModel & html5 contenteditable
-  angular.module('contactlayout').directive("layoutBlockTitle", function() {
+  // Editable titles using ngModel & html5 contenteditable
+  angular.module('contactlayout').directive("contactLayoutEditable", function() {
     return {
       restrict: "A",
       require: "ngModel",
@@ -397,6 +397,8 @@
         element.on("blur change", function() {
           scope.$apply(read);
         });
+
+        element.attr('contenteditable', 'true').addClass('crm-editable-enabled');
       }
     };
   });
