@@ -22,7 +22,7 @@ class CRM_Contactlayout_Page_Inline_ProfileBlock extends CRM_Core_Page {
    */
   public static function getProfileBlock($profileId, $contactId) {
     $values = [];
-    $fields = CRM_Core_BAO_UFGroup::getFields($profileId, FALSE, CRM_Core_Action::VIEW);
+    $fields = CRM_Core_BAO_UFGroup::getFields($profileId, FALSE, CRM_Core_Action::VIEW, NULL, NULL, FALSE, NULL, TRUE);
     foreach ($fields as $name => $field) {
       // eliminate all formatting fields
       if (CRM_Utils_Array::value('field_type', $field) == 'Formatting') {
