@@ -139,6 +139,7 @@
   border-radius: 0 0 2px 2px;
   border: 1px solid #0071bd;
   padding: 2px 4px;
+  min-height: 200px;
 }
 #cse-block-container .cse-block {
   cursor: move;
@@ -171,8 +172,9 @@
 #contactLayoutEditor .crm-editable-enabled {
   display: inline-block;
 }
-#cse-block-container .cse-block h5 div[contenteditable]:focus {
+#cse-block-container .cse-block h5 [contenteditable]:focus {
   cursor: text;
+  background: white;
 }
 #cse-block-container .cse-layout-col .cse-block:not(.collapsible):not(.show-title) h5 {
   font-weight: normal;
