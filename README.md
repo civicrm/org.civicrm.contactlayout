@@ -4,7 +4,7 @@
 
 Have you ever wanted to rearrange the contact summary screen? Move the most important information to the top? Remove unnecessary stuff? Create a simplified layout for your volunteers and interns but a more robust layout for your fundraising team? This extension will let you do just that.
 
-![Screenshot](/images/editor.png)
+![Screencast](/images/screencast.gif)
 
 ![Screenshot](/images/summary.png)
 
