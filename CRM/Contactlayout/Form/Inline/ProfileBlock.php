@@ -17,6 +17,8 @@ class CRM_Contactlayout_Form_Inline_ProfileBlock extends CRM_Profile_Form_Edit {
       $this->set('id', $_GET['cid']);
     }
     parent::preProcess();
+    // Suppress profile status messages like the double-opt-in warning
+    CRM_Core_Session::singleton()->getStatus(TRUE);
   }
 
   public function buildQuickForm() {
