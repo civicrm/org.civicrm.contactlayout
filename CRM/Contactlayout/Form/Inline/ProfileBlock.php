@@ -37,6 +37,13 @@ class CRM_Contactlayout_Form_Inline_ProfileBlock extends CRM_Profile_Form_Edit {
     $this->addButtons($buttons);
     $this->assign('help_pre', CRM_Utils_Array::value('help_pre', $this->_ufGroup));
     $this->assign('help_post', CRM_Utils_Array::value('help_post', $this->_ufGroup));
+
+    // Special handling for contact id element
+    if ($this->elementExists('id')) {
+      $cidElement = $this->getElement('id');
+      $cidElement->freeze();
+      $cidElement->setValue($this->_id);
+    }
   }
 
   /**
@@ -46,6 +53,7 @@ class CRM_Contactlayout_Form_Inline_ProfileBlock extends CRM_Profile_Form_Edit {
    */
   public function postProcess() {
     $values = $this->exportValues();
+    unset($values['id']);
     $values['contact_id'] = $cid = $this->_id;
     $values['profile_id'] = $this->_gid;
     $result = civicrm_api3('Profile', 'submit', $values);
