@@ -18,7 +18,7 @@
   <version>1.0</version>
   <develStage>stable</develStage>
   <compatibility>
-    <ver>5.5</ver>
+    <ver>5.6</ver>
   </compatibility>
   <comments>Looks best with a bootstrap theme such as Shoreditch.</comments>
   <requires>

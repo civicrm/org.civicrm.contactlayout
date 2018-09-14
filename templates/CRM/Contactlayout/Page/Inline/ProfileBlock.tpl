@@ -8,7 +8,7 @@
     {foreach from=$profileBlock item='profileRow'}
       <div class="crm-summary-row">
         <div class="crm-label">{$profileRow.label|escape}</div>
-        <div class="crm-content">{$profileRow.value|escape}</div>
+        <div class="crm-content">{$profileRow.value|purify}</div>
       </div>
     {/foreach}
   </div>
