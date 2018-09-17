@@ -44,11 +44,49 @@ class CRM_Contactlayout_Page_Inline_ProfileBlock extends CRM_Core_Page {
         }
         $values[$field['title']] = implode(', ', $employers);
       }
+      // Special handling for note field - show 3 recent notes
+      if ($name == 'note') {
+        $notes = self::getNotes($contactId, $field);
+        if ($notes) {
+          $result = array_merge($result, $notes);
+          continue;
+        }
+      }
       $result[] = [
         'name' => $name,
         'value' => CRM_Utils_Array::value($field['title'], $values),
         'label' => $field['title'],
       ];
+    }
+    return $result;
+  }
+
+  /**
+   * @param $contactId
+   * @param $field
+   * @return array
+   * @throws \API_Exception
+   */
+  public static function getNotes($contactId, $field) {
+    $result = [];
+    $notes = Civi\Api4\Note::get()
+      ->addWhere('entity_id', '=', $contactId)
+      ->addWhere('entity_table', '=', 'civicrm_contact')
+      ->setSelect(['note', 'subject', 'modified_date'])
+      ->addOrderBy('modified_date', 'DESC')
+      ->addOrderBy('id', 'DESC')
+      ->setLimit(3)
+      ->setCheckPermissions(FALSE)
+      ->execute();
+    if (count($notes)) {
+      $dateFormat = Civi::Settings()->get('dateformatshortdate');
+      foreach ($notes as $i => $note) {
+        $result[] = [
+          'name' => "note",
+          'value' => (empty($note['subject']) ? '' : '<strong>' . $note['subject'] . '</strong><br />') . $note['note'],
+          'label' => $field['title'] . ' (' . CRM_Utils_Date::customFormat($note['modified_date'], $dateFormat) . ')',
+        ];
+      }
     }
     return $result;
   }
