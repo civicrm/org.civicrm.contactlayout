@@ -32,6 +32,11 @@ class CRM_Contactlayout_Page_Inline_ProfileBlock extends CRM_Core_Page {
     CRM_Core_BAO_UFGroup::getValues($contactId, $fields, $values, FALSE);
     $result = [];
     foreach ($fields as $name => $field) {
+      // Special handling for group field (profiles only show public groups by default)
+      if ($name == 'group') {
+        $groups = array_column(CRM_Contact_BAO_GroupContact::getContactGroup($contactId, 'Added'), 'title');
+        $values[$field['title']] = implode(', ', $groups);
+      }
       // Special handling for employer field
       if ($name == 'current_employer') {
         $employers = [];
