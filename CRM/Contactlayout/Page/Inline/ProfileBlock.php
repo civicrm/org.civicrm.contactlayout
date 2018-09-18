@@ -11,6 +11,10 @@ class CRM_Contactlayout_Page_Inline_ProfileBlock extends CRM_Core_Page {
     $this->assign('profileBlock', self::getProfileBlock($profileId, $contactId));
     $this->assign('block', ['profile_id' => $profileId]);
 
+    // Needed to display tags
+    $this->assign('contactTag', CRM_Core_BAO_EntityTag::getContactTags($contactId));
+    $this->assign('allTags', CRM_Core_BAO_Tag::getTagsUsedFor('civicrm_contact', FALSE));
+
     CRM_Contact_Page_View::checkUserPermission($this, $contactId);
     parent::run();
   }
