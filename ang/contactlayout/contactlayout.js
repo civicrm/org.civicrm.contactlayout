@@ -110,6 +110,7 @@
           .on('dialogclose', function() {
             if (edited) {
               reloadBlocks();
+              CRM.Schema.reloadModels();
             }
           });
       }
