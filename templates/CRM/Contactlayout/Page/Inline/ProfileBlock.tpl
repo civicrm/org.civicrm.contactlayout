@@ -1,4 +1,4 @@
-<div {if $permission EQ 'edit'} class="crm-inline-edit" data-edit-params='{ldelim}"cid": "{$contactId}", "gid": {$block.profile_id}, "class_name": "CRM_Contactlayout_Form_Inline_ProfileBlock"{rdelim}' {/if}>
+<div id="{$block.selector|replace:'#':''}" {if $permission EQ 'edit'} class="crm-inline-edit" data-dependent-fields={$block.refresh|@json_encode} data-edit-params='{ldelim}"cid": "{$contactId}", "gid": {$block.profile_id}, "class_name": "CRM_Contactlayout_Form_Inline_ProfileBlock"{rdelim}' {/if}>
   <div class="crm-clear crm-inline-block-content" {if $permission EQ 'edit'}title="{ts}Edit{/ts}"{/if}>
     {if $permission EQ 'edit'}
       <div class="crm-edit-help">
