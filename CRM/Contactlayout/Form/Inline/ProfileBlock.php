@@ -58,6 +58,12 @@ class CRM_Contactlayout_Form_Inline_ProfileBlock extends CRM_Profile_Form_Edit {
       }
     }
 
+    // Profile forms do not add tag sets
+    if ($this->elementExists('tag')) {
+      $parentNames = CRM_Core_BAO_Tag::getTagSet('civicrm_contact');
+      CRM_Core_Form_Tag::buildQuickForm($this, $parentNames, 'civicrm_contact', $this->_id, FALSE, TRUE);
+    }
+
     // Special handling for employer
     if ($this->elementExists('current_employer')) {
       $employerField = $this->getElement('current_employer');
@@ -96,9 +102,18 @@ class CRM_Contactlayout_Form_Inline_ProfileBlock extends CRM_Profile_Form_Edit {
     unset($values['id']);
     $values['contact_id'] = $cid = $this->_id;
     $values['profile_id'] = $this->_gid;
+
+    // Action is needed for tag postprocess
+    $this->_action = CRM_Core_Action::UPDATE;
+
     $this->processEmployer($values);
     $this->processGroups($values);
     $result = civicrm_api3('Profile', 'submit', $values);
+
+    // Save tagsets
+    if (isset($values['contact_taglist']) && !empty($values['contact_taglist'])) {
+      CRM_Core_Form_Tag::postProcess($values['contact_taglist'], $cid, 'civicrm_contact', $this);
+    }
 
     // These are normally performed by CRM_Contact_Form_Inline postprocessing but this form doesn't inherit from that class.
     CRM_Core_BAO_Log::register($cid,
