@@ -81,7 +81,7 @@
             <div class="panel-inner">
               <div id="cse-block-container">
                 <div class="cse-col cse-layout-col" ng-repeat="col in selectedLayout.blocks" ui-sortable="{connectWith: '.cse-col', containment: '#cse-block-container', cancel: 'input,textarea,button,select,option,a,.crm-editable-enabled,[contenteditable]'}" ng-model="col">
-                  <div class="cse-block" ng-repeat="block in col" ng-class="{collapsible: block.collapsible, collapsed: block.collapsed, 'show-title': block.showTitle}" ng-include="'~/contactlayout/contactlayoutblock.html'"></div>
+                  <div class="cse-block" ng-repeat="block in col" ng-class="{collapsible: block.collapsible, collapsed: block.collapsed, 'show-title': block.showTitle, 'block-multiple': block.multiple}" ng-include="'~/contactlayout/contactlayoutblock.html'"></div>
                 </div>
                 <div id="cse-palette-col">
                   <h4>

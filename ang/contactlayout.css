@@ -225,6 +225,25 @@
   font-size: 12px;
   font-weight: 500;
 }
+#cse-block-container .cse-layout-col .block-multiple:not(.collapsed) {
+  margin-bottom: 40px;
+}
+#cse-block-container .cse-layout-col .block-multiple:not(.collapsed):after {
+  display: block;
+  content: '+ Multiple';
+  position: absolute;
+  bottom: -28px;
+  border: 2px solid grey;
+  border-radius: 4px;
+  background-color: white;
+  height: 24px;
+  width: 100%;
+  padding-left: 8px;
+  padding-top: 2px;
+  color: grey;
+  font-size: 11px;
+  box-sizing: border-box;
+}
 
 /**
  * Shims so the UI isn't completely broken when a Bootstrap theme is not installed
