@@ -9,7 +9,13 @@ class CRM_Contactlayout_Page_Inline_ProfileBlock extends CRM_Core_Page {
 
     $this->assign('contactId', $contactId);
     $this->assign('profileBlock', self::getProfileBlock($profileId, $contactId));
-    $this->assign('block', ['profile_id' => $profileId]);
+
+    $allBlocks = CRM_Contactlayout_BAO_ContactLayout::getAllBlocks();
+    foreach ($allBlocks['profile']['blocks'] as $block) {
+      if ($block['profile_id'] == $profileId) {
+        $this->assign('block', $block);
+      }
+    }
 
     // Needed to display tags
     $this->assign('contactTag', CRM_Core_BAO_EntityTag::getContactTags($contactId));

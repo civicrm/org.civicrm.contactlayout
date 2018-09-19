@@ -138,18 +138,21 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
       'tpl_file' => 'CRM/Contact/Page/Inline/ContactInfo.tpl',
       'sample' => [E::ts('Employer'), E::ts('Job Title'), E::ts('Nickame'), E::ts('Source')],
       'edit' => FALSE,
+      'selector' => '#crm-contactinfo-content',
     ];
     $blocks['core']['blocks']['Demographics'] = [
       'title' => E::ts('Demographics'),
       'tpl_file' => 'CRM/Contact/Page/Inline/Demographics.tpl',
       'sample' => [E::ts('Gender'), E::ts('Date of Birth'), E::ts('Age')],
       'edit' => FALSE,
+      'selector' => '#crm-demographic-content',
     ];
     $blocks['core']['blocks']['CommunicationPreferences'] = [
       'title' => E::ts('Communication Preferences'),
       'tpl_file' => 'CRM/Contact/Page/Inline/CommunicationPreferences.tpl',
       'sample' => [E::ts('Privacy'), E::ts('Preferred Method(s)'), E::ts('Email Format'), E::ts('Communication Style'), E::ts('Email Greeting'), E::ts('Postal Greeting'), E::ts('Addressee')],
       'edit' => FALSE,
+      'selector' => '#crm-communication-pref-content',
     ];
     $blocks['core']['blocks']['Address'] = [
       'title' => E::ts('Address'),
@@ -157,36 +160,42 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
       'sample' => [E::ts('Home Address'), E::ts('City'), E::ts('State/Province'), E::ts('Postal Code')],
       'multiple' => TRUE,
       'edit' => FALSE,
+      'selector' => '.crm-inline-edit.address:not(.add-new)',
     ];
     $blocks['core']['blocks']['Phone'] = [
       'title' => E::ts('Phone'),
       'tpl_file' => 'CRM/Contact/Page/Inline/Phone.tpl',
       'sample' => [E::ts('Home Phone'), E::ts('Work Phone')],
       'edit' => FALSE,
+      'selector' => '#crm-phone-content',
     ];
     $blocks['core']['blocks']['Email'] = [
       'title' => E::ts('Email'),
       'tpl_file' => 'CRM/Contact/Page/Inline/Email.tpl',
       'sample' => [E::ts('Home Email'), E::ts('Work Email')],
       'edit' => FALSE,
+      'selector' => '#crm-email-content',
     ];
     $blocks['core']['blocks']['IM'] = [
       'title' => E::ts('Instant Messenger'),
       'tpl_file' => 'CRM/Contact/Page/Inline/IM.tpl',
       'sample' => [E::ts('Yahoo'), E::ts('Skype')],
       'edit' => FALSE,
+      'selector' => '#crm-im-content',
     ];
     $blocks['core']['blocks']['OpenID'] = [
       'title' => E::ts('Open ID'),
       'tpl_file' => 'CRM/Contact/Page/Inline/OpenID.tpl',
       'sample' => [E::ts('User')],
       'edit' => FALSE,
+      'selector' => '#crm-openid-content',
     ];
     $blocks['core']['blocks']['Website'] = [
       'title' => E::ts('Website'),
       'tpl_file' => 'CRM/Contact/Page/Inline/Website.tpl',
       'sample' => [E::ts('Facebook'), E::ts('Linkedin')],
       'edit' => FALSE,
+      'selector' => '#crm-website-content',
     ];
 
     $profiles = civicrm_api3('UFJoin', 'get', [
@@ -194,10 +203,10 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
       'options' => ['limit' => 0],
       'module' => 'Contact Summary',
       'api.UFField.get' => [
-        'return' => 'label',
+        'return' => ['label', 'field_name'],
         'is_active' => 1,
         'uf_group_id' => '$value.uf_group_id',
-        'options' => ['limit' => 10, 'sort' => 'weight'],
+        'options' => ['limit' => 0, 'sort' => 'weight'],
       ],
     ]);
     foreach ($profiles['values'] as $profile) {
@@ -208,6 +217,8 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
         'sample' => CRM_Utils_Array::collect('label', $profile['api.UFField.get']['values']),
         'collapsible' => TRUE,
         'edit' => TRUE,
+        'refresh' => [],
+        'selector' => '#crm-profile-content-' . $profile['uf_group_id.name'],
       ];
     }
 
@@ -219,7 +230,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
       'api.CustomField.get' => [
         'return' => ['label'],
         'is_active' => 1,
-        'options' => ['limit' => 10, 'sort' => 'weight'],
+        'options' => ['limit' => 0, 'sort' => 'weight'],
       ],
     ]);
     foreach ($customGroups['values'] as $groupId => $group) {
@@ -232,8 +243,11 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
         'collapsible' => TRUE,
         'collapsed' => !empty($group['collapse_display']),
         'edit' => 'civicrm/admin/custom/group/field?reset=1&action=browse&gid=' . $groupId,
+        'selector' => '#custom-set-content-' . $groupId,
       ];
     }
+
+    self::addBlockRelations($blocks, $profiles['values'], $customGroups['values']);
 
     $null = NULL;
     CRM_Utils_Hook::singleton()->invoke(['blocks'], $blocks,
@@ -241,6 +255,88 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
     );
 
     return $blocks;
+  }
+
+  /**
+   * Maps common fields between profiles and other blocks on the summary screen.
+   *
+   * @param $blocks
+   * @param $profiles
+   * @param $customGroups
+   */
+  public static function addBlockRelations(&$blocks, $profiles, $customGroups) {
+    $customFields = [];
+    foreach ($customGroups as $groupId => $group) {
+      $customFields['#custom-set-content-' . $groupId] = CRM_Utils_Array::collect('id', $group['api.CustomField.get']['values']);
+    }
+    $coreBlocks = [
+      '#crm-contactname-content' => [
+        'first_name',
+        'middle_name',
+        'last_name',
+        'nick_name',
+        'organization_name',
+        'household_name',
+        'formal_title',
+        'individual_prefix',
+        'individual_suffix',
+        'deceased',
+      ],
+      '#crm-communication-pref-content' => [
+        'do_not',
+        'language',
+        'is_opt_out',
+        'preferred_communication_method',
+        'greeting',
+        'addressee',
+      ],
+      '#crm-contactinfo-content' => [
+        'employer',
+        'job_title',
+        'nick_name',
+        'source',
+      ],
+      '#crm-demographic-content' => [
+        'gender',
+        'deceased',
+        'birth_date',
+      ],
+      '#crm-email-content' => [
+        'email',
+      ],
+      '#crm-phone-content' => [
+        'phone',
+      ],
+      '#crm-website-content' => [
+        'url',
+      ],
+    ];
+    foreach ($profiles as $profile) {
+      $block =& $blocks['profile']['blocks'][$profile['uf_group_id.name']];
+      foreach ($profile['api.UFField.get']['values'] as $field) {
+        $fieldName = strtolower($field['field_name']);
+        if (strpos($fieldName, 'custom_') === 0) {
+          list(, $customId) = explode('_', $fieldName);
+          foreach ($customFields as $selector => $fields) {
+            if (in_array($customId, $fields) && !in_array($selector, $block['refresh'])) {
+              $block['refresh'][] = $selector;
+            }
+          }
+        }
+        else {
+          foreach ($coreBlocks as $selector => $fields) {
+            if (!in_array($selector, $block['refresh'])) {
+              foreach ($fields as $field) {
+                if (strpos($fieldName, $field) !== FALSE) {
+                  $block['refresh'][] = $selector;
+                  break;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
 }
