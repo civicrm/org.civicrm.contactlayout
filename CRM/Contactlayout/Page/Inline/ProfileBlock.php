@@ -47,7 +47,7 @@ class CRM_Contactlayout_Page_Inline_ProfileBlock extends CRM_Core_Page {
         $groups = array_column(CRM_Contact_BAO_GroupContact::getContactGroup($contactId, 'Added'), 'title');
         $values[$field['title']] = implode(', ', $groups);
       }
-      // Special handling for employer field
+      // Special handling for employer field - show multiple
       if ($name == 'current_employer') {
         $employers = [];
         foreach (CRM_Contactlayout_Form_Inline_ProfileBlock::getEmployers($contactId) as $employer) {

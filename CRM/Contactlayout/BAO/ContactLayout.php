@@ -4,7 +4,7 @@ use CRM_Contactlayout_ExtensionUtil as E;
 class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactLayout {
 
   /**
-   * Fetch the right layout
+   * Fetch the first layout for this type of contact visible to this user.
    *
    * @param int $cid
    *   Id of contact being displayed.
@@ -14,24 +14,29 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
    * @return array|null
    */
   public static function getLayout($cid, $uid = NULL) {
-    $uid = $uid ?: \CRM_Core_Session::getLoggedInContactID();
+    $uid = $uid ?: CRM_Core_Session::getLoggedInContactID();
     $contact = \Civi\Api4\Contact::get()
       ->addWhere('id', '=', $cid)
       ->setSelect(['contact_type', 'contact_sub_type'])
       ->execute()
       ->first();
+
     $layout = \Civi\Api4\ContactLayout::get()
       ->setLimit(1)
       ->addSelect('blocks')
       ->addClause('OR', ['contact_type', 'IS NULL'], ['contact_type', '=', $contact['contact_type']])
       ->addOrderBy('weight');
+
+    // Filter by contact sub-type
+    $subClauses = [['contact_sub_type', 'IS NULL']];
     if (!empty($contact['contact_sub_type'])) {
-      $subClauses = [['contact_sub_type', 'IS NULL']];
       foreach ($contact['contact_sub_type'] as $subType) {
         $subClauses[] = ['contact_sub_type', 'LIKE', '%' . CRM_Core_DAO::VALUE_SEPARATOR . $subType . CRM_Core_DAO::VALUE_SEPARATOR . '%'];
       }
-      $layout->addClause('OR', $subClauses);
     }
+    $layout->addClause('OR', $subClauses);
+
+    // Filter by user group
     $groupClause = [['groups', 'IS NULL']];
     $groups = \CRM_Contact_BAO_GroupContact::getContactGroup($uid, 'Added', NULL, FALSE, TRUE, FALSE, TRUE, NULL, TRUE);
     if (!empty($groups)) {
