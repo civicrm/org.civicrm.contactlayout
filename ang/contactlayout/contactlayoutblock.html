@@ -1,4 +1,4 @@
-<h5 title="{{ ts('%1 block', {1: block.groupTitle || 'Unknown'}) }}">
+<h5 title="{{ ts('%1 block', {1: block.groupTitle || 'Unknown'}) + (block.contact_type ? ' (' + contactTypeLabel(block.contact_type) + ')' : '') }}">
   <i class="crm-i {{ block.icon || 'fa-question-circle-o' }}"></i>
   <span ng-if="!col || (!block.collapsible && !block.showTitle)">{{ block.title || ts('Untitled') }}</span>
   <span ng-if="col && (block.collapsible || block.showTitle)" contact-layout-editable ng-model="block.title">{{ block.title || ts('Untitled') }}</span>

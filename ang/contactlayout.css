@@ -225,6 +225,13 @@
   font-size: 12px;
   font-weight: 500;
 }
+#cse-block-container #cse-palette .invalid-block {
+  cursor: not-allowed;
+}
+#cse-block-container #cse-palette .invalid-block h5 {
+  color: grey;
+  text-decoration: line-through;
+}
 #cse-block-container .cse-layout-col .block-multiple:not(.collapsed) {
   margin-bottom: 40px;
 }

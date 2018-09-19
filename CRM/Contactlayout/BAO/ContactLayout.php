@@ -50,24 +50,27 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
     }
     $layout->addClause('OR', $groupClause);
     $layout = CRM_Utils_Array::value('blocks', $layout->execute()->first());
-    self::loadLayout($layout);
+    self::loadLayout($layout, $contact['contact_type']);
     return $layout;
   }
 
   /**
    * Merge block data with a saved layout.
    *
-   * @param $layout
+   * Filters out missing blocks and blocks not applicable to given contact type.
+   *
+   * @param array $layout
+   * @param string $contactType
    */
-  public static function loadLayout(&$layout) {
+  public static function loadLayout(&$layout, $contactType = NULL) {
     if ($layout) {
       foreach ($layout as &$column) {
         foreach ($column as &$block) {
           $blockInfo = self::getBlock($block['name']);
-          if ($blockInfo) {
+          if ($blockInfo && (!$contactType || empty($blockInfo['contact_type']) || $contactType == $blockInfo['contact_type'])) {
             $block += $blockInfo;
           }
-          // If this block is missing, invalidate it
+          // Invalid or missing block
           else {
             $block = FALSE;
           }
@@ -194,6 +197,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
       'sample' => [E::ts('User')],
       'edit' => FALSE,
       'selector' => '#crm-openid-content',
+      'contact_type' => 'Individual',
     ];
     $blocks['core']['blocks']['Website'] = [
       'title' => E::ts('Website'),
@@ -204,7 +208,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
     ];
 
     $profiles = civicrm_api3('UFJoin', 'get', [
-      'return' => ['uf_group_id.title', 'uf_group_id.name', 'uf_group_id'],
+      'return' => ['uf_group_id', 'uf_group_id.title', 'uf_group_id.name', 'uf_group_id.group_type'],
       'options' => ['limit' => 0],
       'module' => 'Contact Summary',
       'api.UFField.get' => [
@@ -215,6 +219,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
       ],
     ]);
     foreach ($profiles['values'] as $profile) {
+      $profileType = array_intersect(CRM_Contact_BAO_ContactType::basicTypes(TRUE), explode(',', $profile['uf_group_id.group_type']));
       $blocks['profile']['blocks'][$profile['uf_group_id.name']] = [
         'title' => $profile['uf_group_id.title'],
         'tpl_file' => 'CRM/Contactlayout/Page/Inline/Profile.tpl',
@@ -224,6 +229,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
         'edit' => TRUE,
         'refresh' => [],
         'selector' => '#crm-profile-content-' . $profile['uf_group_id.name'],
+        'contact_type' => CRM_Utils_Array::first($profileType),
       ];
     }
 
@@ -249,6 +255,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
         'collapsed' => !empty($group['collapse_display']),
         'edit' => 'civicrm/admin/custom/group/field?reset=1&action=browse&gid=' . $groupId,
         'selector' => '#custom-set-content-' . $groupId,
+        'contact_type' => $group['extends'] == 'Contact' ? NULL : $group['extends'],
       ];
     }
 
