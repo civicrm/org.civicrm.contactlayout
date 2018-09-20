@@ -60,7 +60,7 @@
                 <form class="navbar-form navbar-left">
                   <div class="form-group">
                     <label for="selected_layout_contact_type">{{ ts('Show:') }}</label>
-                    <select id="selected_layout_contact_type" class="form-control" ng-model="selectedLayout.contact_type" crm-ui-select ng-change="clearSubType(selectedLayout)">
+                    <select id="selected_layout_contact_type" class="form-control" ng-model="selectedLayout.contact_type" crm-ui-select ng-change="changeContactType(selectedLayout)">
                       <option value="">{{ ts('Contact type') }}</option>
                       <option ng-repeat="ct in contactTypes" value="{{ ct.name }}" ng-if="!ct.parent_id">{{ ct.label }}</option>
                     </select>
@@ -92,8 +92,8 @@
                       </button>
                     </div>
                   </h4>
-                  <div id="cse-palette" class="cse-col" ui-sortable="{connectWith: '.cse-col', containment: '#cse-block-container', update: enforceUnique}" ng-model="selectedLayout.palette">
-                    <div class="cse-block" ng-repeat="block in selectedLayout.palette" ng-include="'~/contactlayout/contactlayoutblock.html'"></div>
+                  <div id="cse-palette" class="cse-col" ui-sortable="{connectWith: '.cse-col', containment: '#cse-block-container', update: enforceUnique, cancel: 'input,textarea,button,select,option,a,.invalid-block'}" ng-model="selectedLayout.palette">
+                    <div class="cse-block" ng-repeat="block in selectedLayout.palette" ng-class="{'invalid-block': selectedLayout.contact_type && block.contact_type && selectedLayout.contact_type !== block.contact_type}" ng-include="'~/contactlayout/contactlayoutblock.html'"></div>
                   </div>
                 </div>
               </div>

@@ -15,10 +15,13 @@
             return crmApi4({
               layouts: ['ContactLayout', 'get', {orderBy: {weight: 'ASC'}}],
               blocks:  ['ContactLayout', 'getBlocks'],
-              contactTypes: ['ContactType', 'get'],
+              contactTypes: ['ContactType', 'get', {
+                where: [['is_active','=','1']],
+                orderBy: {label: 'ASC'}
+              }],
               groups: ['Group', 'get', {
                 select: ['name','title','description'],
-                where: [['is_hidden','=','0'],['is_active','=','1'],['saved_search_id','IS NULL','']]
+                where: [['is_hidden','=','0'], ['is_active','=','1'], ['saved_search_id','IS NULL','']]
               }]
             });
           }
@@ -69,8 +72,20 @@
       return ts('All contact types');
     };
 
-    $scope.clearSubType = function(layout) {
+    $scope.contactTypeLabel = function(contactType) {
+      return getLabels(contactType, data.contactTypes);
+    };
+
+    $scope.changeContactType = function(layout) {
       layout.contact_sub_type = null;
+      if (layout.contact_type) {
+        _.each(layout.blocks, function(blocks, i) {
+          layout.blocks[i] = _.filter(blocks, function(block) {
+            return !block.contact_type || block.contact_type === layout.contact_type;
+          });
+        });
+        loadLayout(layout);
+      }
     };
 
     $scope.showGroups = function(layout) {
