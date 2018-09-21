@@ -108,11 +108,18 @@ class CRM_Contactlayout_Form_Inline_ProfileBlock extends CRM_Profile_Form_Edit {
 
     $this->processEmployer($values);
     $this->processGroups($values);
-    $result = civicrm_api3('Profile', 'submit', $values);
+    civicrm_api3('Profile', 'submit', $values);
 
-    // Save tagsets
-    if (isset($values['contact_taglist']) && !empty($values['contact_taglist'])) {
+    // Save tagsets (not handled by profile api)
+    if (!empty($values['contact_taglist'])) {
       CRM_Core_Form_Tag::postProcess($values['contact_taglist'], $cid, 'civicrm_contact', $this);
+    }
+
+    // Refresh tabs affected by this profile
+    foreach (['tag', 'group', 'note'] as $set) {
+      if (isset($origValues[$set])) {
+        $this->ajaxResponse['updateTabs']["#tab_$set"] = CRM_Contact_BAO_Contact::getCountComponent($set, $this->_id);
+      }
     }
 
     // These are normally performed by CRM_Contact_Form_Inline postprocessing but this form doesn't inherit from that class.
@@ -125,12 +132,6 @@ class CRM_Contactlayout_Form_Inline_ProfileBlock extends CRM_Profile_Form_Edit {
       $this->ajaxResponse,
       CRM_Contact_Form_Inline_Lock::getResponse($cid)
     );
-    // Refresh tabs affected by this profile
-    foreach (['tag', 'group', 'note'] as $tab) {
-      if (isset($origValues[$tab])) {
-        $this->ajaxResponse['updateTabs']["#tab_$tab"] = CRM_Contact_BAO_Contact::getCountComponent($tab, $this->_id);
-      }
-    }
   }
 
   /**
