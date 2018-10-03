@@ -58,7 +58,7 @@ class CRM_Contactlayout_Form_Inline_ProfileBlock extends CRM_Profile_Form_Edit {
       }
     }
 
-    // Profile forms do not add tag sets
+    // Add tag sets (profiles in core don't support this)
     if ($this->elementExists('tag')) {
       $parentNames = CRM_Core_BAO_Tag::getTagSet('civicrm_contact');
       CRM_Core_Form_Tag::buildQuickForm($this, $parentNames, 'civicrm_contact', $this->_id, FALSE, TRUE);
