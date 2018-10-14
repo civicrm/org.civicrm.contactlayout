@@ -1,4 +1,5 @@
 <div id="bootstrap-theme">
+  <div crm-ui-debug="selectedLayout.blocks"></div>
   <h1 crm-page-title>{{ts('Contact Summary Editor')}}</h1>
 
   <div id="contactLayoutEditor">
@@ -44,7 +45,7 @@
                 <button class="btn" ng-class="{'btn-primary': !changesSaved && !saving, 'btn-warning': saving, 'btn-success': changesSaved}" ng-disabled="changesSaved || saving" ng-click="save()">
                   <i class="crm-i" ng-class="{'fa-check': !saving, 'fa-spin fa-spinner': saving}"></i>
                   <span ng-if="changesSaved">{{ ts('All Saved') }}</span>
-                  <span ng-if="!changesSaved && !saving">{{ ts('Save All') }}</span>
+                  <span ng-if="!changesSaved && !saving">{{ layouts.length? ts('Save All') : ts('Delete All') }}</span>
                   <span ng-if="saving">{{ ts('Saving...') }}</span>
                 </button>
               </div>
@@ -80,8 +81,12 @@
             </nav>
             <div class="panel-inner">
               <div id="cse-block-container">
-                <div class="cse-col cse-layout-col" ng-repeat="col in selectedLayout.blocks" ui-sortable="{connectWith: '.cse-col', containment: '#cse-block-container', cancel: 'input,textarea,button,select,option,a,.crm-editable-enabled,[contenteditable]'}" ng-model="col">
-                  <div class="cse-block" ng-repeat="block in col" ng-class="{collapsible: block.collapsible, collapsed: block.collapsed, 'show-title': block.showTitle, 'block-multiple': block.multiple}" ng-include="'~/contactlayout/contactlayoutblock.html'"></div>
+                <div id="cse-rows">
+                  <div class="cse-row" ng-repeat="row in selectedLayout.blocks">
+                    <div class="cse-col cse-layout-col" ng-repeat="col in row" ui-sortable="{connectWith: '.cse-col', containment: '#cse-block-container', cancel: 'input,textarea,button,select,option,a,.crm-editable-enabled,[contenteditable]'}" ng-model="col">
+                      <div class="cse-block" ng-repeat="block in col" ng-class="{collapsible: block.collapsible, collapsed: block.collapsed, 'show-title': block.showTitle, 'block-multiple': block.multiple}" ng-include="'~/contactlayout/contactlayoutblock.html'"></div>
+                    </div>
+                  </div>
                 </div>
                 <div id="cse-palette-col">
                   <h4>

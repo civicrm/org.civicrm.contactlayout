@@ -1,4 +1,4 @@
-/* Add any CSS rules for Angular module "contactlayout" */
+/* CSS rules for Angular module "contactlayout" */
 
 #bootstrap-theme #contactLayoutEditor .panel-body {
   min-height: 600px;
@@ -89,7 +89,8 @@
 }
 
 #contactLayoutEditor,
-#cse-block-container {
+#cse-block-container,
+#cse-rows .cse-row {
   display: flex;
 }
 #contactLayoutLayouts {
@@ -99,11 +100,18 @@
 #contactLayoutEdit {
   flex: 3;
 }
-#cse-block-container > div {
+#cse-rows {
+  flex: 2;
+}
+#cse-rows .cse-col {
   flex: 1;
-  padding: 10px;
-  margin: 0 10px;
-  min-height: 515px;
+  min-height: 50px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  padding: 12px 5px 0
+}
+#cse-rows .cse-col+.cse-col {
+  min-height: 200px;
 }
 #cse-block-container > div:first-child,
 #cse-block-container > div:last-child {
@@ -115,6 +123,7 @@
 }
 #cse-block-container #cse-palette-col {
   padding: 0;
+  flex: 1;
 }
 #cse-block-container #cse-palette-col > h4 {
   padding: 11px 10px;
@@ -244,7 +253,8 @@
   border-radius: 4px;
   background-color: white;
   height: 24px;
-  width: 100%;
+  margin: 0 -2px;
+  width: calc(100% + 4px);
   padding-left: 8px;
   padding-top: 2px;
   color: grey;

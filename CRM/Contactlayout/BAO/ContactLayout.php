@@ -64,19 +64,21 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
    */
   public static function loadLayout(&$layout, $contactType = NULL) {
     if ($layout) {
-      foreach ($layout as &$column) {
-        foreach ($column as &$block) {
-          $blockInfo = self::getBlock($block['name']);
-          if ($blockInfo && (!$contactType || empty($blockInfo['contact_type']) || $contactType == $blockInfo['contact_type'])) {
-            $block += $blockInfo;
+      foreach ($layout as &$row) {
+        foreach ($row as &$column) {
+          foreach ($column as &$block) {
+            $blockInfo = self::getBlock($block['name']);
+            if ($blockInfo && (!$contactType || empty($blockInfo['contact_type']) || $contactType == $blockInfo['contact_type'])) {
+              $block += $blockInfo;
+            }
+            // Invalid or missing block
+            else {
+              $block = FALSE;
+            }
           }
-          // Invalid or missing block
-          else {
-            $block = FALSE;
-          }
+          // Remove invalid blocks
+          $column = array_filter($column);
         }
-        // Remove invalid blocks
-        $column = array_filter($column);
       }
     }
   }

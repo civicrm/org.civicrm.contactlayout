@@ -4,9 +4,6 @@
       $routeProvider.when('/contact-summary-editor', {
         controller: 'Contactlayoutcontactlayout',
         templateUrl: '~/contactlayout/contactlayout.html',
-
-        // If you need to look up data when opening the page, list it out
-        // under 'resolve'.
         resolve: {
           profile_status: function(crmProfiles) {
             return crmProfiles.load();
@@ -79,9 +76,11 @@
     $scope.changeContactType = function(layout) {
       layout.contact_sub_type = null;
       if (layout.contact_type) {
-        _.each(layout.blocks, function(blocks, i) {
-          layout.blocks[i] = _.filter(blocks, function(block) {
-            return !block.contact_type || block.contact_type === layout.contact_type;
+        _.each(layout.blocks, function(row) {
+          _.each(row, function(col, i) {
+            row[i] = _.filter(col, function(block) {
+              return !block.contact_type || block.contact_type === layout.contact_type;
+            });
           });
         });
         loadLayout(layout);
@@ -134,7 +133,7 @@
     $scope.deleteBlock = function(block) {
       var message = [_.escape(ts('Delete the block "%1"?', {1: block.title}))];
       _.each($scope.layouts, function (layout) {
-        if (_.where(layout.blocks[0].concat(layout.blocks[1]), {name: block.name}).length) {
+        if (_.where(layout.blocks[0][0].concat(layout.blocks[1][0], layout.blocks[1][1], layout.blocks[2][0]), {name: block.name}).length) {
           message.push(_.escape(ts('It is currently part of the "%1" layout.', {1: layout.label})));
         }
       });
@@ -145,17 +144,20 @@
         .on('crmConfirm:yes', function() {
           // Remove block from all layouts
           _.each($scope.layouts, function (layout) {
-            _.each(layout.blocks, function(blocks) {
-              var idx = _.findIndex(blocks, {name: block.name});
-              if (idx > -1) {
-                blocks.splice(idx, 1);
-              }
+            _.each(layout.blocks, function(row) {
+              _.each(row, function(col) {
+                var idx = _.findIndex(col, {name: block.name});
+                if (idx > -1) {
+                  col.splice(idx, 1);
+                }
+              });
             });
           });
           reloadBlocks([['UFGroup', 'delete', {where: [['id', '=', block.profile_id]]}]]);
         });
     };
 
+    // Cycles between the 4 possible collapsible/collapsed states
     $scope.toggleCollapsible = function(block) {
       if (!block.collapsible && !block.showTitle) {
         block.collapsible = true;
@@ -182,7 +184,11 @@
     $scope.newLayout = function() {
       var newLayout = {
         label: ts('Untitled %1', {1: ++newLayoutCount}),
-        blocks: [[],[]],
+        blocks: [
+          [[]],
+          [[],[]],
+          [[]]
+        ],
         palette: _.cloneDeep(allBlocks)
       };
       $scope.deletedLayout = null;
@@ -261,12 +267,18 @@
           contact_type: layout.contact_type || null,
           contact_sub_type: layout.contact_sub_type && layout.contact_sub_type.length ? layout.contact_sub_type : null,
           groups: layout.groups && layout.groups.length ? layout.groups : null,
-          blocks: [[],[]]
+          blocks: [
+            [[]],
+            [[],[]],
+            [[]]
+          ]
         };
-        _.each(layout.blocks, function(blocks, col) {
-          _.each(blocks, function(block) {
-            item.blocks[col].push(getBlockProperties(block));
-            empty = false;
+        _.each(layout.blocks, function(row, rowNum) {
+          _.each(row, function(col, colNum) {
+            _.each(col, function(block) {
+              item.blocks[rowNum][colNum].push(getBlockProperties(block));
+              empty = false;
+            });
           });
         });
         if (!layout.label) {
@@ -328,10 +340,12 @@
 
     function loadLayout(layout) {
       layout.palette = _.cloneDeep(allBlocks);
-      _.each(layout.blocks, function(column) {
-        _.each(column, function(block, num) {
-          column[num] = _.extend(_.where(layout.palette, {name: block.name})[0] || {}, getBlockProperties(block));
-          _.remove(layout.palette, {name: block.name});
+      _.each(layout.blocks, function(row) {
+        _.each(row, function(col) {
+          _.each(col, function(block, num) {
+            col[num] = _.extend(_.where(layout.palette, {name: block.name})[0] || {}, getBlockProperties(block));
+            _.remove(layout.palette, {name: block.name});
+          });
         });
       });
     }
