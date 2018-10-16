@@ -49,8 +49,8 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
       }
     }
     $layout->addClause('OR', $groupClause);
-    $layout = CRM_Utils_Array::value('blocks', $layout->execute()->first());
-    self::loadLayout($layout, $contact['contact_type']);
+    $layout = $layout->execute()->first();
+    self::loadBlocks($layout, $contact['contact_type']);
     return $layout;
   }
 
@@ -62,9 +62,9 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
    * @param array $layout
    * @param string $contactType
    */
-  public static function loadLayout(&$layout, $contactType = NULL) {
-    if ($layout) {
-      foreach ($layout as &$row) {
+  public static function loadBlocks(&$layout, $contactType = NULL) {
+    if (!empty($layout['blocks'])) {
+      foreach ($layout['blocks'] as &$row) {
         foreach ($row as &$column) {
           foreach ($column as &$block) {
             $blockInfo = self::getBlock($block['name']);

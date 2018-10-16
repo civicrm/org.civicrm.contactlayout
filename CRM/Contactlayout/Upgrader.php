@@ -70,22 +70,17 @@ class CRM_Contactlayout_Upgrader extends CRM_Contactlayout_Upgrader_Base {
   }
 
   /**
-   * Add top & bottom row to layouts.
+   * Change layout format from columns only to rows + columns.
    *
    * @return TRUE on success
    * @throws Exception
    */
   public function upgrade_1000() {
-    $this->ctx->log->info('Applying update 1000 - Add top & bottom row to layouts.');
+    $this->ctx->log->info('Applying update 1000 - Change layout format from columns only to rows + columns.');
     foreach (ContactLayout::get()->setCheckPermissions(FALSE)->execute() as $layout) {
-      $blocks = [
-        [[]],
-        $layout['blocks'],
-        [[]]
-      ];
       ContactLayout::update()
         ->addWhere('id', '=', $layout['id'])
-        ->addValue('blocks', $blocks)
+        ->addValue('blocks', [$layout['blocks']])
         ->setCheckPermissions(FALSE)
         ->execute();
     }

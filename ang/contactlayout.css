@@ -108,10 +108,15 @@
   min-height: 50px;
   margin-right: 10px;
   margin-bottom: 10px;
-  padding: 12px 5px 0
+  position: relative;
 }
-#cse-rows .cse-col+.cse-col {
+#cse-rows .cse-row:first-child .cse-col {
   min-height: 200px;
+}
+#cse-rows .cse-drop {
+  width: 100%;
+  height: 100%;
+  padding: 22px 5px 0;
 }
 #cse-block-container > div:first-child,
 #cse-block-container > div:last-child {
@@ -121,8 +126,20 @@
   border: 2px dashed #9c9c9c;
   background-color: #f8f8f8;
 }
+#cse-rows .cse-add-col,
+#cse-rows .cse-add-row {
+  display: block;
+  border: 2px dashed grey;
+  width: 20px;
+  height: 20px;
+  color: grey;
+  margin-right: 8px;
+  text-align: center;
+  box-sizing: border-box;
+  line-height: 1.3;
+}
+
 #cse-block-container #cse-palette-col {
-  padding: 0;
   flex: 1;
 }
 #cse-block-container #cse-palette-col > h4 {
@@ -159,12 +176,14 @@
   margin-bottom: 14px;
   margin-top: 2px;
 }
-#cse-block-container .cse-block .cse-block-buttons {
+#cse-block-container .cse-block .cse-block-buttons,
+#cse-rows .cse-remove-col {
   position: absolute;
   right: 3px;
   top: 3px;
 }
-#cse-block-container .cse-block .btn-group-xs .btn {
+#cse-block-container .btn-group-xs .btn,
+#cse-block-container .btn-xs {
   border: 0 none;
 }
 #cse-block-container .cse-block h5 {

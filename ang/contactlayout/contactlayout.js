@@ -130,10 +130,37 @@
       }
     };
 
+    $scope.addRow = function() {
+      $scope.selectedLayout.blocks.push([[], []]);
+    };
+
+    $scope.addCol = function(row) {
+      row.push([]);
+    };
+
+    $scope.removeCol = function(row, col) {
+      row.splice(col, 1);
+      _.each($scope.selectedLayout.blocks, function(row, num) {
+        if (!row.length) {
+          $scope.selectedLayout.blocks.splice(num, 1);
+        }
+      });
+    };
+
+    function getBlocksInLayout(layout) {
+      var blocksInLayout = [];
+      _.each(layout.blocks, function(row) {
+        _.each(row, function(col) {
+          blocksInLayout.push.apply(blocksInLayout, col);
+        });
+      });
+      return blocksInLayout;
+    }
+
     $scope.deleteBlock = function(block) {
       var message = [_.escape(ts('Delete the block "%1"?', {1: block.title}))];
       _.each($scope.layouts, function (layout) {
-        if (_.where(layout.blocks[0][0].concat(layout.blocks[1][0], layout.blocks[1][1], layout.blocks[2][0]), {name: block.name}).length) {
+        if (_.where(getBlocksInLayout(layout), {name: block.name}).length) {
           message.push(_.escape(ts('It is currently part of the "%1" layout.', {1: layout.label})));
         }
       });
@@ -184,11 +211,7 @@
     $scope.newLayout = function() {
       var newLayout = {
         label: ts('Untitled %1', {1: ++newLayoutCount}),
-        blocks: [
-          [[]],
-          [[],[]],
-          [[]]
-        ],
+        blocks: [[[],[]]],
         palette: _.cloneDeep(allBlocks)
       };
       $scope.deletedLayout = null;
@@ -267,14 +290,12 @@
           contact_type: layout.contact_type || null,
           contact_sub_type: layout.contact_sub_type && layout.contact_sub_type.length ? layout.contact_sub_type : null,
           groups: layout.groups && layout.groups.length ? layout.groups : null,
-          blocks: [
-            [[]],
-            [[],[]],
-            [[]]
-          ]
+          blocks: []
         };
         _.each(layout.blocks, function(row, rowNum) {
+          item.blocks.push([]);
           _.each(row, function(col, colNum) {
+            item.blocks[rowNum].push([]);
             _.each(col, function(block) {
               item.blocks[rowNum][colNum].push(getBlockProperties(block));
               empty = false;

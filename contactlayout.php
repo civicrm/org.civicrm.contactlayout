@@ -133,18 +133,22 @@ function contactlayout_civicrm_pageRun(&$page) {
       $layout = CRM_Contactlayout_BAO_ContactLayout::getLayout($contactID);
       if ($layout) {
         $profileBlocks = [];
-        foreach ($layout as $column) {
-          foreach ($column as $block) {
-            if (!empty($block['profile_id'])) {
-              $profileBlocks[$block['profile_id']] = CRM_Contactlayout_Page_Inline_ProfileBlock::getProfileBlock($block['profile_id'], $contactID);
+        foreach ($layout['blocks'] as $row) {
+          foreach ($row as $column) {
+            foreach ($column as $block) {
+              if (!empty($block['profile_id'])) {
+                $profileBlocks[$block['profile_id']] = CRM_Contactlayout_Page_Inline_ProfileBlock::getProfileBlock($block['profile_id'], $contactID);
+              }
             }
           }
         }
-        $page->assign('layoutBlocks', $layout);
+        $page->assign('layoutBlocks', $layout['blocks']);
         $page->assign('profileBlocks', $profileBlocks);
         // Setting these variables will make Summary.tpl replace the contents with SummaryHook.tpl which we override.
         $page->assign('hookContent', 1);
         $page->assign('hookContentPlacement', CRM_Utils_Hook::SUMMARY_REPLACE);
+        CRM_Core_Resources::singleton()
+          ->addStyleFile('org.civicrm.contactlayout', 'css/contact-summary-layout.css');
       }
     }
   }

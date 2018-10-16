@@ -1,7 +1,7 @@
 {foreach from=$layoutBlocks item="row"}
-  <div class="contact_panel">
-    {foreach from=$row item="column" key="columnNo"}
-      <div {if count($row) > 1}class="contactCard{if $columnNo}Right{else}Left{/if}"{/if}>
+  <div class="contact_panel crm-contact-summary-layout-row">
+    {foreach from=$row item="column"}
+      <div class="crm-contact-summary-layout-col">
         {foreach from=$column item='block'}
           <div class="{if $block.collapsible}crm-collapsible{if $block.collapsed} collapsed{/if}{/if}">
             {if (!empty($block.collapsible) || !empty($block.showTitle))}

@@ -1,0 +1,9 @@
+.crm-container .contact_panel.crm-contact-summary-layout-row {
+  display: flex;
+  box-sizing: border-box;
+}
+.crm-container .crm-contact-summary-layout-col {
+  flex: 1;
+  box-sizing: border-box;
+  padding: 10px 10px 0;
+}
