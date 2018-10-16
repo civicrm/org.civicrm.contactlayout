@@ -12,6 +12,7 @@
             return crmApi4({
               layouts: ['ContactLayout', 'get', {orderBy: {weight: 'ASC'}}],
               blocks:  ['ContactLayout', 'getBlocks'],
+              tabs:  ['ContactLayout', 'getTabs'],
               contactTypes: ['ContactType', 'get', {
                 where: [['is_active','=','1']],
                 orderBy: {label: 'ASC'}
@@ -39,6 +40,7 @@
     $scope.saving = false;
     $scope.contactTypes = data.contactTypes;
     $scope.layouts = data.layouts;
+    $scope.tabs = data.tabs;
     var newLayoutCount = 0,
       profileEntities = [{entity_name: "contact_1", entity_type: "IndividualModel"}],
       allBlocks = loadBlocks(data.blocks);
