@@ -87,6 +87,18 @@ class CRM_Contactlayout_Upgrader extends CRM_Contactlayout_Upgrader_Base {
     return TRUE;
   }
 
+  /**
+   * Add support for tabs.
+   *
+   * @return TRUE on success
+   * @throws Exception
+   */
+  public function upgrade_1001() {
+    $this->ctx->log->info('Applying update 1001 - Add support for tabs.');
+    CRM_Core_DAO::executeQuery("ALTER TABLE `civicrm_contact_layout` ADD COLUMN `tabs` longtext NOT NULL COMMENT 'Contains json encoded layout tabs.'");
+    return TRUE;
+  }
+
 
   /**
    * Example: Run an external SQL script.
