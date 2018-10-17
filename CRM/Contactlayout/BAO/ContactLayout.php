@@ -376,8 +376,26 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
         'id' => "custom_{$group['id']}",
         'title' => $group['title'],
         'weight' => $weight += 10,
-        'contactType' => $group['extends'] == 'Contact' ? NULL : $group['extends'],
+        'contact_type' => $group['extends'] == 'Contact' ? NULL : $group['extends'],
       ];
+    }
+    $context = [
+      'contact_id' => CRM_Core_Session::getLoggedInContactID(),
+      'caller' => 'ContactLayout',
+    ];
+    CRM_Utils_Hook::tabset('civicrm/contact/view', $tabs, $context);
+    foreach ($tabs as &$tab) {
+      // Hack for CiviDiscount
+      if ($tab['id'] === 'discounts') {
+        $tabs[] = array(
+          'id' => 'discounts_assigned',
+          'title' => ts('Codes Assigned', ['domain' => 'org.civicrm.module.cividiscount']),
+          'weight' => 115,
+          'contact_type' => 'Organization',
+          'is_active' => TRUE,
+        );
+      }
+      $tab['is_active'] = TRUE;
     }
     usort($tabs, ['CRM_Utils_Sort', 'cmpFunc']);
     return $tabs;

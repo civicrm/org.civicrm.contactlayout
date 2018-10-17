@@ -199,6 +199,16 @@
 }
 #contactLayoutEditor .crm-editable-enabled {
   display: inline-block;
+  padding: 0 !important;
+  border: 2px solid transparent !important;
+}
+#contactLayoutEditor .crm-editable-enabled:hover:not(:focus) {
+  border: 2px dashed grey !important;
+}
+#contactLayoutEditor .crm-editable-enabled:before,
+#contactLayoutEditor .crm-editable-enabled:after {
+  content: '';
+  display: none;
 }
 #cse-block-container .cse-block h5 [contenteditable]:focus {
   cursor: text;
@@ -279,6 +289,44 @@
   color: grey;
   font-size: 11px;
   box-sizing: border-box;
+}
+
+#cse-tabs-container {
+  padding-left: 5px;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+  background: lightgrey;
+}
+
+#cse-tabs-container .cse-tab {
+  display: inline-block;
+  padding: 4px 5px;
+  border-radius: 4px;
+  color: white;
+  background-color: #0071bd;
+  margin-top: 5px;
+  margin-right: 5px;
+  font-size: 12px;
+  height: 30px;
+}
+#cse-tabs-container .cse-tab[data-tab-id=summary] {
+  background-color: #7ea4bd;
+}
+#cse-tabs-container .cse-tab.cse-tab-disabled {
+  background-color: #bdbdbd;
+  text-decoration: line-through;
+}
+#cse-tabs-container .cse-tab a {
+  color: white;
+  position: relative;
+  font-size: 10px;
+  top: -8px
+}
+#cse-tabs-container .cse-tab.ui-sortable-helper a {
+  display: none;
+}
+#cse-tabs-container .cse-tab .fa-arrows {
+  cursor: move;
 }
 
 /**
