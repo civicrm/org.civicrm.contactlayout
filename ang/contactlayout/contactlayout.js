@@ -141,7 +141,7 @@
     $scope.removeCol = function(row, col) {
       row.splice(col, 1);
       _.each($scope.selectedLayout.blocks, function(row, num) {
-        if (!row.length) {
+        if (row && !row.length) {
           $scope.selectedLayout.blocks.splice(num, 1);
         }
       });
