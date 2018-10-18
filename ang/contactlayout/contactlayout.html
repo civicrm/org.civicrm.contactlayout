@@ -83,8 +83,8 @@
               <div id="cse-tabs-container" ui-sortable="{containment: '#cse-tabs-container', handle: '.fa-arrows'}" ng-model="selectedLayout.tabs">
                 <div class="cse-tab" data-tab-id="{{ tab.id }}" ng-if="!tab.contact_type || !selectedLayout.contact_type || tab.contact_type === selectedLayout.contact_type" ng-class="{'cse-tab-disabled': !tab.is_active}" ng-repeat="tab in selectedLayout.tabs">
                   <span class="crm-i fa-arrows"></span>
-                  <span ng-if="tab.is_active" contact-layout-editable ng-model="tab.title">{{ tab.title }}</span>
-                  <span ng-if="!tab.is_active">{{ tabs[tab.id].title }}</span>
+                  <span class="cse-tab-title" ng-if="tab.is_active" contact-layout-editable ng-model="tab.title">{{ tab.title }}</span>
+                  <span class="cse-tab-title" ng-if="!tab.is_active">{{ tab.title }}</span>
                   <a href ng-if="tab.id !== 'summary'" ng-click="toggleTabActive(tab)">
                     <i class="crm-i" ng-class="{'fa-close': tab.is_active, 'fa-undo': !tab.is_active}"></i>
                   </a>

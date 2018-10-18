@@ -237,6 +237,9 @@
 
     $scope.toggleTabActive = function(tab) {
       tab.is_active = !tab.is_active;
+      if (!tab.is_active) {
+        tab.title = $scope.tabs[tab.id].title;
+      }
     };
 
     $scope.newProfile = function() {
