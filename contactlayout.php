@@ -142,6 +142,21 @@ function contactlayout_civicrm_pageRun(&$page) {
             }
           }
         }
+        if (!empty($layout['tabs'])) {
+          $tabs = array_column($page->get_template_vars('allTabs'), NULL, 'id');
+          foreach ($layout['tabs'] as $weight => $tab) {
+            $id = $tab['id'];
+            if (empty($tab['is_active'])) {
+              unset($tabs[$id]);
+            }
+            elseif (isset($tabs[$id])) {
+              $tabs[$id]['weight'] = $weight;
+              $tabs[$id]['title'] = CRM_Utils_Array::value('title', $tab, $tabs[$id]['title']);
+            }
+          }
+          usort($tabs, ['CRM_Utils_Sort', 'cmpFunc']);
+          $page->assign('allTabs', array_values($tabs));
+        }
         $page->assign('layoutBlocks', $layout['blocks']);
         $page->assign('profileBlocks', $profileBlocks);
         // Setting these variables will make Summary.tpl replace the contents with SummaryHook.tpl which we override.

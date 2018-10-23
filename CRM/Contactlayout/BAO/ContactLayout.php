@@ -24,6 +24,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
     $layout = \Civi\Api4\ContactLayout::get()
       ->setLimit(1)
       ->addSelect('blocks')
+      ->addSelect('tabs')
       ->addClause('OR', ['contact_type', 'IS NULL'], ['contact_type', '=', $contact['contact_type']])
       ->addOrderBy('weight');
 
@@ -351,6 +352,54 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
         }
       }
     }
+  }
+
+  /**
+   * @return array
+   */
+  public static function getAllTabs() {
+    $tabs = CRM_Contact_Page_View_Summary::basicTabs();
+    foreach (CRM_Core_Component::getEnabledComponents() as $name => $component) {
+      $tab = $component->registerTab();
+      if ($tab) {
+        $tabs[] = $tab + ['id' => $component->getKeyword()];
+      }
+    }
+    $weight = 200;
+    $customGroups = \Civi\Api4\CustomGroup::get()
+      ->addWhere('style', 'IN', ['Tab', 'Tab with table'])
+      ->addWhere('is_active', '=', 1)
+      ->addWhere('extends', 'IN', ['Contact', 'Individual', 'Household', 'Organization'])
+      ->addOrderBy('weight', 'ASC')
+      ->execute();
+    foreach ($customGroups as $group) {
+      $tabs[] = [
+        'id' => "custom_{$group['id']}",
+        'title' => $group['title'],
+        'weight' => $weight += 10,
+        'contact_type' => $group['extends'] == 'Contact' ? NULL : $group['extends'],
+      ];
+    }
+    $context = [
+      'contact_id' => CRM_Core_Session::getLoggedInContactID(),
+      'caller' => 'ContactLayout',
+    ];
+    CRM_Utils_Hook::tabset('civicrm/contact/view', $tabs, $context);
+    foreach ($tabs as &$tab) {
+      // Hack for CiviDiscount
+      if ($tab['id'] === 'discounts') {
+        $tabs[] = array(
+          'id' => 'discounts_assigned',
+          'title' => ts('Codes Assigned', ['domain' => 'org.civicrm.module.cividiscount']),
+          'weight' => 115,
+          'contact_type' => 'Organization',
+          'is_active' => TRUE,
+        );
+      }
+      $tab['is_active'] = TRUE;
+    }
+    usort($tabs, ['CRM_Utils_Sort', 'cmpFunc']);
+    return $tabs;
   }
 
 }

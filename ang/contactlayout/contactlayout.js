@@ -12,6 +12,7 @@
             return crmApi4({
               layouts: ['ContactLayout', 'get', {orderBy: {weight: 'ASC'}}],
               blocks:  ['ContactLayout', 'getBlocks'],
+              tabs:  ['ContactLayout', 'getTabs'],
               contactTypes: ['ContactType', 'get', {
                 where: [['is_active','=','1']],
                 orderBy: {label: 'ASC'}
@@ -39,6 +40,7 @@
     $scope.saving = false;
     $scope.contactTypes = data.contactTypes;
     $scope.layouts = data.layouts;
+    $scope.tabs = _.indexBy(data.tabs, 'id');
     var newLayoutCount = 0,
       profileEntities = [{entity_name: "contact_1", entity_type: "IndividualModel"}],
       allBlocks = loadBlocks(data.blocks);
@@ -211,12 +213,12 @@
     $scope.newLayout = function() {
       var newLayout = {
         label: ts('Untitled %1', {1: ++newLayoutCount}),
-        blocks: [[[],[]]],
-        palette: _.cloneDeep(allBlocks)
+        blocks: [[[],[]]]
       };
       $scope.deletedLayout = null;
+      loadLayout(newLayout);
       $scope.layouts.unshift(newLayout);
-      $scope.selectedLayout = newLayout;
+      $scope.selectLayout(newLayout);
     };
 
     $scope.deleteLayout = function(index) {
@@ -229,8 +231,15 @@
 
     $scope.restoreLayout = function() {
       $scope.layouts.unshift($scope.deletedLayout);
-      $scope.selectedLayout = $scope.deletedLayout;
+      $scope.selectLayout($scope.deletedLayout);
       $scope.deletedLayout = null;
+    };
+
+    $scope.toggleTabActive = function(tab) {
+      tab.is_active = !tab.is_active;
+      if (!tab.is_active) {
+        tab.title = $scope.tabs[tab.id].title;
+      }
     };
 
     $scope.newProfile = function() {
@@ -282,7 +291,7 @@
         emptyLayouts = [],
         noLabel = false;
       _.each($scope.layouts, function(layout) {
-        var empty = true;
+        var empty = true, tabs = [];
         var item = {
           label: layout.label,
           weight: ++layoutWeight,
@@ -290,7 +299,8 @@
           contact_type: layout.contact_type || null,
           contact_sub_type: layout.contact_sub_type && layout.contact_sub_type.length ? layout.contact_sub_type : null,
           groups: layout.groups && layout.groups.length ? layout.groups : null,
-          blocks: []
+          blocks: [],
+          tabs: []
         };
         _.each(layout.blocks, function(row, rowNum) {
           item.blocks.push([]);
@@ -301,6 +311,13 @@
               empty = false;
             });
           });
+        });
+        _.each(layout.tabs, function(tab, pos) {
+          var tabInfo = {id: tab.id, is_active: tab.is_active};
+          if (tab.title !== $scope.tabs[tab.id].title) {
+            tabInfo.title = tab.title;
+          }
+          item.tabs[pos] = tabInfo;
         });
         if (!layout.label) {
           noLabel = true;
@@ -361,6 +378,15 @@
 
     function loadLayout(layout) {
       layout.palette = _.cloneDeep(allBlocks);
+      layout.tabs = layout.tabs || _.cloneDeep(data.tabs);
+      _.each(data.tabs, function(defaultTab) {
+        var layoutTab = _.where(layout.tabs, {id: defaultTab.id})[0];
+        if (!layoutTab) {
+          layout.tabs.push(defaultTab);
+        } else {
+          layoutTab.title = layoutTab.title || defaultTab.title;
+        }
+      });
       _.each(layout.blocks, function(row) {
         _.each(row, function(col) {
           _.each(col, function(block, num) {
@@ -402,7 +428,7 @@
     // Initialize
     if ($scope.layouts.length) {
       loadLayouts();
-      $scope.selectedLayout = $scope.layouts[0];
+      $scope.selectLayout($scope.layouts[0]);
     }
     else {
       $scope.newLayout();

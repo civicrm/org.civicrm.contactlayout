@@ -1,5 +1,5 @@
 <div id="bootstrap-theme">
-  <div crm-ui-debug="selectedLayout.blocks"></div>
+  <div crm-ui-debug="selectedLayout"></div>
   <h1 crm-page-title>{{ts('Contact Summary Editor')}}</h1>
 
   <div id="contactLayoutEditor">
@@ -80,6 +80,16 @@
               </div>
             </nav>
             <div class="panel-inner">
+              <div id="cse-tabs-container" ui-sortable="{containment: '#cse-tabs-container', handle: '.fa-arrows'}" ng-model="selectedLayout.tabs">
+                <div class="cse-tab" data-tab-id="{{ tab.id }}" ng-if="!tab.contact_type || !selectedLayout.contact_type || tab.contact_type === selectedLayout.contact_type" ng-class="{'cse-tab-disabled': !tab.is_active}" ng-repeat="tab in selectedLayout.tabs">
+                  <span class="crm-i fa-arrows"></span>
+                  <span class="cse-tab-title" ng-if="tab.is_active" contact-layout-editable ng-model="tab.title">{{ tab.title }}</span>
+                  <span class="cse-tab-title" ng-if="!tab.is_active">{{ tab.title }}</span>
+                  <a href ng-if="tab.id !== 'summary'" ng-click="toggleTabActive(tab)">
+                    <i class="crm-i" ng-class="{'fa-close': tab.is_active, 'fa-undo': !tab.is_active}"></i>
+                  </a>
+                </div>
+              </div>
               <div id="cse-block-container">
                 <div id="cse-rows">
                   <div class="cse-row" ng-repeat="row in selectedLayout.blocks">
