@@ -107,7 +107,9 @@ class CRM_Contactlayout_Form_Inline_ProfileBlock extends CRM_Profile_Form_Edit {
     $this->_action = CRM_Core_Action::UPDATE;
 
     $this->processEmployer($values);
-    $this->processGroups($values);
+    if (isset($values['group'])) {
+      $this->processGroups($values);
+    }
     civicrm_api3('Profile', 'submit', $values);
 
     // Save tagsets (not handled by profile api)
