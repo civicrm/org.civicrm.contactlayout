@@ -107,7 +107,9 @@ class CRM_Contactlayout_Form_Inline_ProfileBlock extends CRM_Profile_Form_Edit {
     $this->_action = CRM_Core_Action::UPDATE;
 
     $this->processEmployer($values);
-    $this->processGroups($values);
+    if (isset($values['group'])) {
+      $this->processGroups($values);
+    }
     // Process image
     if (!empty($values['image_URL'])) {
       CRM_Contact_BAO_Contact::processImageParams($values);
