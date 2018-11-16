@@ -77,7 +77,7 @@ class CRM_Contactlayout_Upgrader extends CRM_Contactlayout_Upgrader_Base {
    */
   public function upgrade_1000() {
     $this->ctx->log->info('Applying update 1000 - Change layout format from columns only to rows + columns.');
-    foreach (ContactLayout::get()->setCheckPermissions(FALSE)->execute() as $layout) {
+    foreach (ContactLayout::get()->setSelect(['id', 'blocks'])->setCheckPermissions(FALSE)->execute() as $layout) {
       ContactLayout::update()
         ->addWhere('id', '=', $layout['id'])
         ->addValue('blocks', [$layout['blocks']])
