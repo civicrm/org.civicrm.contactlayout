@@ -140,7 +140,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
     // Core blocks are not editable
     $blocks['core']['blocks']['Basic'] = [
       'title' => E::ts('ID, Type, Tags'),
-      'tpl_file' => 'CRM/Contact/Page/Inline/Basic.tpl',
+      'tpl_file' => 'CRM/Contactlayout/Page/Inline/BasicPlusImage.tpl',
       'sample' => [E::ts('Tags'), E::ts('Contact Type'), E::ts('Contact ID'), E::ts('External ID')],
       'edit' => FALSE,
     ];
