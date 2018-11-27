@@ -42,6 +42,7 @@
     $scope.layouts = data.layouts;
     $scope.tabs = _.indexBy(data.tabs, 'id');
     var newLayoutCount = 0,
+      editingTabIcon,
       profileEntities = [{entity_name: "contact_1", entity_type: "IndividualModel"}],
       allBlocks = loadBlocks(data.blocks);
 
@@ -242,6 +243,11 @@
       }
     };
 
+    $scope.pickTabIcon = function(tab) {
+      editingTabIcon = tab;
+      $('#cse-icon-picker ~ .crm-icon-picker-button').click();
+    };
+
     $scope.newProfile = function() {
       var profileEditor = new CRM.Designer.DesignerDialog({
         findCreateUfGroupModel: function(options) {
@@ -317,6 +323,9 @@
           if (tab.title !== $scope.tabs[tab.id].title) {
             tabInfo.title = tab.title;
           }
+          if (tab.icon !== $scope.tabs[tab.id].icon) {
+            tabInfo.icon = tab.icon;
+          }
           item.tabs[pos] = tabInfo;
         });
         if (!layout.label) {
@@ -385,6 +394,7 @@
           layout.tabs.push(defaultTab);
         } else {
           layoutTab.title = layoutTab.title || defaultTab.title;
+          layoutTab.icon = layoutTab.icon || defaultTab.icon;
         }
       });
       _.each(layout.blocks, function(row) {
@@ -433,6 +443,16 @@
     else {
       $scope.newLayout();
     }
+
+    CRM.loadScript(CRM.config.resourceBase + 'js/jquery/jquery.crmIconPicker.js').done(function() {
+      $('#cse-icon-picker').crmIconPicker().change(function() {
+        if (editingTabIcon) {
+          $scope.$apply(function() {
+            editingTabIcon.icon = 'crm-i ' + $('#cse-icon-picker').val();
+          });
+        }
+      });
+    });
 
   });
 
