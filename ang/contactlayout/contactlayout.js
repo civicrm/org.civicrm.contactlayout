@@ -387,7 +387,11 @@
 
     function loadLayout(layout) {
       layout.palette = _.cloneDeep(allBlocks);
-      layout.tabs = layout.tabs || _.cloneDeep(data.tabs);
+      // Filter out tabs that no longer exist
+      layout.tabs = _.filter(layout.tabs || _.cloneDeep(data.tabs), function(item) {
+        return $scope.tabs[item.id];
+      });
+      // Set defaults for tabs
       _.each(data.tabs, function(defaultTab) {
         var layoutTab = _.where(layout.tabs, {id: defaultTab.id})[0];
         if (!layoutTab) {
