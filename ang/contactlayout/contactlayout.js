@@ -143,11 +143,14 @@
 
     $scope.removeCol = function(row, col) {
       row.splice(col, 1);
+      // When removing the last column in a row, delete the row
       _.each($scope.selectedLayout.blocks, function(row, num) {
         if (row && !row.length) {
           $scope.selectedLayout.blocks.splice(num, 1);
         }
       });
+      // Place blocks from deleted col back in the palette
+      loadLayout($scope.selectedLayout);
     };
 
     function getBlocksInLayout(layout) {
