@@ -363,7 +363,7 @@
         apiCall = ['ContactLayout', 'replace', {records: data}];
       }
       CRM.api4([apiCall])
-        .done(function () {
+        .then(function () {
           $scope.$apply(function () {
             $scope.saving = false;
             $scope.changesSaved = true;
@@ -421,7 +421,7 @@
       apiCalls.push(['ContactLayout', 'getBlocks']);
       $scope.deletedLayout = null;
       CRM.api4(apiCalls)
-        .done(function(data) {
+        .then(function(data) {
           $scope.$apply(function() {
             allBlocks = loadBlocks(_.last(data));
             loadLayouts();
