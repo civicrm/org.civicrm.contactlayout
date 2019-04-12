@@ -10,7 +10,11 @@
               </div>
             {/if}
             <div class="crm-summary-block">
-              {include file=$block.tpl_file}
+              {if $block.tpl_file}
+                {include file=$block.tpl_file}
+              {elseif $block.content_url}
+                {fetch file=$block.content_url}
+              {/if}
             </div>
           </div>
         {/foreach}
