@@ -163,6 +163,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
       'sample' => [E::ts('Gender'), E::ts('Date of Birth'), E::ts('Age')],
       'edit' => FALSE,
       'selector' => '#crm-demographic-content',
+      'contact_type' => 'Individual',
     ];
     $blocks['core']['blocks']['CommunicationPreferences'] = [
       'title' => E::ts('Communication Preferences'),
