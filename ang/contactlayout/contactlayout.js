@@ -131,6 +131,21 @@
       }
     };
 
+    /**
+     * Opens a modal that allows editing the relationship field for the given block.
+     *
+     * @param {object} block a contact layout block object.
+     */
+    $scope.editBlockRelationship = function(block) {
+      CRM.loadForm(CRM.url('civicrm/contact-layout/select-relationship', {
+        related_rel: block.related_rel
+      }))
+        .on('crmFormSuccess', (event, response) => {
+          block.related_rel = response.values.related_rel;
+          $scope.$digest();
+        });
+    };
+
     $scope.addRow = function() {
       $scope.selectedLayout.blocks.push([[], []]);
     };
@@ -348,7 +363,7 @@
 
     // Return the editable properties of a block
     function getBlockProperties(block) {
-      return _.pick(block, 'name', 'title', 'collapsible', 'collapsed', 'showTitle');
+      return _.pick(block, 'name', 'title', 'collapsible', 'collapsed', 'showTitle', 'related_rel');
     }
 
     // Write layout data to the server

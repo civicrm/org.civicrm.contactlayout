@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/contact-layout/select-relationship</path>
+    <page_callback>CRM_Contactlayout_Form_RelationshipSelection</page_callback>
+    <title>Relationship Selection</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+</menu>
