@@ -30,7 +30,8 @@
     }
   );
 
-  angular.module('contactlayout').controller('Contactlayoutcontactlayout', function($scope, $timeout, crmApi4, crmStatus, crmUiHelp, data) {
+  angular.module('contactlayout').controller('Contactlayoutcontactlayout', function($scope, $timeout, contactLayoutRelationshipOptions,
+    crmApi4, crmStatus, crmUiHelp, data, dialogService) {
     var ts = $scope.ts = CRM.ts('contactlayout');
     var hs = $scope.hs = crmUiHelp({file: 'CRM/contactlayout/contactlayout'});
     $scope.selectedLayout = null;
@@ -137,13 +138,42 @@
      * @param {object} block a contact layout block object.
      */
     $scope.editBlockRelationship = function(block) {
-      CRM.loadForm(CRM.url('civicrm/contact-layout/select-relationship', {
-        related_rel: block.related_rel
-      }))
-        .on('crmFormSuccess', (event, response) => {
-          block.related_rel = response.values.related_rel;
-          $scope.$digest();
-        });
+      var model = {
+        ts: ts,
+        selectedRelationship: block.related_rel,
+        relationshipOptions: contactLayoutRelationshipOptions
+      };
+      var dialogOptions = {
+        width: '500px',
+        title: ts('Relationship Selection'),
+        buttons: [
+          {
+            text: ts('Save'),
+            icons: { primary: 'fa-check' },
+            click: function () {
+              block.related_rel = model.selectedRelationship,
+
+              dialogService.close('editBlockRelationshipDialog');
+              $scope.$digest();
+            }
+          },
+          {
+            text: ts('Cancel'),
+            icons: { primary: 'fa-times' },
+            click: function () {
+              dialogService.cancel('editBlockRelationshipDialog');
+            }
+          }
+        ]
+      };
+
+      contactLayoutRelationshipOptions.loadOptions();
+      dialogService.open(
+        'editBlockRelationshipDialog',
+        '~/contactlayout/edit-block-relationship-dialog.html',
+        model,
+        dialogOptions
+      );
     };
 
     $scope.addRow = function() {
@@ -521,5 +551,49 @@
       }
     };
   });
+
+  // Service for loading relationship type options and displaying loading state.
+  angular.module('contactlayout')
+    .service('contactLayoutRelationshipOptions', function (crmApi) {
+      var relationshipOptionsPromise;
+      var service = this;
+
+      service.isLoading = false;
+      service.options = [];
+
+      // loads and stores the relationship type options.
+      service.loadOptions = function () {
+        service.isLoading = true;
+
+        if (!relationshipOptionsPromise) {
+          relationshipOptionsPromise = crmApi('RelationshipType', 'get', {
+            is_active: 1,
+            sequential: 1,
+            options: { limit: 0 }
+          });
+        }
+
+        return relationshipOptionsPromise
+          .then(formatRelationshipOptions)
+          .then(function (options) {
+            service.isLoading = false;
+            service.options = options;
+          })
+      };
+
+      // for each relationship type, it includes an option for the a_b relationship
+      // and another for the b_a relationship.
+      function formatRelationshipOptions (relationshipTypeResponse) {
+        return _.chain(relationshipTypeResponse.values)
+          .reduce(function (result, relationshipType) {
+            result.push({ id: relationshipType.id + '_ab', text: relationshipType.label_a_b });
+            result.push({ id: relationshipType.id + '_ba', text: relationshipType.label_b_a });
+
+            return result;
+          }, [])
+          .sortBy('text')
+          .value();
+      }
+    });
 
 })(angular, CRM.$, CRM._);

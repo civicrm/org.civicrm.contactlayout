@@ -1,0 +1,25 @@
+<div class="contactlayout__edit-block-relationship-dialog crm-container">
+  <div class="crm-section">
+    <div class="label">
+      Relationship
+    </div>
+    <div class="content" ng-if="model.relationshipOptions.isLoading === false">
+      <input
+        ng-model="model.selectedRelationship"
+        crm-ui-select="{
+          data: model.relationshipOptions.options,
+          dropdownAutoWidth : true,
+          allowClear: true,
+          placeholder: model.ts('- Select -')
+        }"
+      />
+      <p>If a relationship is selected, we display the information for the contact's
+        relation instead.</p>
+    </div>
+    <div class="content" ng-if="model.relationshipOptions.isLoading">
+      <i
+        ng-if="model.relationshipOptions.isLoading"
+        class="fa fa-spinner fa-pulse fa-fw"></i>
+    </div>
+  </div>
+</div>
