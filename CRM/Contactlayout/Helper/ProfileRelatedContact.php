@@ -15,7 +15,9 @@ class CRM_Contactlayout_Helper_ProfileRelatedContact {
    *   Contact to get related contact for.
    * @param string $relatedRelationship
    *   String defining relationship to check for with passed contact
-   *   e.g `16_ab` means relationship type id 16 and relationship direction is ab.
+   *   e.g. `16_ab` means relationship type id 16 and relationship direction is ab.
+   *   `16_r` means the relationship is reciprocal (e.g. Friend of). In such
+   *   cases we need to return the other end of the relationship.
    *
    * @return int|null
    *   The first contact matching the criteria.
@@ -26,16 +28,23 @@ class CRM_Contactlayout_Helper_ProfileRelatedContact {
       return NULL;
     }
 
-    $isAToB = $direction == 'ab';
+    $isReciprocal = $direction == 'r';
     $relationshipTable = CRM_Contact_BAO_Relationship::getTableName();
     $relationshipTypeTable = CRM_Contact_BAO_RelationshipType::getTableName();
     $contactTable = CRM_Contact_BAO_Contact::getTableName();
-    $relationshipJoinCondition = $isAToB ? 'ON r.contact_id_a = c.id' : 'ON r.contact_id_b = c.id';
-    $contactCondition = $isAToB ? 'AND r.contact_id_b = %1' : 'AND r.contact_id_a = %1';
+
+    if ($isReciprocal) {
+      $relationshipJoinCondition = 'ON r.contact_id_a = c.id OR r.contact_id_b = c.id';
+      $contactCondition = 'AND (r.contact_id_a = %1 OR r.contact_id_b = %1)';
+    } else {
+      $isAToB = $direction == 'ab';
+      $relationshipJoinCondition = $isAToB ? 'ON r.contact_id_a = c.id' : 'ON r.contact_id_b = c.id';
+      $contactCondition = $isAToB ? 'AND r.contact_id_b = %1' : 'AND r.contact_id_a = %1';
+    }
 
     $query = "
-      SELECT c.id
-      FROM {$contactTable } c
+      SELECT r.contact_id_a, r.contact_id_b
+      FROM {$contactTable} c
       INNER JOIN {$relationshipTable} r
        {$relationshipJoinCondition}
       INNER JOIN {$relationshipTypeTable} rt
@@ -58,8 +67,12 @@ class CRM_Contactlayout_Helper_ProfileRelatedContact {
     $contact = [];
 
     while ($result->fetch()) {
+      $relationId = $contactId == $result->contact_id_a
+        ? $result->contact_id_b
+        : $result->contact_id_a;
+
       $contact = [
-        'id' => $result->id,
+        'id' => $relationId,
       ];
     }
 

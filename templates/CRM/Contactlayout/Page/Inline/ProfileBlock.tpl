@@ -35,12 +35,11 @@
     </div>
   {else}
     <div class="crm-clear crm-inline-block-content">
-      <h4>No relationship found.</h4>
+      <h4>{ts}No relationship found.{/ts}</h4>
       <p>
         <a href="{crmURL p='civicrm/contact/view' q="reset=1&selectedChild=rel&cid=`$contactId`"}">
-          Click here
+          {ts}View Relationships{/ts}
         </a>
-        to view relationships.
       </p>
     </div>
   {/if}

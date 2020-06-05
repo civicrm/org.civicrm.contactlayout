@@ -554,7 +554,7 @@
 
   // Service for loading relationship type options and displaying loading state.
   angular.module('contactlayout')
-    .service('contactLayoutRelationshipOptions', function (crmApi) {
+    .service('contactLayoutRelationshipOptions', function (crmApi4) {
       var relationshipOptionsPromise;
       var service = this;
 
@@ -566,10 +566,8 @@
         service.isLoading = true;
 
         if (!relationshipOptionsPromise) {
-          relationshipOptionsPromise = crmApi('RelationshipType', 'get', {
-            is_active: 1,
-            sequential: 1,
-            options: { limit: 0 }
+          relationshipOptionsPromise = crmApi4('RelationshipType', 'get', {
+            where: [['is_active', '=', true]]
           });
         }
 
@@ -584,10 +582,16 @@
       // for each relationship type, it includes an option for the a_b relationship
       // and another for the b_a relationship.
       function formatRelationshipOptions (relationshipTypeResponse) {
-        return _.chain(relationshipTypeResponse.values)
+        return _.chain(relationshipTypeResponse)
           .reduce(function (result, relationshipType) {
-            result.push({ id: relationshipType.id + '_ab', text: relationshipType.label_a_b });
-            result.push({ id: relationshipType.id + '_ba', text: relationshipType.label_b_a });
+            var isReciprocal = relationshipType.label_a_b === relationshipType.label_b_a;
+
+            if (isReciprocal) {
+              result.push({ id: relationshipType.id + '_r', text: relationshipType.label_a_b });
+            } else {
+              result.push({ id: relationshipType.id + '_ab', text: relationshipType.label_a_b });
+              result.push({ id: relationshipType.id + '_ba', text: relationshipType.label_b_a });
+            }
 
             return result;
           }, [])
