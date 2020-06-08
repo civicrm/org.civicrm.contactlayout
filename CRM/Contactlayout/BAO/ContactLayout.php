@@ -227,16 +227,16 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
         ->setWhere([['is_active', '=', 1], ['uf_group_id', '=', '$uf_group_id']]))
       ->execute();
     foreach ($profiles as $profile) {
-      $profileType = array_intersect(CRM_Contact_BAO_ContactType::basicTypes(TRUE), $profile['uf_group']['group_type']);
-      $blocks['profile']['blocks'][$profile['uf_group']['name']] = [
-        'title' => $profile['uf_group']['title'],
+      $profileType = array_intersect(CRM_Contact_BAO_ContactType::basicTypes(TRUE), $profile['uf_group.group_type']);
+      $blocks['profile']['blocks'][$profile['uf_group.name']] = [
+        'title' => $profile['uf_group.title'],
         'tpl_file' => 'CRM/Contactlayout/Page/Inline/Profile.tpl',
         'profile_id' => $profile['uf_group_id'],
         'sample' => array_column($profile['fields'], 'label'),
         'collapsible' => TRUE,
         'edit' => TRUE,
         'refresh' => [],
-        'selector' => '#crm-profile-content-' . $profile['uf_group']['name'],
+        'selector' => '#crm-profile-content-' . $profile['uf_group.name'],
         'contact_type' => CRM_Utils_Array::first($profileType),
       ];
     }
@@ -333,7 +333,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
       ],
     ];
     foreach ($profiles as $profile) {
-      $block =& $blocks['profile']['blocks'][$profile['uf_group']['name']];
+      $block =& $blocks['profile']['blocks'][$profile['uf_group.name']];
       foreach ($profile['fields'] as $field) {
         $fieldName = strtolower($field['field_name']);
         if (strpos($fieldName, 'custom_') === 0) {

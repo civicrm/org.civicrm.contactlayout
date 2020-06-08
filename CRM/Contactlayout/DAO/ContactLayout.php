@@ -91,6 +91,13 @@ class CRM_Contactlayout_DAO_ContactLayout extends CRM_Core_DAO {
   }
 
   /**
+   * Returns localized title of this entity.
+   */
+  public static function getEntityTitle() {
+    return ts('Contact Summary Layouts');
+  }
+
+  /**
    * Returns all the column names of this table
    *
    * @return array
