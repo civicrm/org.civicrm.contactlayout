@@ -384,7 +384,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
         'id' => "custom_{$group['id']}",
         'title' => $group['title'],
         'weight' => $weight += 10,
-        'icon' => 'crm-i fa-gear',
+        'icon' => 'crm-i ' . ($group['icon'] ?? 'fa-gear'),
         'contact_type' => $group['extends'] == 'Contact' ? NULL : $group['extends'],
       ];
     }
