@@ -141,7 +141,16 @@
       var model = {
         ts: ts,
         selectedRelationship: block.related_rel,
-        relationshipOptions: contactLayoutRelationshipOptions
+        relationshipOptions: contactLayoutRelationshipOptions,
+        displayHelp: function (event) {
+          event.preventDefault();
+          CRM.help('Relationship selection', 'What is the relationship of the contact we want to display on this block?');
+        },
+        getSelectedRelationshipLabel: function () {
+          return _.find(contactLayoutRelationshipOptions.options, {
+            id: model.selectedRelationship
+          }).text;
+        }
       };
       var dialogOptions = {
         width: '500px',
