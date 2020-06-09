@@ -1,0 +1,43 @@
+<div class="contactlayout__relatioonship-dialog crm-container">
+  <p>If a relationship is selected, we display the information for the contact's
+    relation instead.</p>
+  <div class="crm-section">
+    <div class="label">
+      Relationship
+    </div>
+    <div class="content" ng-if="model.relationshipOptions.isLoading === false">
+      <input
+        ng-model="model.selectedRelationship"
+        crm-ui-select="{
+          data: model.relationshipOptions.options,
+          dropdownAutoWidth : true,
+          allowClear: true,
+          placeholder: model.ts('- Select -')
+        }"
+      />
+      <a class="helpicon" title="Field Help" aria-label="Field Help" href="#" ng-click="model.displayHelp($event)">&nbsp;</a>
+    </div>
+    <div
+      ng-if="model.selectedRelationship && !model.relationshipOptions.isLoading"
+      class="contactlayout__relatioonship-dialog__illustration">
+      <div class="contactlayout__relatioonship-dialog__illustration__contact">
+        <i class="fa fa-user"></i><br />
+        <small>Contact on block</small>
+      </div>
+      <div class="contactlayout__relatioonship-dialog__illustration__relationship-type">
+        <i class="fa fa-long-arrow-right"></i>
+        <small>{{model.getSelectedRelationshipLabel()}}</small>
+        <i class="fa fa-long-arrow-right"></i>
+      </div>
+      <div class="contactlayout__relatioonship-dialog__illustration__contact">
+        <i class="fa fa-user"></i><br />
+        <small>Contact we are viewing</small>
+      </div>
+    </div>
+    <div class="content" ng-if="model.relationshipOptions.isLoading">
+      <i
+        ng-if="model.relationshipOptions.isLoading"
+        class="fa fa-spinner fa-pulse fa-fw"></i>
+    </div>
+  </div>
+</div>

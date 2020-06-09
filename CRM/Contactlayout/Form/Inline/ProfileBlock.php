@@ -13,8 +13,12 @@ class CRM_Contactlayout_Form_Inline_ProfileBlock extends CRM_Profile_Form_Edit {
    * Form for editing profile blocks
    */
   public function preProcess() {
-    if (!empty($_GET['cid'])) {
-      $this->set('id', $_GET['cid']);
+    $relatedContactId = CRM_Utils_Request::retrieveValue('rel_cid', 'Positive', NULL, FALSE);
+    $viewedContactId = CRM_Utils_Request::retrieveValue('cid', 'Positive', NULL, TRUE);
+    $contactId = $relatedContactId ? $relatedContactId : $viewedContactId;
+
+    if (!empty($contactId)) {
+      $this->set('id', $contactId);
     }
     parent::preProcess();
     // Suppress profile status messages like the double-opt-in warning
