@@ -10,7 +10,7 @@ Have you ever wanted to rearrange the contact summary screen? Move the most impo
 
 ## Requirements
 
-* CiviCRM 5.7+
+* CiviCRM 5.19+
 * [Angular Profiles extension](https://github.com/ginkgostreet/org.civicrm.angularprofiles)
 * (Optional) Looks best with a bootstrap-based admin theme or the [Shoreditch exension](https://github.com/civicrm/org.civicrm.shoreditch).
 
