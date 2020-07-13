@@ -183,6 +183,10 @@
         },
         // Stores the relationship label and contact icons for the selected relationship option
         storeRelationshipInfoForSelectedOption: function () {
+          if (!model.selectedRelationship) {
+            return;
+          }
+
           var relationship = contactLayoutRelationshipOptions.getRelationshipFromOption(model.selectedRelationship);
           var relationshipOption = _.find(model.relationshipOptions.options, { id: model.selectedRelationship });
           var contactIcons = relationship.direction === 'r'

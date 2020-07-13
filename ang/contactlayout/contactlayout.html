@@ -117,7 +117,7 @@
                     </div>
                   </h4>
                   <div id="cse-palette" class="cse-col cse-drop" ui-sortable="{connectWith: '.cse-drop', containment: '#cse-block-container', update: enforceUnique, cancel: 'input,textarea,button,select,option,a,.invalid-block'}" ng-model="selectedLayout.palette">
-                    <div class="cse-block" ng-repeat="block in selectedLayout.palette" ng-class="{'invalid-block': selectedLayout.contact_type && block.contact_type && selectedLayout.contact_type !== block.contact_type}" ng-include="'~/contactlayout/contactlayoutblock.html'"></div>
+                    <div class="cse-block" ng-repeat="block in selectedLayout.palette" ng-class="{'invalid-block': !checkBlockValidity(block)}" ng-include="'~/contactlayout/contactlayoutblock.html'"></div>
                   </div>
                 </div>
               </div>
