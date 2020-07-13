@@ -8,6 +8,7 @@
     <div class="content">
       <input
         ng-model="model.selectedRelationship"
+        ng-change="model.storeRelationshipInfoForSelectedOption()"
         crm-ui-select="{
           data: model.relationshipOptions.options,
           dropdownAutoWidth : true,
@@ -21,16 +22,16 @@
       ng-if="model.selectedRelationship"
       class="contactlayout__relatioonship-dialog__illustration">
       <div class="contactlayout__relatioonship-dialog__illustration__contact">
-        <i class="fa fa-user"></i><br />
+        <i class="{{model.contactIcons.onBlock}}"></i><br />
         <small>Contact on block</small>
       </div>
       <div class="contactlayout__relatioonship-dialog__illustration__relationship-type">
         <i class="fa fa-long-arrow-right"></i>
-        <small>{{model.getSelectedRelationshipLabel()}}</small>
+        <small>{{model.relationshipLabel}}</small>
         <i class="fa fa-long-arrow-right"></i>
       </div>
       <div class="contactlayout__relatioonship-dialog__illustration__contact">
-        <i class="fa fa-user"></i><br />
+        <i class="{{model.contactIcons.viewing}}"></i><br />
         <small>Contact we are viewing</small>
       </div>
     </div>
