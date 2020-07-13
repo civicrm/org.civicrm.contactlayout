@@ -1,4 +1,4 @@
-(function(angular, $, _) {
+(function(angular, $, _, RELATIONSHIP_TYPES) {
   // Autoload dependencies.
   angular.module('contactlayout', CRM.angRequires('contactlayout'));
 
@@ -176,7 +176,6 @@
         ]
       };
 
-      contactLayoutRelationshipOptions.loadOptions();
       dialogService.open(
         'editBlockRelationshipDialog',
         '~/contactlayout/edit-block-relationship-dialog.html',
@@ -567,26 +566,7 @@
       var relationshipOptionsPromise;
       var service = this;
 
-      service.isLoading = false;
-      service.options = [];
-
-      // loads and stores the relationship type options.
-      service.loadOptions = function () {
-        service.isLoading = true;
-
-        if (!relationshipOptionsPromise) {
-          relationshipOptionsPromise = crmApi4('RelationshipType', 'get', {
-            where: [['is_active', '=', true]]
-          });
-        }
-
-        return relationshipOptionsPromise
-          .then(formatRelationshipOptions)
-          .then(function (options) {
-            service.isLoading = false;
-            service.options = options;
-          })
-      };
+      service.options = formatRelationshipOptions(RELATIONSHIP_TYPES);
 
       // for each relationship type, it includes an option for the a_b relationship
       // and another for the b_a relationship.
@@ -609,4 +589,4 @@
       }
     });
 
-})(angular, CRM.$, CRM._);
+})(angular, CRM.$, CRM._, CRM['contactlayout'].relationshipTypes);

@@ -5,7 +5,7 @@
     <div class="label">
       Relationship
     </div>
-    <div class="content" ng-if="model.relationshipOptions.isLoading === false">
+    <div class="content">
       <input
         ng-model="model.selectedRelationship"
         crm-ui-select="{
@@ -18,7 +18,7 @@
       <a class="helpicon" title="Field Help" aria-label="Field Help" href="#" ng-click="model.displayHelp($event)">&nbsp;</a>
     </div>
     <div
-      ng-if="model.selectedRelationship && !model.relationshipOptions.isLoading"
+      ng-if="model.selectedRelationship"
       class="contactlayout__relatioonship-dialog__illustration">
       <div class="contactlayout__relatioonship-dialog__illustration__contact">
         <i class="fa fa-user"></i><br />
@@ -33,11 +33,6 @@
         <i class="fa fa-user"></i><br />
         <small>Contact we are viewing</small>
       </div>
-    </div>
-    <div class="content" ng-if="model.relationshipOptions.isLoading">
-      <i
-        ng-if="model.relationshipOptions.isLoading"
-        class="fa fa-spinner fa-pulse fa-fw"></i>
     </div>
   </div>
 </div>
