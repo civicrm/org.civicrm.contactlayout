@@ -144,12 +144,12 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
     if ($blockRelation) {
       try {
         $relationship = self::getRelationshipFromOption($blockRelation);
-      } catch (Exception $exception) {
+      }
+      catch (Exception $exception) {
         return FALSE;
       }
 
-      return
-        ($relationship['direction'] === 'r' && (
+      return ($relationship['direction'] === 'r' && (
           ($contactType === $relationship['type']['contact_type_a'] &&
             $blockInfo['contact_type'] === $relationship['type']['contact_type_b']) ||
           ($contactType === $relationship['type']['contact_type_b'] &&
@@ -160,7 +160,8 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
         ($relationship['direction'] === 'ba' && (
           $blockInfo['contact_type'] === $relationship['type']['contact_type_b'] &&
           $contactType === $relationship['type']['contact_type_a']));
-    } else {
+    }
+    else {
       return $blockInfo && (!$contactType || empty($blockInfo['contact_type']) || $contactType == $blockInfo['contact_type']);
     }
   }
@@ -189,7 +190,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
 
     return [
       'type' => $relationshipType,
-      'direction' => $relationship[1]
+      'direction' => $relationship[1],
     ];
   }
 

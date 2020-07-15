@@ -65,12 +65,12 @@
             (relationship.type.contact_type_b === block.contact_type &&
               relationship.type.contact_type_a === $scope.selectedLayout.contact_type);
         } else {
-          var contactTypes = relationship.direction === 'ab'
-            ? { onBlock: relationship.type.contact_type_a, viewing: relationship.type.contact_type_b }
-            : { onBlock: relationship.type.contact_type_b, viewing: relationship.type.contact_type_a };
+          var contactTypes = relationship.direction === 'ab' ?
+            { onBlock: relationship.type.contact_type_a, viewing: relationship.type.contact_type_b } :
+            { onBlock: relationship.type.contact_type_b, viewing: relationship.type.contact_type_a };
 
-          return $scope.selectedLayout.contact_type === contactTypes.viewing
-            || block.contact_type === contactTypes.onBlock;
+          return $scope.selectedLayout.contact_type === contactTypes.viewing ||
+            block.contact_type === contactTypes.onBlock;
         }
       }
     };
@@ -189,13 +189,7 @@
 
           var relationship = contactLayoutRelationshipOptions.getRelationshipFromOption(model.selectedRelationship);
           var relationshipOption = _.find(model.relationshipOptions.options, { id: model.selectedRelationship });
-          var contactIcons = relationship.direction === 'r'
-            ? block.contact_type === relationship.type.contact_type_a
-              ? { onBlock: relationship.type.contact_type_a, viewing: relationship.type.contact_type_b }
-              : { onBlock: relationship.type.contact_type_b, viewing: relationship.type.contact_type_a }
-            : relationship.direction === 'ab'
-              ? { onBlock: relationship.type.contact_type_a, viewing: relationship.type.contact_type_b }
-              : { onBlock: relationship.type.contact_type_b, viewing: relationship.type.contact_type_a };
+          var contactIcons = getIconsForRelationship(relationship, block);
 
           model.relationshipLabel = relationshipOption.text;
           model.contactIcons.onBlock = CONTACT_ICONS[contactIcons.onBlock] || CONTACT_ICONS.Individual;
@@ -210,7 +204,7 @@
             text: ts('Save'),
             icons: { primary: 'fa-check' },
             click: function () {
-              block.related_rel = model.selectedRelationship,
+              block.related_rel = model.selectedRelationship;
 
               dialogService.close('editBlockRelationshipDialog');
               $scope.$digest();
@@ -263,6 +257,19 @@
         });
       });
       return blocksInLayout;
+    }
+
+    // Returns the set of icons for the given relationship type, direction, and block's contact type.
+    function getIconsForRelationship(relationship, block) {
+      if (relationship.direction === 'r') {
+        return block.contact_type === relationship.type.contact_type_a ?
+          { onBlock: relationship.type.contact_type_a, viewing: relationship.type.contact_type_b } :
+          { onBlock: relationship.type.contact_type_b, viewing: relationship.type.contact_type_a };
+      } else {
+        return relationship.direction === 'ab' ?
+          { onBlock: relationship.type.contact_type_a, viewing: relationship.type.contact_type_b } :
+          { onBlock: relationship.type.contact_type_b, viewing: relationship.type.contact_type_a };
+      }
     }
 
     $scope.deleteBlock = function(block) {

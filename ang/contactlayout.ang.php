@@ -1,7 +1,11 @@
 <?php
 // Declare contactlayout angular module
 
-// Returns a list of active relationship types
+/**
+ * Returns a list of active relationship types.
+ *
+ * @return array
+ */
 function getActiveRelationshipTypes() {
   return (array) Civi\Api4\RelationshipType::get()
     ->addWhere('is_active', '=', TRUE)
