@@ -1,4 +1,4 @@
-(function(angular, $, _, RELATIONSHIP_TYPES) {
+(function(angular, $, _) {
   // Autoload dependencies.
   angular.module('contactlayout', CRM.angRequires('contactlayout'));
 
@@ -614,8 +614,9 @@
   // Service for loading relationship type options and displaying loading state.
   angular.module('contactlayout')
     .service('contactLayoutRelationshipOptions', function (crmApi4) {
-      var relationshipOptionsPromise;
+      var RELATIONSHIP_TYPES = CRM.contactlayout.relationshipTypes;
       var service = this;
+
 
       service.options = formatRelationshipOptions(RELATIONSHIP_TYPES);
       service.getRelationshipFromOption = getRelationshipFromOption;
@@ -653,4 +654,4 @@
       }
     });
 
-})(angular, CRM.$, CRM._, CRM['contactlayout'].relationshipTypes);
+})(angular, CRM.$, CRM._);

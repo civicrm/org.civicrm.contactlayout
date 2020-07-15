@@ -69,9 +69,10 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
         foreach ($row as &$column) {
           foreach ($column as &$block) {
             $blockInfo = self::getBlock($block['name']);
+            $relatedRel = isset($block['related_rel']) ? $block['related_rel'] : NULL;
             $isValidBlock = self::checkBlockValidity(
               $blockInfo,
-              $block['related_rel'],
+              $relatedRel,
               $contactType
             );
 
@@ -141,7 +142,11 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
    */
   protected static function checkBlockValidity ($blockInfo, $blockRelation = NULL, $contactType = NULL) {
     if ($blockRelation) {
-      $relationship = self::getRelationshipFromOption($blockRelation);
+      try {
+        $relationship = self::getRelationshipFromOption($blockRelation);
+      } catch (Exception $exception) {
+        return FALSE;
+      }
 
       return
         ($relationship['direction'] === 'r' && (
@@ -174,9 +179,13 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
     $relationshipTypeId = $relationship[0];
     $relationshipType = \Civi\Api4\RelationshipType::get()
       ->addWhere('id', '=', $relationshipTypeId)
-      ->addWhere('is_active', '=', TRUE)
+      ->setCheckPermissions(FALSE)
       ->execute()
       ->first();
+
+    if (!$relationshipType) {
+      throw new Exception("Relationship Type not found");
+    }
 
     return [
       'type' => $relationshipType,
