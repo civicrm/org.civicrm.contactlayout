@@ -380,6 +380,10 @@
   font-size: 13px;
 }
 
+.crm-container .contactlayout__relatioonship-dialog .select2-container {
+  min-width: calc(100% - 30px);
+}
+
 .contactlayout__relatioonship-dialog__illustration {
   align-items: center;
   color: gray;

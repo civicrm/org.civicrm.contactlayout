@@ -69,7 +69,14 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
         foreach ($row as &$column) {
           foreach ($column as &$block) {
             $blockInfo = self::getBlock($block['name']);
-            if ($blockInfo && (!$contactType || empty($blockInfo['contact_type']) || $contactType == $blockInfo['contact_type'])) {
+            $relatedRel = isset($block['related_rel']) ? $block['related_rel'] : NULL;
+            $isValidBlock = self::checkBlockValidity(
+              $blockInfo,
+              $relatedRel,
+              $contactType
+            );
+
+            if ($isValidBlock) {
               $block += $blockInfo;
             }
             // Invalid or missing block
@@ -117,6 +124,74 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
       }
     }
     return NULL;
+  }
+
+  /**
+   * Determines if the block can be displayed for the given contact type.
+   *
+   * If the block is for a contact's relation then we determine if the given
+   * contact type and the relation's contact type match.
+   *
+   * When the block has no relation we match the block's contact type to the
+   * given contact type.
+   *
+   * @param array $blockInfo
+   * @param string $blockRelation
+   * @param string $contactType
+   * @return bool
+   */
+  protected static function checkBlockValidity ($blockInfo, $blockRelation = NULL, $contactType = NULL) {
+    if ($blockRelation) {
+      try {
+        $relationship = self::getRelationshipFromOption($blockRelation);
+      }
+      catch (Exception $exception) {
+        return FALSE;
+      }
+
+      return ($relationship['direction'] === 'r' && (
+          ($contactType === $relationship['type']['contact_type_a'] &&
+            $blockInfo['contact_type'] === $relationship['type']['contact_type_b']) ||
+          ($contactType === $relationship['type']['contact_type_b'] &&
+            $blockInfo['contact_type'] === $relationship['type']['contact_type_a']))) ||
+        ($relationship['direction'] === 'ab' && (
+          $blockInfo['contact_type'] === $relationship['type']['contact_type_a'] &&
+          $contactType === $relationship['type']['contact_type_b'])) ||
+        ($relationship['direction'] === 'ba' && (
+          $blockInfo['contact_type'] === $relationship['type']['contact_type_b'] &&
+          $contactType === $relationship['type']['contact_type_a']));
+    }
+    else {
+      return $blockInfo && (!$contactType || empty($blockInfo['contact_type']) || $contactType == $blockInfo['contact_type']);
+    }
+  }
+
+  /**
+   * Returns the relationship type and direction for the given parameter.
+   *
+   * The parameter might come in the format `15_ab` where `15` is the relationship
+   * type ID, and `ab` is the direction.
+   *
+   * @param string $relationshipOption
+   * @return array
+   */
+  protected static function getRelationshipFromOption ($relationshipOption) {
+    $relationship = explode('_', $relationshipOption);
+    $relationshipTypeId = $relationship[0];
+    $relationshipType = \Civi\Api4\RelationshipType::get()
+      ->addWhere('id', '=', $relationshipTypeId)
+      ->setCheckPermissions(FALSE)
+      ->execute()
+      ->first();
+
+    if (!$relationshipType) {
+      throw new Exception("Relationship Type not found");
+    }
+
+    return [
+      'type' => $relationshipType,
+      'direction' => $relationship[1],
+    ];
   }
 
   /**
