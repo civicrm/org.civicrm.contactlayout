@@ -5,6 +5,7 @@ namespace Civi\Api4;
 /**
  * ContactLayout entity - visual layouts for the contact summary screen.
  *
+ * @see https://civicrm.org/extensions/contact-layout-editor
  */
 class ContactLayout extends Generic\DAOEntity {
 
