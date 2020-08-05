@@ -3,27 +3,12 @@
   angular.module('contactlayout', CRM.angRequires('contactlayout'));
 
   angular.module('contactlayout').config(function($routeProvider) {
-      $routeProvider.when('/contact-summary-editor', {
+      $routeProvider.when('/', {
         controller: 'Contactlayoutcontactlayout',
         templateUrl: '~/contactlayout/contactlayout.html',
         resolve: {
           profile_status: function(crmProfiles) {
             return crmProfiles.load();
-          },
-          data: function(crmApi4) {
-            return crmApi4({
-              layouts: ['ContactLayout', 'get', {orderBy: {weight: 'ASC'}}],
-              blocks:  ['ContactLayout', 'getBlocks'],
-              tabs:  ['ContactLayout', 'getTabs'],
-              contactTypes: ['ContactType', 'get', {
-                where: [['is_active', '=', 1]],
-                orderBy: {label: 'ASC'}
-              }],
-              groups: ['Group', 'get', {
-                select: ['name','title','description'],
-                where: [['is_hidden', '=', 0], ['is_active', '=', 1], ['saved_search_id','IS NULL']]
-              }]
-            });
           }
         }
       });
@@ -31,9 +16,10 @@
   );
 
   angular.module('contactlayout').controller('Contactlayoutcontactlayout', function($scope, $timeout, contactLayoutRelationshipOptions,
-    crmApi4, crmStatus, crmUiHelp, data, dialogService) {
+    crmApi4, crmStatus, crmUiHelp, dialogService) {
     var ts = $scope.ts = CRM.ts('contactlayout');
     var hs = $scope.hs = crmUiHelp({file: 'CRM/contactlayout/contactlayout'});
+    var data = CRM.vars.contactlayout;
     $scope.selectedLayout = null;
     $scope.changesSaved = 1;
     $scope.saving = false;
@@ -621,7 +607,7 @@
   // Service for loading relationship type options and displaying loading state.
   angular.module('contactlayout')
     .service('contactLayoutRelationshipOptions', function (crmApi4) {
-      var RELATIONSHIP_TYPES = CRM.contactlayout.relationshipTypes;
+      var RELATIONSHIP_TYPES = CRM.vars.contactlayout.relationshipTypes;
       var service = this;
 
 
