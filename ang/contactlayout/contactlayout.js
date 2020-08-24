@@ -5,21 +5,17 @@
   angular.module('contactlayout').config(function($routeProvider) {
       $routeProvider.when('/', {
         controller: 'Contactlayoutcontactlayout',
-        templateUrl: '~/contactlayout/contactlayout.html',
-        resolve: {
-          profile_status: function(crmProfiles) {
-            return crmProfiles.load();
-          }
-        }
+        templateUrl: '~/contactlayout/contactlayout.html'
       });
     }
   );
 
-  angular.module('contactlayout').controller('Contactlayoutcontactlayout', function($scope, $timeout, contactLayoutRelationshipOptions,
-    crmApi4, crmStatus, crmUiHelp, dialogService) {
+  angular.module('contactlayout').controller('Contactlayoutcontactlayout', function($scope, $timeout, $q, contactLayoutRelationshipOptions,
+    crmApi4, crmStatus, crmUiHelp, dialogService, crmProfiles) {
     var ts = $scope.ts = CRM.ts('contactlayout');
     var hs = $scope.hs = crmUiHelp({file: 'CRM/contactlayout/contactlayout'});
     var data = CRM.vars.contactlayout;
+    var profilesReady = $q.defer();
     $scope.selectedLayout = null;
     $scope.changesSaved = 1;
     $scope.saving = false;
@@ -125,7 +121,9 @@
     $scope.editBlock = function(block) {
       var edited;
       if (block.profile_id) {
-        editProfile(block.profile_id);
+        profilesReady.promise.then(function() {
+          editProfile(block.profile_id);
+        });
       } else {
         CRM.loadForm(CRM.url(block.edit))
           .on('crmFormSuccess', function() {
@@ -347,6 +345,10 @@
     };
 
     $scope.newProfile = function() {
+      profilesReady.promise.then(newProfile);
+    };
+
+    function newProfile() {
       var profileEditor = new CRM.Designer.DesignerDialog({
         findCreateUfGroupModel: function(options) {
           // Initialize new UF group
@@ -365,7 +367,7 @@
           ['UFJoin', 'create', {values: {module: "Contact Summary", uf_group_id: newId}}]
         ]);
       }, 'contactlayout');
-    };
+    }
 
     function editProfile(ufId) {
       var profileEditor = new CRM.Designer.DesignerDialog({
@@ -525,12 +527,16 @@
     }
 
     // Load schema for backbone-based profile editor
-    CRM.civiSchema = {
-      IndividualModel: null,
-      OrganizationModel: null,
-      HouseholdModel: null
-    };
-    CRM.Schema.reloadModels();
+    crmProfiles.load().then(function() {
+      CRM.civiSchema = {
+        IndividualModel: null,
+        OrganizationModel: null,
+        HouseholdModel: null
+      };
+      CRM.Schema.reloadModels().then(function() {
+        profilesReady.resolve();
+      });
+    });
 
     // Set changesSaved to true on initial load, false thereafter whenever changes are made to the model
     $scope.$watch('layouts', function () {
