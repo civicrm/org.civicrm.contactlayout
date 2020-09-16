@@ -110,6 +110,8 @@ class CRM_Contactlayout_Form_Inline_ProfileBlock extends CRM_Profile_Form_Edit {
     // Action is needed for tag postprocess
     $this->_action = CRM_Core_Action::UPDATE;
 
+    $fields = civicrm_api3('Contact', 'getfields')['values'];
+
     $this->processEmployer($values);
     if (isset($values['group'])) {
       $this->processGroups($values);
@@ -118,6 +120,13 @@ class CRM_Contactlayout_Form_Inline_ProfileBlock extends CRM_Profile_Form_Edit {
     if (!empty($values['image_URL'])) {
       CRM_Contact_BAO_Contact::processImageParams($values);
     }
+    // Reformat checkbox values
+    foreach ($fields as $name => $info) {
+      if (($info['html_type'] ?? NULL) === 'CheckBox' && !empty($values[$name]) && is_array($values[$name])) {
+        $values[$name] = array_keys(array_filter($values[$name]));
+      }
+    }
+
     civicrm_api3('Profile', 'submit', $values);
 
     // Save tagsets (not handled by profile api)
