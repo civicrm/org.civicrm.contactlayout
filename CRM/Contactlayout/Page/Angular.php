@@ -10,11 +10,11 @@ class CRM_Contactlayout_Page_Angular extends CRM_Core_Page {
       'tabs' => (array) civicrm_api4('ContactLayout', 'getTabs'),
       'contactTypes' => (array) civicrm_api4('ContactType', 'get', [
         'where' => [['is_active', '=', 1]],
-        'orderBy' => ['label' => 'ASC']
+        'orderBy' => ['label' => 'ASC'],
       ]),
       'groups' => (array) civicrm_api4('Group', 'get', [
-        'select' => ['name','title','description'],
-        'where' => [['is_hidden', '=', 0], ['is_active', '=', 1], ['saved_search_id','IS NULL']]
+        'select' => ['name', 'title', 'description'],
+        'where' => [['is_hidden', '=', 0], ['is_active', '=', 1], ['saved_search_id', 'IS NULL']],
       ]),
       'relationshipTypes' => (array) civicrm_api4('RelationshipType', 'get', ['where' => [['is_active', '=', TRUE]]]),
     ]);
