@@ -17,7 +17,8 @@ class CRM_Contactlayout_Page_Angular extends CRM_Core_Page {
         'where' => [['is_hidden', '=', 0], ['is_active', '=', 1], ['saved_search_id', 'IS NULL']],
       ]),
       'relationshipTypes' => (array) civicrm_api4('RelationshipType', 'get', ['where' => [['is_active', '=', TRUE]]]),
-    ]);
+    ])
+      ->addBundle('bootstrap3');
 
     // Load angular module
     $loader = new Civi\Angular\AngularLoader();
