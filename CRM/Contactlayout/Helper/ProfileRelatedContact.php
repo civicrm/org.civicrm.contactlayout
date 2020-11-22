@@ -54,6 +54,7 @@ class CRM_Contactlayout_Helper_ProfileRelatedContact {
       {$contactCondition}
       AND (r.start_date IS NULL OR r.start_date <= %3)
       AND (r.end_date IS NULL OR r.end_date >= %3)
+      AND c.is_deleted = 0
       LIMIT 1;
     ";
 
