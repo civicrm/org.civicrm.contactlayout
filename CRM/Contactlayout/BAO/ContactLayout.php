@@ -151,14 +151,14 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
 
       return ($relationship['direction'] === 'r' && (
           ($contactType === $relationship['type']['contact_type_a'] &&
-            $blockInfo['contact_type'] === $relationship['type']['contact_type_b']) ||
+           isset($blockInfo['contact_type']) && $blockInfo['contact_type'] === $relationship['type']['contact_type_b']) ||
           ($contactType === $relationship['type']['contact_type_b'] &&
-            $blockInfo['contact_type'] === $relationship['type']['contact_type_a']))) ||
+              isset($blockInfo['contact_type']) && $blockInfo['contact_type'] === $relationship['type']['contact_type_a']))) ||
         ($relationship['direction'] === 'ab' && (
-          $blockInfo['contact_type'] === $relationship['type']['contact_type_a'] &&
+                isset($blockInfo['contact_type']) && $blockInfo['contact_type'] === $relationship['type']['contact_type_a'] &&
           $contactType === $relationship['type']['contact_type_b'])) ||
         ($relationship['direction'] === 'ba' && (
-          $blockInfo['contact_type'] === $relationship['type']['contact_type_b'] &&
+                isset($blockInfo['contact_type']) && $blockInfo['contact_type'] === $relationship['type']['contact_type_b'] &&
           $contactType === $relationship['type']['contact_type_a']));
     }
     else {
