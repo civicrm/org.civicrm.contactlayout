@@ -140,7 +140,8 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
    * @param string $contactType
    * @return bool
    */
-  protected static function checkBlockValidity ($blockInfo, $blockRelation = NULL, $contactType = NULL) {
+  protected static function checkBlockValidity($blockInfo, $blockRelation = NULL, $contactType = NULL) {
+    $blockContactType = $blockInfo['contact_type'] ?? NULL;
     if ($blockRelation) {
       try {
         $relationship = self::getRelationshipFromOption($blockRelation);
@@ -151,18 +152,18 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
 
       return ($relationship['direction'] === 'r' && (
           ($contactType === $relationship['type']['contact_type_a'] &&
-            $blockInfo['contact_type'] === $relationship['type']['contact_type_b']) ||
+            $blockContactType === $relationship['type']['contact_type_b']) ||
           ($contactType === $relationship['type']['contact_type_b'] &&
-            $blockInfo['contact_type'] === $relationship['type']['contact_type_a']))) ||
+            $blockContactType === $relationship['type']['contact_type_a']))) ||
         ($relationship['direction'] === 'ab' && (
-          $blockInfo['contact_type'] === $relationship['type']['contact_type_a'] &&
+          $blockContactType === $relationship['type']['contact_type_a'] &&
           $contactType === $relationship['type']['contact_type_b'])) ||
         ($relationship['direction'] === 'ba' && (
-          $blockInfo['contact_type'] === $relationship['type']['contact_type_b'] &&
+          $blockContactType === $relationship['type']['contact_type_b'] &&
           $contactType === $relationship['type']['contact_type_a']));
     }
     else {
-      return $blockInfo && (!$contactType || empty($blockInfo['contact_type']) || $contactType == $blockInfo['contact_type']);
+      return $blockInfo && (!$contactType || !$blockContactType || $contactType == $blockContactType);
     }
   }
 
@@ -175,7 +176,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
    * @param string $relationshipOption
    * @return array
    */
-  protected static function getRelationshipFromOption ($relationshipOption) {
+  protected static function getRelationshipFromOption($relationshipOption) {
     $relationship = explode('_', $relationshipOption);
     $relationshipTypeId = $relationship[0];
     $relationshipType = \Civi\Api4\RelationshipType::get()
