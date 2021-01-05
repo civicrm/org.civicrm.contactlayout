@@ -272,7 +272,6 @@
 }
 #cse-block-container .cse-layout-col .block-multiple:not(.collapsed):after {
   display: block;
-  content: '+ Multiple';
   position: absolute;
   bottom: -28px;
   border: 2px solid grey;
