@@ -85,23 +85,10 @@
   width: 20em;
 }
 
-#contactLayoutEditor,
-#cse-block-container,
-#cse-rows .cse-row {
-  display: flex;
-}
 #contactLayoutLayouts {
-  flex: 1;
   margin-right: 10px;
 }
-#contactLayoutEdit {
-  flex: 3;
-}
-#cse-rows {
-  flex: 2;
-}
 #cse-rows .cse-col {
-  flex: 1;
   min-height: 50px;
   margin-right: 10px;
   margin-bottom: 10px;
@@ -126,6 +113,7 @@
 #cse-rows .cse-add-col,
 #cse-rows .cse-add-row {
   display: block;
+  flex: none;
   border: 2px dashed grey;
   width: 20px;
   height: 20px;
@@ -355,31 +343,7 @@
   cursor: move;
 }
 
-/**
- * Shims so the UI isn't completely broken when a Bootstrap theme is not installed
- */
-#contactLayoutEditor * {
-  box-sizing: border-box;
-}
-.panel {
-  border: 1px solid grey;
-}
-.panel-heading {
-  padding: 10px 20px;
-  color: #464354;
-  background-color: #f3f6f7;
-}
-.panel-primary>.panel-heading {
-  color: #fff;
-  background-color: #0071bd;
-}
-.btn:not([disabled]) {
-  cursor: pointer;
-}
-#contactLayoutEditor h5 {
-  font-size: 13px;
-}
-
+/* Relationship dialog styles */
 .crm-container .contactlayout__relatioonship-dialog .select2-container {
   min-width: calc(100% - 30px);
 }
