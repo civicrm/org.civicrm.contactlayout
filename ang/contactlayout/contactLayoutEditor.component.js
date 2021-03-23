@@ -115,6 +115,10 @@
           profilesReady.promise.then(function () {
             editProfile(block.profile_id);
           });
+        }
+        // Cannot use angular pages in a popup
+        else if(_.includes(block.edit, '#')) {
+          window.open(CRM.url(block.edit), '_blank');
         } else {
           CRM.loadForm(CRM.url(block.edit))
             .on('crmFormSuccess', function () {
