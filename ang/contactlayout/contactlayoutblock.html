@@ -10,7 +10,7 @@
   <button
     class="btn btn-success-outline"
     title="{{:: ts('Select relationship') }}"
-    ng-if="block.edit"
+    ng-if="block.profile_id"
     ng-click="editBlockRelationship(block)"
   >
     <i class="crm-i fa-users" ng-class="{'text-primary': !!block.related_rel}"></i>
