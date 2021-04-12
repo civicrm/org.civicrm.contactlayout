@@ -41,15 +41,11 @@
   padding: 10px;
   margin: 0;
 }
-#bootstrap-theme #contactLayoutEditor .cse-deleted-msg a {
-  float: right;
-}
 
 #bootstrap-theme #contactLayoutEditor .cse-layout-item {
   border-radius: 4px;
   border: 1px solid grey;
   padding: 3px;
-  text-align: center;
   margin-bottom: 10px;
   cursor: move;
   background-color: #f8f8f8;
@@ -59,15 +55,6 @@
 #bootstrap-theme #contactLayoutEditor h4.cse-layout-item-title {
   font-weight: 600;
   margin: 7px 0;
-}
-
-#bootstrap-theme #contactLayoutEditor .cse-layout-delete {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-#bootstrap-theme #contactLayoutEditor .cse-layout-delete .btn {
-  border: 0 none;
 }
 
 #bootstrap-theme #contactLayoutEditor .cse-item-selected {

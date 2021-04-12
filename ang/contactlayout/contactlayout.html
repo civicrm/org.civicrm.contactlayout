@@ -6,7 +6,7 @@
     <div class="panel panel-primary">
       <div class="panel-heading">
         <div class="btn-group btn-group-md pull-right">
-          <button class="btn btn-primary" ng-click="newLayout()" title="{{:: ts('Create new layout') }}">
+          <button type="button" class="btn btn-primary" ng-click="newLayout()" title="{{:: ts('Create new layout') }}">
             <i class="crm-i fa-plus"></i> {{:: ts('Layout') }}
           </button>
         </div>
@@ -17,12 +17,15 @@
       <div class="panel-body">
         <div class="alert alert-warning cse-deleted-msg" ng-if="deletedLayout">
           {{ ts('Deleted %1', {1: deletedLayout.label}) }}
-          <a href ng-click="restoreLayout()">{{:: ts('Undo') }}</a>
+          <a href ng-click="restoreLayout()" class="pull-right">{{:: ts('Undo') }}</a>
         </div>
         <div class="panel-inner" ui-sortable="{axis: 'y', cancel: 'input,textarea,button,select,option,a,.crm-editable-enabled,[contenteditable]'}" ng-model="layouts">
           <div class="cse-layout-item" ng-repeat="layout in layouts" ng-class="{'cse-item-selected': layout == selectedLayout}" ng-click="selectLayout(layout)">
-            <div class="btn-group btn-group-sm cse-layout-delete">
-              <button class="btn btn-danger-outline" ng-click="deleteLayout($index)" title="{{:: ts('Delete layout') }}">
+            <div class="btn-group btn-group-sm pull-right">
+              <button type="button" class="btn btn-info-outline" ng-click="copyLayout($index); $event.stopPropagation();" title="{{:: ts('Copy layout') }}">
+                <i class="crm-i fa-copy"></i>
+              </button>
+              <button type="button" class="btn btn-danger-outline" ng-click="deleteLayout($index); $event.stopPropagation();" title="{{:: ts('Delete layout') }}">
                 <i class="crm-i fa-trash"></i>
               </button>
             </div>
@@ -40,7 +43,7 @@
         <h2 class="panel-title" >
           <form class="form-inline">
             <div class="btn-group btn-group-md pull-right">
-              <button class="btn" ng-class="{'btn-primary': !changesSaved && !saving, 'btn-warning': saving, 'btn-success': changesSaved}" ng-disabled="changesSaved || saving" ng-click="save()">
+              <button type="submit" class="btn" ng-class="{'btn-primary': !changesSaved && !saving, 'btn-warning': saving, 'btn-success': changesSaved}" ng-disabled="changesSaved || saving" ng-click="save()">
                 <i class="crm-i" ng-class="{'fa-check': !saving, 'fa-spin fa-spinner': saving}"></i>
                 <span ng-if="changesSaved">{{:: ts('All Saved') }}</span>
                 <span ng-if="!changesSaved && !saving">{{ layouts.length? ts('Save All') : ts('Delete All') }}</span>
@@ -68,7 +71,6 @@
                       <option ng-repeat="ct in selectableSubTypes(selectedLayout.contact_type)" value="{{ ct.name }}">{{ ct.label }}</option>
                     </select>
                   </span>
-                  &nbsp;&nbsp;
                   <label for="selected_layout_groups">{{:: ts('To:') }}</label>
                   <input id="selected_layout_groups" class="form-control" ng-list ng-model="selectedLayout.groups"
                     crm-entityref="{entity: 'Group', api: {id_field: 'name', params: {is_hidden: 0, is_active: 1}}, select: {placeholder: ts('Groups'), multiple: true, allowClear:true, minimumInputLength: 0}}"
@@ -94,7 +96,7 @@
               <div id="cse-rows" class="crm-flex-2">
                 <div class="cse-row crm-flex-box" ng-repeat="row in selectedLayout.blocks">
                   <div class="cse-col cse-layout-col" ng-repeat="(colNum, col) in row">
-                    <button class="btn btn-xs btn-danger-outline cse-remove-col" ng-click="removeCol(row, colNum)" title="{{:: ts('Remove column') }}">
+                    <button type="button" class="btn btn-xs btn-danger-outline cse-remove-col" ng-click="removeCol(row, colNum)" title="{{:: ts('Remove column') }}">
                       <i class="crm-i fa-close"></i>
                     </button>
                     <div class="cse-drop" ui-sortable="{connectWith: '.cse-drop', containment: '#cse-block-container', cancel: 'input,textarea,button,select,option,a,.crm-editable-enabled,[contenteditable]'}" ng-model="col">

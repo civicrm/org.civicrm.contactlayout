@@ -312,6 +312,14 @@
         $scope.selectLayout(newLayout);
       };
 
+      $scope.copyLayout = function(index) {
+        var newLayout = angular.copy($scope.layouts[index]);
+        delete newLayout.id;
+        newLayout.label += ' (copy)';
+        $scope.layouts.splice(index, 0, newLayout);
+        $scope.selectLayout(newLayout);
+      };
+
       $scope.deleteLayout = function (index) {
         $scope.deletedLayout = $scope.layouts[index];
         if ($scope.selectedLayout === $scope.layouts[index]) {
