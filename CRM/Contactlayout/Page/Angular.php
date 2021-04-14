@@ -19,6 +19,9 @@ class CRM_Contactlayout_Page_Angular extends CRM_Core_Page {
       'relationshipTypes' => (array) civicrm_api4('RelationshipType', 'get', ['where' => [['is_active', '=', TRUE]]]),
     ]);
 
+    // For editing profile blocks
+    CRM_UF_Page_ProfileEditor::registerProfileScripts();
+
     // Bootstrap Angular and set page name.
     $loader = new Civi\Angular\AngularLoader();
     $loader->setPageName('civicrm/admin/contactlayout');
