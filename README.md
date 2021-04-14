@@ -10,9 +10,7 @@ Have you ever wanted to rearrange the contact summary screen? Move the most impo
 
 ## Requirements
 
-* CiviCRM 5.19+
-* [Angular Profiles extension](https://github.com/ginkgostreet/org.civicrm.angularprofiles)
-* (Optional) Looks best with a bootstrap-based admin theme or the [Shoreditch exension](https://github.com/civicrm/org.civicrm.shoreditch).
+* CiviCRM 5.33+
 
 ## Basic Usage
 
@@ -33,6 +31,7 @@ Have you ever wanted to rearrange the contact summary screen? Move the most impo
 * [Shoreditch theme](https://github.com/civicrm/org.civicrm.shoreditch) - works with or without full theme override mode.
 * [Relationship block extension](https://github.com/eileenmcnaughton/org.wikimedia.relationshipblock) - provides a block for displaying important relationships.
 * [Extended Reports extension](https://civicrm.org/extensions/extended-reports) - allows reports to be displayed as blocks on the summary screen.
+* Form Builder & Search Kit - CiviCRM core extensions which can display custom forms & searches as contact summary blocks & tabs.
 
 ## For developers
 
