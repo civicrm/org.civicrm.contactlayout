@@ -14,5 +14,5 @@ return [
   ],
   'bundles' => ['bootstrap3'],
   'basePages' => ['civicrm/admin/contactlayout'],
-  'requires' => ['crmUi', 'crmUtil', 'ui.sortable', 'api4', 'dialogService', 'crmProfileUtils'],
+  'requires' => ['crmUi', 'crmUtil', 'ui.sortable', 'api4', 'dialogService'],
 ];

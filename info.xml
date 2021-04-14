@@ -22,7 +22,6 @@
   </compatibility>
   <comments>Looks best with a bootstrap theme such as Shoreditch.</comments>
   <requires>
-    <ext>org.civicrm.angularprofiles</ext>
   </requires>
   <civix>
     <namespace>CRM/Contactlayout</namespace>

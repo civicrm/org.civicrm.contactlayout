@@ -3,7 +3,7 @@
   angular.module('contactlayout').component('contactLayoutEditor', {
     templateUrl: '~/contactlayout/contactlayout.html',
     controller: function($scope, $timeout, $q, contactLayoutRelationshipOptions,
-             crmApi4, crmStatus, dialogService, crmProfiles) {
+             crmApi4, crmStatus, dialogService) {
       var ts = $scope.ts = CRM.ts('contactlayout');
       var data = CRM.vars.contactlayout;
       var profilesReady = $q.defer();
@@ -528,8 +528,15 @@
           });
       }
 
-      // Load schema for backbone-based profile editor
-      crmProfiles.load().then(function () {
+      // Initialize
+      this.$onInit = function() {
+        if ($scope.layouts.length) {
+          loadLayouts();
+          $scope.selectLayout($scope.layouts[0]);
+        } else {
+          $scope.newLayout();
+        }
+        // Load schema for backbone-based profile editor
         CRM.civiSchema = {
           IndividualModel: null,
           OrganizationModel: null,
@@ -538,20 +545,12 @@
         CRM.Schema.reloadModels().then(function () {
           profilesReady.resolve();
         });
-      });
+      };
 
       // Set changesSaved to true on initial load, false thereafter whenever changes are made to the model
       $scope.$watch('layouts', function () {
         $scope.changesSaved = $scope.changesSaved === 1;
       }, true);
-
-      // Initialize
-      if ($scope.layouts.length) {
-        loadLayouts();
-        $scope.selectLayout($scope.layouts[0]);
-      } else {
-        $scope.newLayout();
-      }
 
       CRM.loadScript(CRM.config.resourceBase + 'js/jquery/jquery.crmIconPicker.js').done(function () {
         $('#cse-icon-picker').crmIconPicker().change(function () {
