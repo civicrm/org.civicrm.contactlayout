@@ -1,7 +1,7 @@
 <?php
 use CRM_Contactlayout_ExtensionUtil as E;
 
-class CRM_Contactlayout_Page_Angular extends CRM_Core_Page {
+class CRM_Contactlayout_Page_Base extends CRM_Core_Page {
 
   public function run() {
     $contactEditOptions = CRM_Core_OptionGroup::values('contact_edit_options', TRUE, FALSE, FALSE, NULL, 'name');
@@ -29,10 +29,8 @@ class CRM_Contactlayout_Page_Angular extends CRM_Core_Page {
     // For editing profile blocks
     CRM_UF_Page_ProfileEditor::registerProfileScripts();
 
-    // Bootstrap Angular and set page name.
-    $loader = new Civi\Angular\AngularLoader();
-    $loader->setPageName('civicrm/admin/contactlayout');
-    $loader->load();
+    // Load AngularJs module.
+    Civi::service('angularjs.loader')->addModules('contactlayout');
 
     parent::run();
   }

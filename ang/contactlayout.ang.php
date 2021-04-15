@@ -13,6 +13,6 @@ return [
     'ang/contactlayout',
   ],
   'bundles' => ['bootstrap3'],
-  'basePages' => ['civicrm/admin/contactlayout'],
+  'basePages' => [],
   'requires' => ['crmUi', 'crmUtil', 'ui.sortable', 'api4', 'dialogService'],
 ];
