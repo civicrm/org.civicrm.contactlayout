@@ -4,6 +4,11 @@ use CRM_Contactlayout_ExtensionUtil as E;
 class CRM_Contactlayout_Page_Angular extends CRM_Core_Page {
 
   public function run() {
+    $contactEditOptions = CRM_Core_OptionGroup::values('contact_edit_options', TRUE, FALSE, FALSE, NULL, 'name');
+    $contactEditPrefs = \Civi\Api4\Setting::get(FALSE)
+      ->addSelect('contact_edit_options')
+      ->execute()->first()['value'];
+
     Civi::resources()->addVars(E::SHORT_NAME, [
       'layouts' => (array) civicrm_api4('ContactLayout', 'get', ['orderBy' => ['weight' => 'ASC']]),
       'blocks' => (array) civicrm_api4('ContactLayout', 'getBlocks'),
@@ -17,6 +22,8 @@ class CRM_Contactlayout_Page_Angular extends CRM_Core_Page {
         'where' => [['is_hidden', '=', 0], ['is_active', '=', 1], ['saved_search_id', 'IS NULL']],
       ]),
       'relationshipTypes' => (array) civicrm_api4('RelationshipType', 'get', ['where' => [['is_active', '=', TRUE]]]),
+      'contactEditOptions' => $contactEditOptions,
+      'systemDefaultsEnabled' => array_intersect($contactEditOptions, $contactEditPrefs),
     ]);
 
     // For editing profile blocks

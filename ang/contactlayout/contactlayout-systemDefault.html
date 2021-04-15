@@ -1,0 +1,28 @@
+<nav class="navbar">
+  <div class="container-fluid alert alert-warning">
+    <p>
+      {{:: ts('The system default cannot be rearranged. It will be shown if no other layouts exist, or if none of their criteria match a given contact for the current user.') }}
+    </p>
+  </div>
+</nav>
+<div class="panel-inner">
+  <div id="cse-block-container" class="crm-flex-box cse-block-container-system">
+    <div id="cse-rows" class="crm-flex-2">
+      <div class="cse-row crm-flex-box" ng-repeat="row in systemLayout">
+        <div class="cse-col cse-layout-col" ng-repeat="(colNum, col) in row">
+          <div>
+            <div class="cse-block" ng-repeat="block in col" ng-show="isSystemBlockEnabled(block)" ng-class="{collapsible: block.collapsible, collapsed: block.collapsed, 'show-title': block.showTitle, 'block-multiple': block.multiple}" ng-include="'~/contactlayout/contactlayout-systemBlock.html'"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="cse-palette-col">
+      <h4>
+        {{:: ts('Disabled Blocks') }}
+      </h4>
+      <div id="cse-palette" >
+        <div class="cse-block" ng-repeat="block in systemBlocks" ng-hide="isSystemBlockEnabled(block)" ng-include="'~/contactlayout/contactlayout-systemBlock.html'"></div>
+      </div>
+    </div>
+  </div>
+</div>

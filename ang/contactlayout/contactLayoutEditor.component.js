@@ -13,10 +13,12 @@
       $scope.contactTypes = data.contactTypes;
       $scope.layouts = data.layouts;
       $scope.tabs = _.indexBy(data.tabs, 'id');
+      $scope.systemBlocks = [];
+      $scope.systemLayout = [];
       var newLayoutCount = 0,
         editingTabIcon,
         profileEntities = [{entity_name: "contact_1", entity_type: "IndividualModel"}],
-        allBlocks = loadBlocks(data.blocks);
+        allBlocks = [];
       var CONTACT_ICONS = {
         Individual: 'fa fa-user',
         Organization: 'fa fa-building',
@@ -320,6 +322,20 @@
         $scope.selectLayout(newLayout);
       };
 
+      $scope.copyDefaultLayout = function() {
+        var newLayout = {
+          label: ts('Untitled %1', {1: ++newLayoutCount}),
+          blocks: _.transform(allBlocks, function(layout, block) {
+            if (block.system_default && $scope.isSystemBlockEnabled(block)) {
+              layout[0][block.system_default[1]].push(block);
+            }
+          }, [[[], []]])
+        };
+        loadLayout(newLayout);
+        $scope.layouts.push(newLayout);
+        $scope.selectLayout(newLayout);
+      };
+
       $scope.deleteLayout = function (index) {
         $scope.deletedLayout = $scope.layouts[index];
         if ($scope.selectedLayout === $scope.layouts[index]) {
@@ -471,16 +487,21 @@
       }
 
       function loadBlocks(blockData) {
-        allBlocks = [];
+        allBlocks.length = 0;
+        $scope.systemBlocks.length = 0;
+        $scope.systemLayout = [[[], []], [[], []], [[], []], [[], []], [[], []]];
         _.each(blockData, function (group) {
           _.each(group.blocks, function (block) {
             block.group = group.name;
             block.groupTitle = group.title;
             block.icon = group.icon;
             allBlocks.push(block);
+            if (block.system_default) {
+              $scope.systemBlocks.push(block);
+              $scope.systemLayout[block.system_default[0]][block.system_default[1]].push(block);
+            }
           });
         });
-        return allBlocks;
       }
 
       function loadLayouts() {
@@ -522,20 +543,39 @@
         CRM.api4(apiCalls)
           .then(function (data) {
             $scope.$apply(function () {
-              allBlocks = loadBlocks(_.last(data));
+              loadBlocks(_.last(data));
               loadLayouts();
             });
           });
       }
 
+      $scope.isSystemBlockTogglable = function(block) {
+        var name = block.name.replace('core.', '');
+        return !!data.contactEditOptions[name];
+      };
+
+      $scope.isSystemBlockEnabled = function(block) {
+        var name = block.name.indexOf('custom.') === 0 ? 'CustomData' : block.name.replace('core.', '');
+        return !data.contactEditOptions[name] || data.systemDefaultsEnabled[name];
+      };
+
+      $scope.toggleSystemBlock = function(block) {
+        var name = block.name.replace('core.', '');
+        if (data.systemDefaultsEnabled[name]) {
+          delete data.systemDefaultsEnabled[name];
+        } else {
+          data.systemDefaultsEnabled[name] = data.contactEditOptions[name];
+        }
+        crmStatus({}, crmApi4('Setting', 'set', {
+          values: {contact_edit_options: data.systemDefaultsEnabled}
+        }));
+      };
+
       // Initialize
       this.$onInit = function() {
-        if ($scope.layouts.length) {
-          loadLayouts();
-          $scope.selectLayout($scope.layouts[0]);
-        } else {
-          $scope.newLayout();
-        }
+        loadBlocks(data.blocks);
+        loadLayouts();
+
         // Load schema for backbone-based profile editor
         CRM.civiSchema = {
           IndividualModel: null,
