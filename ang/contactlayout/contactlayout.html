@@ -19,7 +19,7 @@
           <i class="crm-i fa-sort-amount-desc"></i>
           {{:: ts('Layouts on top have highest priority.') }}
         </div>
-        <div class="alert alert-warning cse-deleted-msg" ng-if="deletedLayout">
+        <div class="alert alert-danger cse-deleted-msg" ng-if="deletedLayout">
           {{ ts('Deleted %1', {1: deletedLayout.label}) }}
           <a href ng-click="restoreLayout()" class="pull-right">{{:: ts('Undo') }}</a>
         </div>
@@ -44,8 +44,8 @@
               </button>
             </div>
             <h4 class="cse-layout-item-title"><i class="crm-i fa-lock disabled"></i> {{:: ts('System Default') }}</h4>
-            <div>{{:: ts('Fallback for all contacts') }}</div>
-            <div>{{:: ts('when no other layout applies') }}</div>
+            <div>{{:: ts('Fallback for all contact types') }}</div>
+            <div>{{:: ts('if no other layout applies for the acting user') }}</div>
           </div>
         </div>
       </div>
