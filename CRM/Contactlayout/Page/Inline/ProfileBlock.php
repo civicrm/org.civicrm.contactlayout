@@ -65,7 +65,7 @@ class CRM_Contactlayout_Page_Inline_ProfileBlock extends CRM_Core_Page {
         foreach (CRM_Contactlayout_Form_Inline_ProfileBlock::getEmployers($contactId) as $employer) {
           $org = $employer['display_name'];
           if (CRM_Contact_BAO_Contact_Permission::allow($employer['contact_id'])) {
-            $org = '<a href="' . CRM_Utils_System::url('civicrm/contact/view', ['reset' => 1, 'cid' => $employer['contact_id']]) . '" title="' . E::ts('view employer') . '">' . $org . '</a>';
+            $org = '<a href="' . CRM_Utils_System::url('civicrm/contact/view', ['reset' => 1, 'cid' => $employer['contact_id']]) . '" title="' . htmlspecialchars(E::ts('view employer')) . '">' . $org . '</a>';
           }
           $employers[] = $org;
         }
