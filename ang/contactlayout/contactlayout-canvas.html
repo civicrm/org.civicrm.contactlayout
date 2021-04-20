@@ -21,18 +21,7 @@
   </div>
 </nav>
 <div class="panel-inner">
-  <div id="cse-tabs-container" ui-sortable="{containment: '#cse-tabs-container', cancel: 'input,textarea,button,select,option,a,.crm-editable-enabled,[contenteditable]'}" ng-model="selectedLayout.tabs">
-    <div class="cse-tab crm-draggable" data-tab-id="{{ tab.id }}" ng-if="!tab.contact_type || !selectedLayout.contact_type || tab.contact_type === selectedLayout.contact_type" ng-class="{'cse-tab-disabled': !tab.is_active}" ng-repeat="tab in selectedLayout.tabs">
-      <span class="cse-tab-icon crm-editable-enabled" ng-if="tab.is_active" ng-click="pickTabIcon(tab)">
-        <i class="{{ tab.icon || 'crm-i fa-puzzle-piece' }}"></i>
-      </span>
-      <span class="cse-tab-title" ng-if="tab.is_active" contact-layout-editable ng-model="tab.title">{{ tab.title }}</span>
-      <span class="cse-tab-title" ng-if="!tab.is_active">{{ tab.title }}</span>
-      <a href class="cse-tab-toggle" ng-if="tab.id !== 'summary'" ng-click="toggleTabActive(tab)">
-        <i class="crm-i" ng-class="{'fa-close': tab.is_active, 'fa-undo': !tab.is_active}"></i>
-      </a>
-    </div>
-  </div>
+  <contact-layout-edit-tabs contact-type="selectedLayout.contact_type" layout="selectedLayout" defaults="$ctrl.data.tabs || systemTabs"></contact-layout-edit-tabs>
   <div id="cse-block-container" class="crm-flex-box cse-block-container-editable">
     <div id="cse-rows" class="crm-flex-2">
       <div class="cse-row crm-flex-box" ng-repeat="row in selectedLayout.blocks">

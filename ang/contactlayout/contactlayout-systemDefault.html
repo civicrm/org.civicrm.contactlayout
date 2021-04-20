@@ -1,10 +1,14 @@
-<nav class="navbar">
-  <div class="container-fluid alert alert-warning">
-    <p>
-      {{:: ts('The system default cannot be rearranged. It will be shown if no other layouts exist, or if none of their criteria match a given contact for the current user.') }}
-    </p>
-  </div>
-</nav>
+<div class="alert alert-warning">
+  <p>
+    {{:: ts('Customizing the system tabs will affect every layout which does not override the default.') }}
+  </p>
+</div>
+<contact-layout-edit-tabs layout="$ctrl.data" defaults="systemTabs"></contact-layout-edit-tabs>
+<div class="alert alert-warning">
+  <p>
+    {{:: ts('The default layout cannot be rearranged. It will be shown if no other layouts exist, or if none of their criteria match the contact being viewed by the acting user.') }}
+  </p>
+</div>
 <div class="panel-inner">
   <div id="cse-block-container" class="crm-flex-box cse-block-container-system">
     <div id="cse-rows" class="crm-flex-2">

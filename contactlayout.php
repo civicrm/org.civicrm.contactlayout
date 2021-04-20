@@ -131,6 +131,10 @@ function contactlayout_civicrm_pageRun(&$page) {
   if (get_class($page) === 'CRM_Contact_Page_View_Summary') {
     $contactID = $page->getVar('_contactId');
     if ($contactID) {
+      $defaultTabs = \Civi\Api4\Setting::get()
+        ->addSelect('contactlayout_default_tabs')
+        ->execute()
+        ->first()['value'] ?? NULL;
       $layout = CRM_Contactlayout_BAO_ContactLayout::getLayout($contactID);
       if ($layout) {
         $profileBlocks = [];
@@ -163,22 +167,6 @@ function contactlayout_civicrm_pageRun(&$page) {
             }
           }
         }
-        if (!empty($layout['tabs'])) {
-          $tabs = array_column($page->get_template_vars('allTabs'), NULL, 'id');
-          foreach ($layout['tabs'] as $weight => $tab) {
-            $id = $tab['id'];
-            if (empty($tab['is_active'])) {
-              unset($tabs[$id]);
-            }
-            elseif (isset($tabs[$id])) {
-              $tabs[$id]['weight'] = $weight;
-              $tabs[$id]['title'] = CRM_Utils_Array::value('title', $tab, $tabs[$id]['title']);
-              $tabs[$id]['icon'] = CRM_Utils_Array::value('icon', $tab, CRM_Utils_Array::value('icon', $tabs[$id]));
-            }
-          }
-          usort($tabs, ['CRM_Utils_Sort', 'cmpFunc']);
-          $page->assign('allTabs', array_values($tabs));
-        }
         $page->assign('layoutBlocks', $layout['blocks']);
         $page->assign('profileBlocks', $profileBlocks);
         // Setting these variables will make Summary.tpl replace the contents with SummaryHook.tpl which we override.
@@ -186,6 +174,22 @@ function contactlayout_civicrm_pageRun(&$page) {
         $page->assign('hookContentPlacement', CRM_Utils_Hook::SUMMARY_REPLACE);
         CRM_Core_Resources::singleton()
           ->addStyleFile('org.civicrm.contactlayout', 'css/contact-summary-layout.css');
+      }
+      if (!empty($layout['tabs']) || $defaultTabs) {
+        $tabs = array_column($page->get_template_vars('allTabs'), NULL, 'id');
+        foreach ($layout['tabs'] ?? $defaultTabs as $weight => $tab) {
+          $id = $tab['id'];
+          if (empty($tab['is_active'])) {
+            unset($tabs[$id]);
+          }
+          elseif (isset($tabs[$id])) {
+            $tabs[$id]['weight'] = $weight;
+            $tabs[$id]['title'] = CRM_Utils_Array::value('title', $tab, $tabs[$id]['title']);
+            $tabs[$id]['icon'] = CRM_Utils_Array::value('icon', $tab, CRM_Utils_Array::value('icon', $tabs[$id]));
+          }
+        }
+        usort($tabs, ['CRM_Utils_Sort', 'cmpFunc']);
+        $page->assign('allTabs', array_values($tabs));
       }
     }
   }

@@ -7,9 +7,9 @@
  * extension.
  */
 class CRM_Contactlayout_ExtensionUtil {
-  const SHORT_NAME = "contactlayout";
-  const LONG_NAME = "org.civicrm.contactlayout";
-  const CLASS_PREFIX = "CRM_Contactlayout";
+  const SHORT_NAME = 'contactlayout';
+  const LONG_NAME = 'org.civicrm.contactlayout';
+  const CLASS_PREFIX = 'CRM_Contactlayout';
 
   /**
    * Translate a string using the extension's domain.

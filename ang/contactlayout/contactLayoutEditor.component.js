@@ -1,18 +1,23 @@
 (function(angular, $, _) {
 
   angular.module('contactlayout').component('contactLayoutEditor', {
-    templateUrl: '~/contactlayout/contactlayout.html',
+    templateUrl: '~/contactlayout/contactLayoutEditor.html',
     controller: function($scope, $timeout, $q, contactLayoutRelationshipOptions,
              crmApi4, crmStatus, dialogService) {
-      var ts = $scope.ts = CRM.ts('contactlayout');
-      var data = CRM.vars.contactlayout;
-      var profilesReady = $q.defer();
+      var ts = $scope.ts = CRM.ts('contactlayout'),
+        ctrl = this,
+        vars = CRM.vars.contactlayout,
+        profilesReady = $q.defer();
       $scope.selectedLayout = null;
       $scope.changesSaved = 1;
       $scope.saving = false;
-      $scope.contactTypes = data.contactTypes;
-      $scope.layouts = data.layouts;
-      $scope.tabs = _.indexBy(data.tabs, 'id');
+      $scope.contactTypes = vars.contactTypes;
+      this.data = {
+        layouts: vars.layouts,
+        tabs: vars.defaultTabs
+      };
+      $scope.tabs = _.indexBy(vars.tabs, 'id');
+      $scope.systemTabs = vars.tabs;
       $scope.systemBlocks = [];
       $scope.systemLayout = [];
       var newLayoutCount = 0,
@@ -26,7 +31,7 @@
       };
 
       // Determines if the given block can be used for the current layout's contact type
-      $scope.checkBlockValidity = function (block) {
+      $scope.checkBlockValidity = function(block) {
         if (!$scope.selectedLayout.contact_type) {
           return true;
         } else if (!block.related_rel) {
@@ -50,14 +55,14 @@
         }
       };
 
-      $scope.selectLayout = function (layout) {
+      $scope.selectLayout = function(layout) {
         $scope.selectedLayout = layout;
       };
 
       function getLabels(name, data) {
         if (_.isArray(name)) {
           var ret = [];
-          _.each(name, function (n) {
+          _.each(name, function(n) {
             ret.push(getLabels(n, data));
           });
           return ret;
@@ -66,26 +71,26 @@
         return values.label || values.title;
       }
 
-      $scope.showContactTypes = function (layout) {
+      $scope.showContactTypes = function(layout) {
         if (layout.contact_sub_type && layout.contact_sub_type.length) {
-          return getLabels(layout.contact_sub_type, data.contactTypes).join(', ');
+          return getLabels(layout.contact_sub_type, vars.contactTypes).join(', ');
         }
         if (layout.contact_type) {
-          return getLabels(layout.contact_type, data.contactTypes);
+          return getLabels(layout.contact_type, vars.contactTypes);
         }
         return ts('All contact types');
       };
 
-      $scope.contactTypeLabel = function (contactType) {
-        return getLabels(contactType, data.contactTypes);
+      $scope.contactTypeLabel = function(contactType) {
+        return getLabels(contactType, vars.contactTypes);
       };
 
-      $scope.changeContactType = function (layout) {
+      $scope.changeContactType = function(layout) {
         layout.contact_sub_type = null;
         if (layout.contact_type) {
-          _.each(layout.blocks, function (row) {
-            _.each(row, function (col, i) {
-              row[i] = _.filter(col, function (block) {
+          _.each(layout.blocks, function(row) {
+            _.each(row, function(col, i) {
+              row[i] = _.filter(col, function(block) {
                 return !block.contact_type || block.contact_type === layout.contact_type;
               });
             });
@@ -94,27 +99,27 @@
         }
       };
 
-      $scope.showGroups = function (layout) {
+      $scope.showGroups = function(layout) {
         if (layout.groups && layout.groups.length) {
-          return getLabels(layout.groups, data.groups).join(', ');
+          return getLabels(layout.groups, vars.groups).join(', ');
         }
         return ts('All users');
       };
 
-      $scope.selectableSubTypes = function (contactType) {
-        typeId = _.where(data.contactTypes, {name: contactType})[0].id;
-        return _.where(data.contactTypes, {parent_id: typeId});
+      $scope.selectableSubTypes = function(contactType) {
+        typeId = _.where(vars.contactTypes, {name: contactType})[0].id;
+        return _.where(vars.contactTypes, {parent_id: typeId});
       };
 
-      $scope.removeBlock = function (index, blocks) {
+      $scope.removeBlock = function(index, blocks) {
         blocks.splice(index, 1);
         loadLayout($scope.selectedLayout);
       };
 
-      $scope.editBlock = function (block) {
+      $scope.editBlock = function(block) {
         var edited;
         if (block.profile_id) {
-          profilesReady.promise.then(function () {
+          profilesReady.promise.then(function() {
             editProfile(block.profile_id);
           });
         }
@@ -123,10 +128,10 @@
           window.open(CRM.url(block.edit), '_blank');
         } else {
           CRM.loadForm(CRM.url(block.edit))
-            .on('crmFormSuccess', function () {
+            .on('crmFormSuccess', function() {
               edited = true;
             })
-            .on('crmLoad', function (e) {
+            .on('crmLoad', function(e) {
               if ($(e.target).is('.ui-dialog-content')) {
                 $(this).prepend('<div class="messages status"><i class="crm-i fa-exclamation-triangle"></i> ' +
                   ts('You are editing global settings, which will affect more than just this layout.') +
@@ -134,7 +139,7 @@
                 );
               }
             })
-            .on('dialogclose', function () {
+            .on('dialogclose', function() {
               if (edited) {
                 reloadBlocks();
                 CRM.Schema.reloadModels();
@@ -148,7 +153,7 @@
        *
        * @param {object} block a contact layout block object.
        */
-      $scope.editBlockRelationship = function (block) {
+      $scope.editBlockRelationship = function(block) {
         var model = {
           ts: ts,
           relationshipLabel: '',
@@ -158,12 +163,12 @@
             onBlock: CONTACT_ICONS.Individual,
             viewing: CONTACT_ICONS.Individual,
           },
-          displayHelp: function (event) {
+          displayHelp: function(event) {
             event.preventDefault();
             CRM.help('Relationship selection', 'What is the relationship of the contact we want to display on this block?');
           },
           // Stores the relationship label and contact icons for the selected relationship option
-          storeRelationshipInfoForSelectedOption: function () {
+          storeRelationshipInfoForSelectedOption: function() {
             if (!model.selectedRelationship) {
               return;
             }
@@ -184,7 +189,7 @@
             {
               text: ts('Save'),
               icons: {primary: 'fa-check'},
-              click: function () {
+              click: function() {
                 block.related_rel = model.selectedRelationship;
 
                 dialogService.close('editBlockRelationshipDialog');
@@ -194,7 +199,7 @@
             {
               text: ts('Cancel'),
               icons: {primary: 'fa-times'},
-              click: function () {
+              click: function() {
                 dialogService.cancel('editBlockRelationshipDialog');
               }
             }
@@ -210,18 +215,18 @@
         );
       };
 
-      $scope.addRow = function () {
+      $scope.addRow = function() {
         $scope.selectedLayout.blocks.push([[], []]);
       };
 
-      $scope.addCol = function (row) {
+      $scope.addCol = function(row) {
         row.push([]);
       };
 
-      $scope.removeCol = function (row, col) {
+      $scope.removeCol = function(row, col) {
         row.splice(col, 1);
         // When removing the last column in a row, delete the row
-        _.each($scope.selectedLayout.blocks, function (row, num) {
+        _.each($scope.selectedLayout.blocks, function(row, num) {
           if (row && !row.length) {
             $scope.selectedLayout.blocks.splice(num, 1);
           }
@@ -232,8 +237,8 @@
 
       function getBlocksInLayout(layout) {
         var blocksInLayout = [];
-        _.each(layout.blocks, function (row) {
-          _.each(row, function (col) {
+        _.each(layout.blocks, function(row) {
+          _.each(row, function(col) {
             blocksInLayout.push.apply(blocksInLayout, col);
           });
         });
@@ -253,9 +258,9 @@
         }
       }
 
-      $scope.deleteBlock = function (block) {
+      $scope.deleteBlock = function(block) {
         var message = [_.escape(ts('Delete the block "%1"?', {1: block.title}))];
-        _.each($scope.layouts, function (layout) {
+        _.each(ctrl.data.layouts, function(layout) {
           if (_.where(getBlocksInLayout(layout), {name: block.name}).length) {
             message.push(_.escape(ts('It is currently part of the "%1" layout.', {1: layout.label})));
           }
@@ -264,11 +269,11 @@
           message: '<p>' + message.join('</p><p>') + '</p>',
           options: {no: ts('No'), yes: ts('Yes')}
         })
-          .on('crmConfirm:yes', function () {
+          .on('crmConfirm:yes', function() {
             // Remove block from all layouts
-            _.each($scope.layouts, function (layout) {
-              _.each(layout.blocks, function (row) {
-                _.each(row, function (col) {
+            _.each(ctrl.data.layouts, function(layout) {
+              _.each(layout.blocks, function(row) {
+                _.each(row, function(col) {
                   var idx = _.findIndex(col, {name: block.name});
                   if (idx > -1) {
                     col.splice(idx, 1);
@@ -281,7 +286,7 @@
       };
 
       // Cycles between the 4 possible collapsible/collapsed states
-      $scope.toggleCollapsible = function (block) {
+      $scope.toggleCollapsible = function(block) {
         if (!block.collapsible && !block.showTitle) {
           block.collapsible = true;
           block.collapsed = true;
@@ -296,29 +301,29 @@
         }
       };
 
-      $scope.enforceUnique = function (e, ui) {
+      $scope.enforceUnique = function(e, ui) {
         if (!ui.item.sortable.received &&
           $(ui.item.sortable.droptarget).is('#cse-palette')) {
           ui.item.sortable.cancel();
         }
       };
 
-      $scope.newLayout = function () {
+      $scope.newLayout = function() {
         var newLayout = {
           label: ts('Untitled %1', {1: ++newLayoutCount}),
           blocks: [[[], []]]
         };
         $scope.deletedLayout = null;
         loadLayout(newLayout);
-        $scope.layouts.unshift(newLayout);
+        ctrl.data.layouts.unshift(newLayout);
         $scope.selectLayout(newLayout);
       };
 
       $scope.copyLayout = function(index) {
-        var newLayout = angular.copy($scope.layouts[index]);
+        var newLayout = angular.copy(ctrl.data.layouts[index]);
         delete newLayout.id;
         newLayout.label += ' (copy)';
-        $scope.layouts.splice(index, 0, newLayout);
+        ctrl.data.layouts.splice(index, 0, newLayout);
         $scope.selectLayout(newLayout);
       };
 
@@ -332,43 +337,43 @@
           }, [[[], []]])
         };
         loadLayout(newLayout);
-        $scope.layouts.push(newLayout);
+        ctrl.data.layouts.push(newLayout);
         $scope.selectLayout(newLayout);
       };
 
-      $scope.deleteLayout = function (index) {
-        $scope.deletedLayout = $scope.layouts[index];
-        if ($scope.selectedLayout === $scope.layouts[index]) {
+      $scope.deleteLayout = function(index) {
+        $scope.deletedLayout = ctrl.data.layouts[index];
+        if ($scope.selectedLayout === ctrl.data.layouts[index]) {
           $scope.selectedLayout = null;
         }
-        $scope.layouts.splice(index, 1);
+        ctrl.data.layouts.splice(index, 1);
       };
 
-      $scope.restoreLayout = function () {
-        $scope.layouts.unshift($scope.deletedLayout);
+      $scope.restoreLayout = function() {
+        ctrl.data.layouts.unshift($scope.deletedLayout);
         $scope.selectLayout($scope.deletedLayout);
         $scope.deletedLayout = null;
       };
 
-      $scope.toggleTabActive = function (tab) {
+      $scope.toggleTabActive = function(tab) {
         tab.is_active = !tab.is_active;
         if (!tab.is_active) {
           tab.title = $scope.tabs[tab.id].title;
         }
       };
 
-      $scope.pickTabIcon = function (tab) {
+      $scope.pickTabIcon = function(tab) {
         editingTabIcon = tab;
         $('#cse-icon-picker ~ .crm-icon-picker-button').click();
       };
 
-      $scope.newProfile = function () {
+      $scope.newProfile = function() {
         profilesReady.promise.then(newProfile);
       };
 
       function newProfile() {
         var profileEditor = new CRM.Designer.DesignerDialog({
-          findCreateUfGroupModel: function (options) {
+          findCreateUfGroupModel: function(options) {
             // Initialize new UF group
             var ufGroupModel = new CRM.UF.UFGroupModel();
             ufGroupModel.getRel('ufEntityCollection').reset(profileEntities);
@@ -376,7 +381,7 @@
           }
         }).render();
         CRM.designerApp.vent.off('ufSaved', null, 'contactlayout');
-        CRM.designerApp.vent.on('ufSaved', function () {
+        CRM.designerApp.vent.on('ufSaved', function() {
           var newId = profileEditor.model.get('id');
           // Save a record of this new profile as a contact summary block so this extension recognizes it.
           // Also save it as a profile form so that you can click to edit and it will render a form on the summary screen.
@@ -390,9 +395,9 @@
       function editProfile(ufId) {
         var profileEditor = new CRM.Designer.DesignerDialog({
           // Copied from crm.profile-selector.js doEdit() method.
-          findCreateUfGroupModel: function (options) {
+          findCreateUfGroupModel: function(options) {
             CRM.api('UFGroup', 'getsingle', {id: ufId, "api.UFField.get": 1}, {
-              success: function (formData) {
+              success: function(formData) {
                 // Note: With chaining, API returns some extraneous keys that aren't part of UFGroupModel
                 var ufGroupModel = new CRM.UF.UFGroupModel(_.pick(formData, _.keys(CRM.UF.UFGroupModel.prototype.schema)));
                 ufGroupModel.setUFGroupModel(ufGroupModel.calculateContactEntityType(), profileEntities);
@@ -403,18 +408,18 @@
           }
         }).render();
         CRM.designerApp.vent.off('ufSaved', null, 'contactlayout');
-        CRM.designerApp.vent.on('ufSaved', function () {
+        CRM.designerApp.vent.on('ufSaved', function() {
           reloadBlocks();
         }, 'contactlayout');
       }
 
       // Called when pressing the save button
-      $scope.save = function () {
+      $scope.save = function() {
         var data = [],
           layoutWeight = 0,
           emptyLayouts = [],
           noLabel = false;
-        _.each($scope.layouts, function (layout) {
+        _.each(ctrl.data.layouts, function(layout) {
           var empty = true, tabs = [];
           var item = {
             label: layout.label,
@@ -424,19 +429,19 @@
             contact_sub_type: layout.contact_sub_type && layout.contact_sub_type.length ? layout.contact_sub_type : null,
             groups: layout.groups && layout.groups.length ? layout.groups : null,
             blocks: [],
-            tabs: []
+            tabs: layout.tabs ? [] : null
           };
-          _.each(layout.blocks, function (row, rowNum) {
+          _.each(layout.blocks, function(row, rowNum) {
             item.blocks.push([]);
-            _.each(row, function (col, colNum) {
+            _.each(row, function(col, colNum) {
               item.blocks[rowNum].push([]);
-              _.each(col, function (block) {
+              _.each(col, function(block) {
                 item.blocks[rowNum][colNum].push(getBlockProperties(block));
                 empty = false;
               });
             });
           });
-          _.each(layout.tabs, function (tab, pos) {
+          _.each(layout.tabs, function(tab, pos) {
             var tabInfo = {id: tab.id, is_active: tab.is_active};
             if (tab.title !== $scope.tabs[tab.id].title) {
               tabInfo.title = tab.title;
@@ -472,17 +477,23 @@
       function writeRecords(data) {
         $scope.saving = true;
         $scope.deletedLayout = null;
+        var apiCalls = [];
         // Replace records (or delete all if there are none)
-        var apiCall = ['ContactLayout', 'delete', {where: [['id', 'IS NOT NULL']]}];
         if (data.length) {
-          apiCall = ['ContactLayout', 'replace', {records: data}];
+          apiCalls.push(['ContactLayout', 'replace', {records: data}]);
+        } else {
+          apiCalls.push(['ContactLayout', 'delete', {where: [['id', 'IS NOT NULL']]}]);
         }
-        CRM.api4([apiCall])
-          .then(function () {
-            $scope.$apply(function () {
-              $scope.saving = false;
-              $scope.changesSaved = true;
-            });
+        // Update default tabs
+        if (ctrl.data.tabs) {
+          apiCalls.push(['Setting', 'set', {values: {'contactlayout_default_tabs': ctrl.data.tabs}}]);
+        } else {
+          apiCalls.push(['Setting', 'revert', {select: ['contactlayout_default_tabs']}]);
+        }
+        crmApi4(apiCalls)
+          .then(function() {
+            $scope.saving = false;
+            $scope.changesSaved = true;
           });
       }
 
@@ -490,8 +501,8 @@
         allBlocks.length = 0;
         $scope.systemBlocks.length = 0;
         $scope.systemLayout = [[[], []], [[], []], [[], []], [[], []], [[], []]];
-        _.each(blockData, function (group) {
-          _.each(group.blocks, function (block) {
+        _.each(blockData, function(group) {
+          _.each(group.blocks, function(block) {
             block.group = group.name;
             block.groupTitle = group.title;
             block.icon = group.icon;
@@ -505,28 +516,30 @@
       }
 
       function loadLayouts() {
-        _.each($scope.layouts, loadLayout);
+        _.each(ctrl.data.layouts, loadLayout);
       }
 
       function loadLayout(layout) {
         layout.palette = _.cloneDeep(allBlocks);
-        // Filter out tabs that no longer exist
-        layout.tabs = _.filter(layout.tabs || _.cloneDeep(data.tabs), function (item) {
-          return $scope.tabs[item.id];
-        });
-        // Set defaults for tabs
-        _.each(data.tabs, function (defaultTab) {
-          var layoutTab = _.where(layout.tabs, {id: defaultTab.id})[0];
-          if (!layoutTab) {
-            layout.tabs.push(defaultTab);
-          } else {
-            layoutTab.title = layoutTab.title || defaultTab.title;
-            layoutTab.icon = layoutTab.icon || defaultTab.icon;
-          }
-        });
-        _.each(layout.blocks, function (row) {
-          _.each(row, function (col) {
-            _.each(col, function (block, num) {
+        if (layout.tabs) {
+          // Filter out tabs that no longer exist
+          layout.tabs = _.filter(layout.tabs, function(item) {
+            return $scope.tabs[item.id];
+          });
+          // Set defaults for tabs
+          _.each(vars.tabs, function(defaultTab) {
+            var layoutTab = _.where(layout.tabs, {id: defaultTab.id})[0];
+            if (!layoutTab) {
+              layout.tabs.push(defaultTab);
+            } else {
+              layoutTab.title = layoutTab.title || defaultTab.title;
+              layoutTab.icon = layoutTab.icon || defaultTab.icon;
+            }
+          });
+        }
+        _.each(layout.blocks, function(row) {
+          _.each(row, function(col) {
+            _.each(col, function(block, num) {
               col[num] = _.extend(_.where(layout.palette, {name: block.name})[0] || {}, getBlockProperties(block));
               _.remove(layout.palette, {name: block.name});
             });
@@ -541,8 +554,8 @@
         apiCalls.push(['ContactLayout', 'getBlocks']);
         $scope.deletedLayout = null;
         CRM.api4(apiCalls)
-          .then(function (data) {
-            $scope.$apply(function () {
+          .then(function(data) {
+            $scope.$apply(function() {
               loadBlocks(_.last(data));
               loadLayouts();
             });
@@ -551,29 +564,29 @@
 
       $scope.isSystemBlockTogglable = function(block) {
         var name = block.name.replace('core.', '');
-        return !!data.contactEditOptions[name];
+        return !!vars.contactEditOptions[name];
       };
 
       $scope.isSystemBlockEnabled = function(block) {
         var name = block.name.indexOf('custom.') === 0 ? 'CustomData' : block.name.replace('core.', '');
-        return !data.contactEditOptions[name] || data.systemDefaultsEnabled[name];
+        return !vars.contactEditOptions[name] || vars.systemDefaultsEnabled[name];
       };
 
       $scope.toggleSystemBlock = function(block) {
         var name = block.name.replace('core.', '');
-        if (data.systemDefaultsEnabled[name]) {
-          delete data.systemDefaultsEnabled[name];
+        if (vars.systemDefaultsEnabled[name]) {
+          delete vars.systemDefaultsEnabled[name];
         } else {
-          data.systemDefaultsEnabled[name] = data.contactEditOptions[name];
+          vars.systemDefaultsEnabled[name] = vars.contactEditOptions[name];
         }
         crmStatus({}, crmApi4('Setting', 'set', {
-          values: {contact_edit_options: data.systemDefaultsEnabled}
+          values: {contact_edit_options: vars.systemDefaultsEnabled}
         }));
       };
 
       // Initialize
       this.$onInit = function() {
-        loadBlocks(data.blocks);
+        loadBlocks(vars.blocks);
         loadLayouts();
 
         // Load schema for backbone-based profile editor
@@ -582,20 +595,20 @@
           OrganizationModel: null,
           HouseholdModel: null
         };
-        CRM.Schema.reloadModels().then(function () {
+        CRM.Schema.reloadModels().then(function() {
           profilesReady.resolve();
         });
       };
 
       // Set changesSaved to true on initial load, false thereafter whenever changes are made to the model
-      $scope.$watch('layouts', function () {
+      $scope.$watch('$ctrl.data', function() {
         $scope.changesSaved = $scope.changesSaved === 1;
       }, true);
 
-      CRM.loadScript(CRM.config.resourceBase + 'js/jquery/jquery.crmIconPicker.js').done(function () {
-        $('#cse-icon-picker').crmIconPicker().change(function () {
+      CRM.loadScript(CRM.config.resourceBase + 'js/jquery/jquery.crmIconPicker.js').done(function() {
+        $('#cse-icon-picker').crmIconPicker().change(function() {
           if (editingTabIcon) {
-            $scope.$apply(function () {
+            $scope.$apply(function() {
               editingTabIcon.icon = 'crm-i ' + $('#cse-icon-picker').val();
               editingTabIcon = null;
               $('#cse-icon-picker').val('').change();

@@ -23,8 +23,8 @@
           {{ ts('Deleted %1', {1: deletedLayout.label}) }}
           <a href ng-click="restoreLayout()" class="pull-right">{{:: ts('Undo') }}</a>
         </div>
-        <div class="panel-inner" ui-sortable="{axis: 'y', cancel: 'input,textarea,button,select,option,a,.crm-editable-enabled,[contenteditable]'}" ng-model="layouts">
-          <div class="cse-layout-item crm-draggable" ng-repeat="layout in layouts" ng-class="{'cse-item-selected': layout == selectedLayout}" ng-click="selectLayout(layout)">
+        <div class="panel-inner" ui-sortable="{axis: 'y', cancel: 'input,textarea,button,select,option,a,.crm-editable-enabled,[contenteditable]'}" ng-model="$ctrl.data.layouts">
+          <div class="cse-layout-item crm-draggable" ng-repeat="layout in $ctrl.data.layouts" ng-class="{'cse-item-selected': layout == selectedLayout}" ng-click="selectLayout(layout)">
             <div class="btn-group btn-group-sm pull-right">
               <button type="button" class="btn btn-info-outline" ng-click="copyLayout($index); $event.stopPropagation();" title="{{:: ts('Copy layout') }}">
                 <i class="crm-i fa-copy"></i>
@@ -60,7 +60,7 @@
               <button type="submit" class="btn" ng-class="{'btn-primary': !changesSaved && !saving, 'btn-warning': saving, 'btn-success': changesSaved}" ng-disabled="changesSaved || saving" ng-click="save()">
                 <i class="crm-i" ng-class="{'fa-check': !saving, 'fa-spin fa-spinner': saving}"></i>
                 <span ng-if="changesSaved">{{:: ts('All Saved') }}</span>
-                <span ng-if="!changesSaved && !saving">{{ layouts.length? ts('Save All') : ts('Delete All') }}</span>
+                <span ng-if="!changesSaved && !saving">{{:: ts('Save All') }}</span>
                 <span ng-if="saving">{{:: ts('Saving...') }}</span>
               </button>
             </div>
