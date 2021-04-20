@@ -23,8 +23,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
 
     $layout = \Civi\Api4\ContactLayout::get()
       ->setLimit(1)
-      ->addSelect('blocks')
-      ->addSelect('tabs')
+      ->addSelect('label', 'blocks', 'tabs')
       ->addClause('OR', ['contact_type', 'IS NULL'], ['contact_type', '=', $contact['contact_type']])
       ->addOrderBy('weight');
 
