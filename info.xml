@@ -18,7 +18,7 @@
   <version>1.9.0</version>
   <develStage>stable</develStage>
   <compatibility>
-    <ver>5.37</ver>
+    <ver>5.38</ver>
   </compatibility>
   <civix>
     <namespace>CRM/Contactlayout</namespace>
