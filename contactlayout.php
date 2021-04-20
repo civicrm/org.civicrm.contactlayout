@@ -172,7 +172,7 @@ function contactlayout_civicrm_pageRun(&$page) {
         // Setting these variables will make Summary.tpl replace the contents with SummaryHook.tpl which we override.
         $page->assign('hookContent', 1);
         $page->assign('hookContentPlacement', CRM_Utils_Hook::SUMMARY_REPLACE);
-        CRM_Core_Resources::singleton()
+        Civi::resources()
           ->addStyleFile('org.civicrm.contactlayout', 'css/contact-summary-layout.css');
       }
       if (!empty($layout['tabs']) || $defaultTabs) {
@@ -184,8 +184,8 @@ function contactlayout_civicrm_pageRun(&$page) {
           }
           elseif (isset($tabs[$id])) {
             $tabs[$id]['weight'] = $weight;
-            $tabs[$id]['title'] = CRM_Utils_Array::value('title', $tab, $tabs[$id]['title']);
-            $tabs[$id]['icon'] = CRM_Utils_Array::value('icon', $tab, CRM_Utils_Array::value('icon', $tabs[$id]));
+            $tabs[$id]['title'] = $tab['title'] ?? $tabs[$id]['title'];
+            $tabs[$id]['icon'] = $tab['icon'] ?? $tabs[$id]['icon'] ?? NULL;
           }
         }
         usort($tabs, ['CRM_Utils_Sort', 'cmpFunc']);
@@ -223,10 +223,10 @@ function contactlayout_civicrm_postProcess($formName, &$form) {
         foreach ($group['blocks'] as $block) {
           if (
             $block['tpl_file'] == $tpl ||
-            ($formName == 'CRM_Contact_Form_Inline_CustomData' && $form->_groupID == CRM_Utils_Array::value('custom_group_id', $block)) ||
+            ($formName == 'CRM_Contact_Form_Inline_CustomData' && $form->_groupID == ($block['custom_group_id'] ?? NULL)) ||
             $block['name'] == 'Address' && $formName == 'CRM_Contact_Form_Inline_Address'
           ) {
-            $selector = CRM_Utils_Array::value('selector', $block);
+            $selector = $block['selector'] ?? NULL;
             break 2;
           }
         }

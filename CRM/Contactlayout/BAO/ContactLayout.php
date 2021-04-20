@@ -116,8 +116,8 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
    */
   public static function getBlock($fullName) {
     list($groupName, $blockName) = explode('.', $fullName, 2);
-    $group = CRM_Utils_Array::value($groupName, self::getAllBlocks());
-    foreach (CRM_Utils_Array::value('blocks', $group, []) as $block) {
+    $group = self::getAllBlocks()[$groupName] ?? [];
+    foreach ($group['blocks'] ?? [] as $block) {
       if ($block['name'] == $fullName) {
         return $block;
       }
