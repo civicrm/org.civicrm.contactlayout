@@ -10,7 +10,7 @@ Have you ever wanted to rearrange the contact summary screen? Move the most impo
 
 ## Requirements
 
-* CiviCRM 5.33+
+* CiviCRM 5.38+
 
 ## Basic Usage
 
@@ -18,6 +18,7 @@ Have you ever wanted to rearrange the contact summary screen? Move the most impo
 * Create one or more layouts, dragging the desired blocks from the palette.
 * Click the "New Block" button to create a block combining any contact fields you desire (including custom fields).
 * Your blocks can be added to one or more layouts.
+* Rearrange tabs along the top, change their labels or icons, per-layout or system-wide. 
 * **Note:** Block titles, collapsibility & positioning can be set on a per-layout basis, but editing the fields _within_ a block will affect all layouts the block appears in.
 
 ### Managing Multiple Layouts
