@@ -10,12 +10,12 @@
   <!--  Editable tabs -->
   <div ng-if="$ctrl.layout.tabs" ui-sortable="$ctrl.sortableOptions" ng-model="$ctrl.layout.tabs">
     <div class="cse-tab crm-draggable" data-tab-id="{{ tab.id }}" ng-if="!tab.contact_type || !$ctrl.contactType || tab.contact_type === $ctrl.contactType" ng-class="{'cse-tab-disabled': !tab.is_active}" ng-repeat="tab in $ctrl.layout.tabs">
-      <span class="cse-tab-icon crm-editable-enabled" ng-if="tab.is_active" ng-click="pickTabIcon(tab)">
+      <span class="cse-tab-icon crm-editable-enabled" ng-if="tab.is_active" ng-click="$ctrl.pickTabIcon(tab)">
         <i class="{{ tab.icon || 'crm-i fa-puzzle-piece' }}"></i>
       </span>
       <span class="cse-tab-title" ng-if="tab.is_active" contact-layout-editable ng-model="tab.title">{{ tab.title }}</span>
       <span class="cse-tab-title" ng-if="!tab.is_active">{{ tab.title }}</span>
-      <a href class="cse-tab-toggle" ng-if="tab.id !== 'summary'" ng-click="toggleTabActive(tab)">
+      <a href class="cse-tab-toggle" ng-if="tab.id !== 'summary'" ng-click="$ctrl.toggleTabActive(tab)">
         <i class="crm-i" ng-class="{'fa-close': tab.is_active, 'fa-undo': !tab.is_active}"></i>
       </a>
     </div>

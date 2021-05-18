@@ -7,7 +7,8 @@
       var ts = $scope.ts = CRM.ts('contactlayout'),
         ctrl = this,
         vars = CRM.vars.contactlayout,
-        profilesReady = $q.defer();
+        profilesReady = $q.defer(),
+        allTabs = _.indexBy(vars.tabs, 'id');
       $scope.selectedLayout = null;
       $scope.changesSaved = 1;
       $scope.saving = false;
@@ -16,12 +17,10 @@
         layouts: vars.layouts,
         tabs: vars.defaultTabs
       };
-      $scope.tabs = _.indexBy(vars.tabs, 'id');
       $scope.systemTabs = vars.tabs;
       $scope.systemBlocks = [];
       $scope.systemLayout = [];
       var newLayoutCount = 0,
-        editingTabIcon,
         profileEntities = [{entity_name: "contact_1", entity_type: "IndividualModel"}],
         allBlocks = [];
       var CONTACT_ICONS = {
@@ -355,18 +354,6 @@
         $scope.deletedLayout = null;
       };
 
-      $scope.toggleTabActive = function(tab) {
-        tab.is_active = !tab.is_active;
-        if (!tab.is_active) {
-          tab.title = $scope.tabs[tab.id].title;
-        }
-      };
-
-      $scope.pickTabIcon = function(tab) {
-        editingTabIcon = tab;
-        $('#cse-icon-picker ~ .crm-icon-picker-button').click();
-      };
-
       $scope.newProfile = function() {
         profilesReady.promise.then(newProfile);
       };
@@ -443,10 +430,10 @@
           });
           _.each(layout.tabs, function(tab, pos) {
             var tabInfo = {id: tab.id, is_active: tab.is_active};
-            if (tab.title !== $scope.tabs[tab.id].title) {
+            if (tab.title !== allTabs[tab.id].title) {
               tabInfo.title = tab.title;
             }
-            if (tab.icon !== $scope.tabs[tab.id].icon) {
+            if (tab.icon !== allTabs[tab.id].icon) {
               tabInfo.icon = tab.icon;
             }
             item.tabs[pos] = tabInfo;
@@ -524,7 +511,7 @@
         if (layout.tabs) {
           // Filter out tabs that no longer exist
           layout.tabs = _.filter(layout.tabs, function(item) {
-            return $scope.tabs[item.id];
+            return allTabs[item.id];
           });
           // Set defaults for tabs
           _.each(vars.tabs, function(defaultTab) {
@@ -604,18 +591,6 @@
       $scope.$watch('$ctrl.data', function() {
         $scope.changesSaved = $scope.changesSaved === 1;
       }, true);
-
-      CRM.loadScript(CRM.config.resourceBase + 'js/jquery/jquery.crmIconPicker.js').done(function() {
-        $('#cse-icon-picker').crmIconPicker().change(function() {
-          if (editingTabIcon) {
-            $scope.$apply(function() {
-              editingTabIcon.icon = 'crm-i ' + $('#cse-icon-picker').val();
-              editingTabIcon = null;
-              $('#cse-icon-picker').val('').change();
-            });
-          }
-        });
-      });
 
     }
   });
