@@ -31,7 +31,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
     $subClauses = [['contact_sub_type', 'IS NULL']];
     if (!empty($contact['contact_sub_type'])) {
       foreach ($contact['contact_sub_type'] as $subType) {
-        $subClauses[] = ['contact_sub_type', 'LIKE', '%' . CRM_Core_DAO::VALUE_SEPARATOR . $subType . CRM_Core_DAO::VALUE_SEPARATOR . '%'];
+        $subClauses[] = ['contact_sub_type', 'CONTAINS', $subType];
       }
     }
     $layout->addClause('OR', $subClauses);
@@ -45,7 +45,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
         ->addWhere('id', 'IN', array_column($groups, 'group_id'))
         ->execute();
       foreach ($groups as $group) {
-        $groupClause[] = ['groups', 'LIKE', '%' . CRM_Core_DAO::VALUE_SEPARATOR . $group['name'] . CRM_Core_DAO::VALUE_SEPARATOR . '%'];
+        $groupClause[] = ['groups', 'CONTAINS', $group['name']];
       }
     }
     $layout->addClause('OR', $groupClause);
