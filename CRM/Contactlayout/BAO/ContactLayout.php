@@ -21,9 +21,8 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
       ->execute()
       ->first();
 
-    $layout = \Civi\Api4\ContactLayout::get()
-      ->setLimit(1)
-      ->addSelect('label', 'blocks', 'tabs')
+    $get = \Civi\Api4\ContactLayout::get()
+      ->addSelect('label', 'blocks', 'tabs', 'groups')
       ->addClause('OR', ['contact_type', 'IS NULL'], ['contact_type', '=', $contact['contact_type']])
       ->addOrderBy('weight');
 
@@ -34,24 +33,35 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
         $subClauses[] = ['contact_sub_type', 'CONTAINS', $subType];
       }
     }
-    $layout->addClause('OR', $subClauses);
+    $get->addClause('OR', $subClauses);
 
-    // Filter by user group
-    $groupClause = [['groups', 'IS NULL']];
-    $groups = \CRM_Contact_BAO_GroupContact::getContactGroup($uid, 'Added', NULL, FALSE, TRUE, FALSE, TRUE, NULL, TRUE);
-    if (!empty($groups)) {
-      $groups = \Civi\Api4\Group::get()
-        ->addSelect('name')
-        ->addWhere('id', 'IN', array_column($groups, 'group_id'))
-        ->execute();
-      foreach ($groups as $group) {
-        $groupClause[] = ['groups', 'CONTAINS', $group['name']];
+    foreach ($get->execute() as $layout) {
+      if (self::userIsIn($uid, $layout['groups'])) {
+        self::loadBlocks($layout, $contact['contact_type']);
+        return $layout;
       }
     }
-    $layout->addClause('OR', $groupClause);
-    $layout = $layout->execute()->first();
-    self::loadBlocks($layout, $contact['contact_type']);
-    return $layout;
+    return NULL;
+  }
+
+  /**
+   * Check if the user matches the group filter for a layout
+   *
+   * @param int $uid
+   * @param array|null $groups
+   *
+   * @return bool
+   */
+  private static function userIsIn($uid, $groups) {
+    // If no group filter, any user matches
+    if (!$groups) {
+      return TRUE;
+    }
+    return (bool) \Civi\Api4\Contact::get(FALSE)
+      ->addSelect('id')
+      ->addWhere('id', '=', $uid)
+      ->addWhere('groups:name', 'IN', $groups)
+      ->execute()->count();
   }
 
   /**
