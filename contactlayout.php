@@ -131,7 +131,7 @@ function contactlayout_civicrm_pageRun(&$page) {
   if (get_class($page) === 'CRM_Contact_Page_View_Summary') {
     $contactID = $page->getVar('_contactId');
     if ($contactID) {
-      $defaultTabs = \Civi\Api4\Setting::get()
+      $defaultTabs = \Civi\Api4\Setting::get(FALSE)
         ->addSelect('contactlayout_default_tabs')
         ->execute()
         ->first()['value'] ?? NULL;
