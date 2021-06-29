@@ -209,6 +209,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
    * @return array
    */
   protected static function loadAllBlocks() {
+    $contactTypes = CRM_Contact_BAO_ContactType::basicTypes(TRUE);
     $blocks = [
       'core' => [
         'title' => E::ts('Predefined'),
@@ -312,44 +313,50 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
     ];
 
     $profiles = Civi\Api4\UFJoin::get(FALSE)
-      ->setSelect(['uf_group_id', 'uf_group.title', 'uf_group.name', 'uf_group.group_type'])
+      ->addSelect('uf_group_id', 'uf_group_id.title', 'uf_group_id.name', 'uf_group_id.group_type')
+      ->addSelect('GROUP_CONCAT(fields.field_name) AS field_names')
+      ->addSelect('GROUP_CONCAT(fields.label ORDER BY fields.weight) AS field_labels')
       ->addWhere('module', '=', 'Contact Summary')
-      ->addChain('fields', \Civi\Api4\UFField::get()
-        ->setSelect(['label', 'field_name'])
-        ->addOrderBy('weight')
-        ->setWhere([['is_active', '=', 1], ['uf_group_id', '=', '$uf_group_id']]))
+      ->addWhere('uf_group_id.is_active', '=', TRUE)
+      ->addJoin('UFField AS fields', 'LEFT',
+        ['uf_group_id', '=', 'fields.uf_group_id'],
+        ['fields.is_active', '=', TRUE])
+      ->addGroupBy('id')
       ->execute();
     foreach ($profiles as $profile) {
-      $profileType = array_intersect(CRM_Contact_BAO_ContactType::basicTypes(TRUE), $profile['uf_group.group_type']);
-      $blocks['profile']['blocks'][$profile['uf_group.name']] = [
-        'title' => $profile['uf_group.title'],
+      $profileType = array_intersect($contactTypes, $profile['uf_group_id.group_type']);
+      $blocks['profile']['blocks'][$profile['uf_group_id.name']] = [
+        'title' => $profile['uf_group_id.title'],
         'tpl_file' => 'CRM/Contactlayout/Page/Inline/Profile.tpl',
         'profile_id' => $profile['uf_group_id'],
-        'sample' => array_column($profile['fields'], 'label'),
+        'sample' => $profile['field_labels'],
         'collapsible' => TRUE,
         'edit' => TRUE,
         'refresh' => [],
-        'selector' => '#crm-profile-content-' . $profile['uf_group.name'],
+        'selector' => '#crm-profile-content-' . $profile['uf_group_id.name'],
         'contact_type' => CRM_Utils_Array::first($profileType),
       ];
     }
 
     $customGroups = \Civi\Api4\CustomGroup::get(FALSE)
-      ->addWhere('extends', 'IN', ['Contact', 'Individual', 'Household', 'Organization'])
+      ->addSelect('id', 'name', 'title', 'is_multiple', 'collapse_display', 'extends')
+      ->addSelect('GROUP_CONCAT(fields.id) AS field_ids')
+      ->addSelect('GROUP_CONCAT(fields.label ORDER BY fields.weight) AS field_labels')
+      ->addWhere('extends', 'IN', array_merge(['Contact'], $contactTypes))
       ->addWhere('style', '=', 'Inline')
-      ->addWhere('is_active', '=', 1)
+      ->addWhere('is_active', '=', TRUE)
+      ->addJoin('CustomField AS fields', 'LEFT',
+        ['id', '=', 'fields.custom_group_id'],
+        ['fields.is_active', '=', TRUE])
+      ->addGroupBy('id')
       ->addOrderBy('weight')
-      ->addChain('fields', \Civi\Api4\CustomField::get()
-        ->addSelect('label')
-        ->addOrderBy('weight')
-        ->setWhere([['is_active', '=', 1], ['custom_group_id', '=', '$id']]))
       ->execute();
     foreach ($customGroups as $index => $group) {
       $blocks['custom']['blocks'][$group['name']] = [
         'title' => $group['title'],
         'tpl_file' => 'CRM/Contactlayout/Page/Inline/CustomFieldSet.tpl',
         'custom_group_id' => $group['id'],
-        'sample' => array_column($group['fields'], 'label'),
+        'sample' => $group['field_labels'],
         'multiple' => !empty($group['is_multiple']),
         'collapsible' => TRUE,
         'collapsed' => !empty($group['collapse_display']),
@@ -380,7 +387,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
   public static function addBlockRelations(&$blocks, $profiles, $customGroups) {
     $customFields = [];
     foreach ($customGroups as $group) {
-      $customFields['#custom-set-content-' . $group['id']] = array_column($group['fields'], 'id');
+      $customFields['#custom-set-content-' . $group['id']] = $group['field_ids'];
     }
     $coreBlocks = [
       '#crm-contactname-content' => [
@@ -425,9 +432,9 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
       ],
     ];
     foreach ($profiles as $profile) {
-      $block =& $blocks['profile']['blocks'][$profile['uf_group.name']];
-      foreach ($profile['fields'] as $field) {
-        $fieldName = strtolower($field['field_name']);
+      $block =& $blocks['profile']['blocks'][$profile['uf_group_id.name']];
+      foreach ($profile['field_names'] as $fieldName) {
+        $fieldName = strtolower($fieldName);
         if (strpos($fieldName, 'custom_') === 0) {
           list(, $customId) = explode('_', $fieldName);
           foreach ($customFields as $selector => $fields) {
@@ -438,12 +445,10 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
         }
         else {
           foreach ($coreBlocks as $selector => $fields) {
-            if (!in_array($selector, $block['refresh'])) {
-              foreach ($fields as $field) {
-                if (strpos($fieldName, $field) !== FALSE) {
-                  $block['refresh'][] = $selector;
-                  break;
-                }
+            foreach ($fields as $field) {
+              if (!in_array($selector, $block['refresh']) && strpos($fieldName, $field) !== FALSE) {
+                $block['refresh'][] = $selector;
+                break;
               }
             }
           }
@@ -456,6 +461,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
    * @return array
    */
   public static function getAllTabs() {
+    $contactTypes = CRM_Contact_BAO_ContactType::basicTypes(TRUE);
     $tabs = CRM_Contact_Page_View_Summary::basicTabs();
     foreach (CRM_Core_Component::getEnabledComponents() as $name => $component) {
       $tab = $component->registerTab();
@@ -467,8 +473,8 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
     $customGroups = \Civi\Api4\CustomGroup::get()
       ->addWhere('style', 'IN', ['Tab', 'Tab with table'])
       ->addWhere('is_active', '=', 1)
-      ->addWhere('extends', 'IN', ['Contact', 'Individual', 'Household', 'Organization'])
-      ->addOrderBy('weight', 'ASC')
+      ->addWhere('extends', 'IN', array_merge(['Contact'], $contactTypes))
+      ->addOrderBy('weight')
       ->execute();
     foreach ($customGroups as $group) {
       $tabs[] = [
