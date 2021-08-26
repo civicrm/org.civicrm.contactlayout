@@ -57,10 +57,14 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
     if (!$groups) {
       return TRUE;
     }
+    $groupIds = array_map(function($groupName) {
+      return CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Group', $groupName, 'id', 'name');
+    }, $groups);
     return (bool) \Civi\Api4\Contact::get(FALSE)
       ->addSelect('id')
       ->addWhere('id', '=', $uid)
-      ->addWhere('groups:name', 'IN', $groups)
+      // TODO: Change this back to ('groups:name', 'IN', $groups) when fixed upstream
+      ->addWhere('groups', 'IN', $groupIds)
       ->execute()->count();
   }
 
