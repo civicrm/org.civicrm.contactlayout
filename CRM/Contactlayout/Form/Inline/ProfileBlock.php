@@ -164,7 +164,7 @@ class CRM_Contactlayout_Form_Inline_ProfileBlock extends CRM_Profile_Form_Edit {
       ->setCheckPermissions(FALSE)
       ->addWhere('is_active', '=', '1')
       ->addWhere('contact_id_a', '=', $cid)
-      ->addWhere('relationship_type.name_a_b', '=', 'Employee of')
+      ->addWhere('relationship_type_id.name_a_b', '=', 'Employee of')
       ->addClause('OR', ['start_date', 'IS NULL'], ['start_date', '<=', 'now'])
       ->addClause('OR', ['end_date', 'IS NULL'], ['end_date', '>', 'now'])
       ->execute();
