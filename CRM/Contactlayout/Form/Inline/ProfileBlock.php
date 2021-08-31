@@ -160,7 +160,7 @@ class CRM_Contactlayout_Form_Inline_ProfileBlock extends CRM_Profile_Form_Edit {
    */
   public static function getEmployers($cid) {
     $relationships = Civi\Api4\Relationship::get()
-      ->setSelect(['contact_id_b', 'contact_b.display_name'])
+      ->setSelect(['contact_id_b', 'contact_id_b.display_name'])
       ->setCheckPermissions(FALSE)
       ->addWhere('is_active', '=', '1')
       ->addWhere('contact_id_a', '=', $cid)
@@ -173,8 +173,7 @@ class CRM_Contactlayout_Form_Inline_ProfileBlock extends CRM_Profile_Form_Edit {
       $results[] = [
         'id' => $relationship['id'],
         'contact_id' => $relationship['contact_id_b'],
-        // Api4 output changed for custom fields circa apiv4.6
-        'display_name' => $relationship['contact_b.display_name'] ?? $relationship['contact_b']['display_name'],
+        'display_name' => $relationship['contact_id_b.display_name'],
       ];
     }
     return $results;
