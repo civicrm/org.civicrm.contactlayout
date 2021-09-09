@@ -14,8 +14,8 @@
     <url desc="Support">https://github.com/civicrm/org.civicrm.contactlayout/issues</url>
     <url desc="Licensing">http://www.gnu.org/licenses/agpl-3.0.html</url>
   </urls>
-  <releaseDate>2021-08-26</releaseDate>
-  <version>2.0.5</version>
+  <releaseDate>2021-09-08</releaseDate>
+  <version>2.0.6</version>
   <develStage>stable</develStage>
   <compatibility>
     <ver>5.40</ver>
