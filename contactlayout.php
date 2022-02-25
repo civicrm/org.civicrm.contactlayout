@@ -200,7 +200,7 @@ function contactlayout_civicrm_pageRun(&$page) {
       if (CRM_Core_Permission::check('administer CiviCRM')) {
         CRM_Core_Region::instance('contact-actions-ribbon')
           ->add([
-            'markup' => '<li style="float:right;">
+            'markup' => '<li class="crm-contact-summary-edit-layout">
               <a class="crm-hover-button" title="' . htmlspecialchars(E::ts('Edit Layout')) . '" href="' . CRM_Utils_System::url('civicrm/admin/contactlayout') . '">
                 <i class="crm-i fa-edit"></i> ' . htmlspecialchars(E::ts('Layout: %1', [1 => $layout['label'] ?? E::ts('System Default')])) .
             '</a>
