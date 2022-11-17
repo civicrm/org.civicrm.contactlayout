@@ -340,7 +340,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
       ->addGroupBy('id')
       ->execute();
     foreach ($profiles as $profile) {
-      $profileType = array_intersect($contactTypes, $profile['uf_group_id.group_type']);
+      $profileType = array_intersect($contactTypes, $profile['uf_group_id.group_type'] ?? []);
       $blocks['profile']['blocks'][$profile['uf_group_id.name']] = [
         'title' => $profile['uf_group_id.title'],
         'tpl_file' => 'CRM/Contactlayout/Page/Inline/Profile.tpl',
