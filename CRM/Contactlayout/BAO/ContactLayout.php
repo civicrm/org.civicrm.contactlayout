@@ -503,6 +503,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
     }
     $context = [
       'contact_id' => CRM_Core_Session::getLoggedInContactID(),
+      'contact_type' => 'Individual',
       'caller' => 'ContactLayout',
     ];
     CRM_Utils_Hook::tabset('civicrm/contact/view', $tabs, $context);
