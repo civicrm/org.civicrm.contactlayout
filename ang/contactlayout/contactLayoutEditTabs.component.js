@@ -36,6 +36,10 @@
         }
       };
 
+      this.tabIsValid = function(tab) {
+        return !tab.contact_type || !ctrl.contactType || tab.contact_type.includes(ctrl.contactType);
+      };
+
       this.pickTabIcon = function(tab) {
         editingTabIcon = tab;
         $('#cse-icon-picker ~ .crm-icon-picker-button').click();
