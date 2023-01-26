@@ -454,7 +454,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
         if (strpos($fieldName, 'custom_') === 0) {
           list(, $customId) = explode('_', $fieldName);
           foreach ($customFields as $selector => $fields) {
-            if (in_array($customId, $fields) && !in_array($selector, $block['refresh'])) {
+            if (!empty($fields) && in_array($customId, $fields) && !in_array($selector, $block['refresh'])) {
               $block['refresh'][] = $selector;
             }
           }
