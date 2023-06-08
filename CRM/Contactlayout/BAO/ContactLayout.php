@@ -403,7 +403,9 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
   public static function addBlockRelations(&$blocks, $profiles, $customGroups) {
     $customFields = [];
     foreach ($customGroups as $group) {
-      $customFields['#custom-set-content-' . $group['id']] = $group['field_ids'];
+      if (!empty($group['field_ids'])) {
+        $customFields['#custom-set-content-' . $group['id']] = $group['field_ids'];
+      }
     }
     $coreBlocks = [
       '#crm-contactname-content' => [
