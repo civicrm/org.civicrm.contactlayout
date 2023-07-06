@@ -59,6 +59,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
     }
     // Convert group names to ids, and verify groups exist
     $groupIds = (array) civicrm_api4('Group', 'get', [
+      'checkPermissions' => FALSE,
       'where' => [['name', 'IN', $layout['groups']]],
     ], ['name' => 'id']);
 
