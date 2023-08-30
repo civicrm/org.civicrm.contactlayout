@@ -524,7 +524,6 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
     foreach ($tabs as $index => $tab) {
       // Every tab OUGHT to have an 'id' but the documentation about this has been unclear.
       // Proactively convert array key to id if missing.
-      $id = $tab['id'] ?? $index;
       $allTabs[] = $tab + [
         'is_active' => TRUE,
         'id' => $index,
