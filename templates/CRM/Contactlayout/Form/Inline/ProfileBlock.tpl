@@ -55,7 +55,7 @@
             {$form.$n.label}
           </div>
           <div class="crm-content">
-            {if $n|substr:0:3 eq 'im-'}
+            {if $n|str_starts_with:'im-'}
               {assign var="provider" value=$n|cat:"-provider_id"}
               {$form.$provider.html}&nbsp;
             {/if}
@@ -72,7 +72,7 @@
                   </div>
                 </div>
               {/if}
-            {elseif $n|substr:0:5 eq 'phone'}
+            {elseif $n|str_starts_with:'phone'}
               {assign var="phone_ext_field" value=$n|replace:'phone':'phone_ext'}
               {$form.$n.html}
               {if $form.$phone_ext_field.html}
