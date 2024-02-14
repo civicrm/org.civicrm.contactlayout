@@ -44,4 +44,4 @@ CREATE TABLE `civicrm_contact_layout` (
   `tabs` longtext COMMENT 'Contains json encoded layout tabs.',
   PRIMARY KEY (`id`)
 )
-ENGINE=InnoDB;
+ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
