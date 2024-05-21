@@ -167,7 +167,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
    * @return bool
    */
   protected static function checkBlockValidity($blockInfo, $blockRelation = NULL, $contactType = NULL) {
-    $blockContactType = $blockInfo['contact_type'] ?? NULL;
+    $blockContactType = $blockInfo['contact_type'] ?? [];
     if ($blockRelation) {
       try {
         $relationship = self::getRelationshipFromOption($blockRelation);
@@ -179,7 +179,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
       return self::checkBlockRelation($relationship, $contactType, $blockContactType);
     }
     else {
-      return $blockInfo && (!$contactType || !$blockContactType || in_array($contactType, (array) $blockContactType, TRUE));
+      return $blockInfo && (!$contactType || !$blockContactType || in_array($contactType, $blockContactType, TRUE));
     }
   }
 
@@ -189,7 +189,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
    * @param $blockContactType
    * @return bool
    */
-  private static function checkBlockRelation(array $relationship, $contactType, $blockContactType) {
+  private static function checkBlockRelation(array $relationship, $contactType, array $blockContactType) {
     // Reciprocal relationship - check both directions
     if ($relationship['direction'] === 'r') {
       return self::checkBlockRelation(['direction' => 'ab'] + $relationship, $contactType, $blockContactType) ||
