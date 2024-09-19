@@ -46,7 +46,7 @@ function contactlayout_civicrm_pageRun(&$page) {
           ->execute()
           ->first()['value'] ?? NULL;
       }
-      catch (API_Exception $e) {
+      catch (CRM_Core_Exception $e) {
         Civi::log()->warning(E::ts("Exception retrieving default tabs setting: %1", ['1' => $e->getMessage()]));
         $defaultTabs = NULL;
       }
