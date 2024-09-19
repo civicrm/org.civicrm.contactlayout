@@ -98,7 +98,7 @@ class CRM_Contactlayout_Form_Inline_ProfileBlock extends CRM_Profile_Form_Edit {
   /**
    * Save profiles
    *
-   * @throws CiviCRM_API3_Exception
+   * @throws \CRM_Core_Exception
    */
   public function postProcess() {
     $values = $origValues = $this->controller->exportValues($this->_name);
