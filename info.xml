@@ -20,6 +20,15 @@
   <compatibility>
     <ver>5.74</ver>
   </compatibility>
+  <smarty_compatibility>
+    <ver>5.0</ver>
+  </smarty_compatibility>
+  <php_compatibility>
+    <ver>8.1</ver>
+    <ver>8.2</ver>
+    <ver>8.3</ver>
+    <ver>8.4</ver>
+  </php_compatibility>
   <civix>
     <namespace>CRM/Contactlayout</namespace>
     <format>24.09.1</format>
