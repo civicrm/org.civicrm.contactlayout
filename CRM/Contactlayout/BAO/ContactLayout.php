@@ -463,7 +463,7 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
       $block =& $blocks['profile']['blocks'][$profile['uf_group_id.name']];
       foreach ($profile['field_names'] as $fieldName) {
         $fieldName = strtolower($fieldName);
-        if (strpos($fieldName, 'custom_') === 0) {
+        if (str_starts_with($fieldName, 'custom_')) {
           list(, $customId) = explode('_', $fieldName);
           foreach ($customFields as $selector => $fields) {
             if (in_array($customId, $fields) && !in_array($selector, $block['refresh'])) {
