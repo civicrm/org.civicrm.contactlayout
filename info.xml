@@ -31,7 +31,7 @@
   </php_compatibility>
   <civix>
     <namespace>CRM/Contactlayout</namespace>
-    <format>24.09.1</format>
+    <format>25.01.1</format>
   </civix>
   <classloader>
     <psr4 prefix="Civi\" path="Civi"/>
