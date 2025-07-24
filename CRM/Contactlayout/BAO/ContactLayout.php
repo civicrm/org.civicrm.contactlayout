@@ -55,13 +55,10 @@ class CRM_Contactlayout_BAO_ContactLayout extends CRM_Contactlayout_DAO_ContactL
    */
   private static function checkSubtypeFilter($contact, $layout) {
     // AND operator, check if the contact matches all layout sub_type(s)
-    if ($layout['settings']['sub_type_operator'] == 'AND') {
-      foreach ($layout['contact_sub_type'] AS $sub_type) {
-        if (!in_array($sub_type, $contact['contact_sub_type'])) {
-          return FALSE;
-        }
+    if (!empty($layout['contact_sub_type']) && ($layout['settings']['sub_type_operator'] ?? 'OR') === 'AND') {
+      if (array_diff($layout['contact_sub_type'], $contact['contact_sub_type'] ?? [])) {
+        return FALSE;
       }
-      return TRUE;
     }
     // OR operator, the layout was already selected based on contact sub_type(s)
     return TRUE;
