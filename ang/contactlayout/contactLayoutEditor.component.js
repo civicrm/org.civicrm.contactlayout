@@ -418,7 +418,8 @@
             contact_sub_type: layout.contact_sub_type?.length ? layout.contact_sub_type : null,
             groups: layout.groups?.length ? layout.groups : null,
             blocks: [],
-            tabs: layout.tabs ? [] : null
+            tabs: layout.tabs ? [] : null,
+            settings: layout.settings || {},
           };
 
           layout.blocks.forEach((row, rowNum) => {
@@ -516,6 +517,12 @@
 
       function loadLayout(layout) {
         layout.palette = _.cloneDeep(allBlocks);
+
+        if (!layout.settings || Array.isArray(layout.settings)) {
+          layout.settings = {};
+        }
+        layout.settings.sub_type_operator = layout.settings.sub_type_operator || 'OR';
+
         if (layout.tabs) {
           // Filter out tabs that no longer exist
           layout.tabs = layout.tabs.filter(item => allTabs[item.id]);
