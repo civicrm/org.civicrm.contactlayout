@@ -326,12 +326,15 @@
       $scope.copyDefaultLayout = function() {
         const newLayout = {
           label: ts('Untitled %1', {1: ++newLayoutCount}),
-          blocks: [[[], []]]
+          blocks: [],
         };
 
         allBlocks.forEach(block => {
           if (block.system_default && $scope.isSystemBlockEnabled(block)) {
             const [rowIndex, colIndex] = block.system_default;
+            while (newLayout.blocks.length <= rowIndex) {
+              newLayout.blocks.push([[], []]);
+            }
             newLayout.blocks[rowIndex][colIndex].push(block);
           }
         });
